@@ -1042,9 +1042,11 @@ body.dashboard-initialized #continueLearningList .glass-card {
 
 /* Hyperistic AI Insight Card Background Animation */
 .ai-insight-card {
-    background: rgba(10, 12, 25, 0.6) !important;
-    border: 1px solid rgba(0, 240, 255, 0.15) !important;
-    box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05);
+    background: rgba(10, 12, 25, 0.3) !important;
+    border: 1px solid rgba(0, 240, 255, 0.3) !important;
+    backdrop-filter: blur(50px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(50px) saturate(200%) !important;
+    box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.1), 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .ai-insight-card::before {
@@ -1054,20 +1056,18 @@ body.dashboard-initialized #continueLearningList .glass-card {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at 40% 40%, rgba(0, 240, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(112, 0, 255, 0.15), transparent 50%);
-    animation: spinGlow 15s linear infinite;
+    background: radial-gradient(circle at 30% 40%, rgba(0, 240, 255, 0.3), transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(112, 0, 255, 0.3), transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(255, 0, 128, 0.2), transparent 50%);
+    animation: hyperSpinGlow 20s ease-in-out infinite alternate;
     z-index: -2;
-    filter: blur(30px);
+    filter: blur(40px);
     pointer-events: none;
 }
 
-@keyframes spinGlow {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.1); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
-.ai-insight-card .ai-insight-bg-icon {
-    z-index: -1;
+@keyframes hyperSpinGlow {
+    0% { transform: rotate(0deg) scale(1) translate(0, 0); }
+    33% { transform: rotate(120deg) scale(1.2) translate(5%, 5%); }
+    66% { transform: rotate(240deg) scale(0.9) translate(-5%, 5%); }
+    100% { transform: rotate(360deg) scale(1) translate(0, 0); }
 }
