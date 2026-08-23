@@ -767,3 +767,33 @@ input:checked + .slider:before {
     color: #fff;
 }
 
+
+/* Back Button Component */
+.back-btn {
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    outline: none;
+}
+
+.back-btn:hover {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
+    transform: translateX(-4px);
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.back-btn:active {
+    transform: translateX(-2px) scale(0.98);
+}

@@ -125,23 +125,7 @@
             <header class="topbar">
                 <div class="flex items-center gap-2">
                     <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
-                    <button onclick="history.back()" title="Go Back" style="
-                        display: inline-flex; align-items: center; gap: 8px;
-                        background: rgba(255,255,255,0.05);
-                        border: 1px solid var(--border);
-                        color: var(--text-secondary);
-                        padding: 7px 16px;
-                        border-radius: 8px;
-                        font-size: 0.88rem;
-                        font-weight: 500;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                    "
-                    onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='var(--text-primary)';"
-                    onmouseleave="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-secondary)';" >
-                        <i class="fa-solid fa-arrow-left" style="font-size: 0.85rem;"></i>
-                        Back
-                    </button>
+                    <button onclick="if(document.referrer) { history.back(); } else { window.location.href = 'dashboard.html'; }" class="back-btn" title="Go Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
                     <h2>Company Profile</h2>
                 </div>
                 <div class="topbar-right">

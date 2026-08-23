@@ -323,7 +323,8 @@
         <header class="topbar">
             <div class="flex items-center gap-2">
                 <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
-                <h2>AI Learning Coach</h2>
+                    <button onclick="if(document.referrer) { history.back(); } else { window.location.href = 'dashboard.html'; }" class="back-btn" title="Go Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <h2>AI Learning Coach</h2>
             </div>
             <div class="topbar-right">
                 <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">

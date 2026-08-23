@@ -313,6 +313,7 @@
                     <button class="hamburger-btn">
                         <i class="fa-solid fa-bars"></i>
                     </button>
+                    <button onclick="if(document.referrer) { history.back(); } else { window.location.href = 'dashboard.html'; }" class="back-btn" title="Go Back"><i class="fa-solid fa-arrow-left"></i> Back</button>
                     <h2 id="courseTitle" style="font-size: 1.2rem; opacity: 0; animation: fadeIn 0.5s ease forwards;" class="text-gradient">Loading Course...</h2>
                 </div>
                 <div class="topbar-right">
