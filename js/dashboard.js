@@ -199,3 +199,99 @@ function initDashboard() {
     // Mark dashboard as initialized to prevent re-triggering entrance animations on background data syncs
     document.body.classList.add('dashboard-initialized');
 }
+
+// --- Notification Logic ---
+const mockNotifications = [
+    {
+        id: 1,
+        type: 'info',
+        icon: 'fa-bolt',
+        title: 'New Skill Path Unlocked',
+        message: 'You have unlocked the Advanced React Patterns path based on your recent assessment.',
+        time: '2 hours ago'
+    },
+    {
+        id: 2,
+        type: 'warning',
+        icon: 'fa-clock',
+        title: 'Interview Upcoming',
+        message: 'Your mock interview for Frontend Developer is scheduled for tomorrow at 10 AM.',
+        time: '5 hours ago'
+    },
+    {
+        id: 3,
+        type: 'success',
+        icon: 'fa-trophy',
+        title: 'Achievement Unlocked',
+        message: 'You completed a 7-day learning streak!',
+        time: '1 day ago'
+    }
+];
+
+let notifications = [...mockNotifications];
+
+function toggleNotifications(event) {
+    if (event) event.stopPropagation();
+    const notifDropdown = document.querySelector('.notif-dropdown');
+    notifDropdown.classList.toggle('active');
+    
+    if (notifDropdown.classList.contains('active')) {
+        renderNotifications();
+    }
+}
+
+function renderNotifications() {
+    const list = document.querySelector('.notification-list');
+    const dot = document.querySelector('.notification-dot');
+    
+    if (notifications.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">No new notifications</div>';
+        dot.style.display = 'none';
+        return;
+    }
+    
+    dot.style.display = 'block';
+    
+    list.innerHTML = notifications.map(n => `
+        <div class="notification-item ${n.type}" onclick="handleNotificationClick(${n.id})">
+            <div class="notif-icon">
+                <i class="fa-solid ${n.icon}"></i>
+            </div>
+            <div class="notif-content">
+                <h4>${n.title}</h4>
+                <p>${n.message}</p>
+                <span class="notif-time">${n.time}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function markAllRead(event) {
+    if (event) event.stopPropagation();
+    notifications = [];
+    renderNotifications();
+}
+
+function handleNotificationClick(id) {
+    // Usually redirects, but for now we'll just remove it
+    notifications = notifications.filter(n => n.id !== id);
+    renderNotifications();
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    const notifDropdown = document.querySelector('.notif-dropdown');
+    const bell = document.querySelector('.notification-bell');
+    
+    if (notifDropdown && notifDropdown.classList.contains('active') && !bell.contains(e.target)) {
+        notifDropdown.classList.remove('active');
+    }
+});
+
+// Initial render to show the dot if there are notifications
+document.addEventListener('DOMContentLoaded', () => {
+    if (notifications.length > 0) {
+        const dot = document.querySelector('.notification-dot');
+        if (dot) dot.style.display = 'block';
+    }
+});
