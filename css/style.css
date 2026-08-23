@@ -146,13 +146,13 @@ button {
 /* Primary Button - Glowing Cyan */
 .btn-primary {
     background: rgba(0, 240, 255, 0.1);
-    border: 1px solid rgba(0, 240, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
 }
 
 .btn-primary:hover {
     background: rgba(0, 240, 255, 0.2);
-    border-color: rgba(0, 240, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
     transform: translateY(-2px);
 }
@@ -875,7 +875,7 @@ input:checked + .slider:before {
 
         .btn-glow.primary {
             background: rgba(0, 240, 255, 0.1);
-            border-color: rgba(0, 240, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
             color: #ffffff;
         }
@@ -889,7 +889,7 @@ input:checked + .slider:before {
 
         .btn-glow.primary:hover {
             background: rgba(0, 240, 255, 0.2);
-            border-color: rgba(0, 240, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
         }
 
