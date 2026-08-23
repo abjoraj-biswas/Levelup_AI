@@ -447,6 +447,47 @@
         }
 
         /* Animations */
+        /* Apple-Style Scroll-Driven Animations (Progressive Enhancement) */
+        @supports ((animation-timeline: view()) and (animation-range: entry)) {
+            .reveal, .reveal-step {
+                animation: apple-reveal linear both !important;
+                animation-timeline: view() !important;
+                animation-range: entry 10% cover 30% !important;
+                transition: none !important;
+            }
+
+            @keyframes apple-reveal {
+                from {
+                    opacity: 0;
+                    transform: perspective(1000px) rotateX(15deg) translateY(80px) scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
+                }
+            }
+
+            .hero-section {
+                animation: hero-parallax linear both;
+                animation-timeline: scroll();
+                animation-range: 0 600px;
+                transform-origin: top center;
+            }
+
+            @keyframes hero-parallax {
+                from {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: scale(0.9) translateY(80px);
+                    filter: blur(5px);
+                }
+            }
+        }
+
+        /* Standard Animations */
         @keyframes fadeUp {
             from {
                 opacity: 0;
