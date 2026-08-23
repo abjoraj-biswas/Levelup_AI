@@ -4,8 +4,8 @@
     /* Color Palette */
     --bg-primary: #05050f; /* Deep navy/black */
     --bg-secondary: #0a0b1a; 
-    --bg-card: rgba(15, 17, 35, 0.6);
-    --bg-card-hover: rgba(25, 28, 55, 0.8);
+    --bg-card: rgba(15, 17, 35, 0.4);
+    --bg-card-hover: rgba(25, 28, 55, 0.5);
     
     --primary: #00f0ff;
     --hyper-gradient: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%); /* Cyan highlight */
@@ -16,7 +16,7 @@
     --text-secondary: #a0a5cc;
     --text-muted: #6b7280;
     
-    --border: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.08);
     --border-glow: rgba(0, 240, 255, 0.3);
     
     --success: #00ff88;
@@ -32,11 +32,11 @@
     --border-radius-pill: 50px;
     
     /* Effects */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
+    --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 20px rgba(0, 240, 255, 0.2);
-    --glass-blur: blur(12px);
+    --glass-blur: blur(40px) saturate(150%);
 }
 
 * {
@@ -57,23 +57,34 @@ body {
 }
 
 
-/* Subtle Animated Background */
-body::before {
+/* Hyperistic Animated Background */
+body::before, body::after {
     content: '';
     position: fixed;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 85, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(112, 0, 255, 0.05) 0%, transparent 30%);
     z-index: -1;
-    animation: pulseBg 15s infinite alternate;
+    pointer-events: none;
 }
 
-@keyframes pulseBg {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.1); }
+body::before {
+    background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
+    animation: orbSpin 25s linear infinite;
+}
+
+body::after {
+    background: radial-gradient(circle at 60% 30%, rgba(0, 85, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 40% 70%, rgba(255, 0, 128, 0.05) 0%, transparent 30%);
+    animation: orbSpin 35s linear infinite reverse;
+}
+
+@keyframes orbSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
 }
 
 h1, h2, h3, h4, h5, h6 {
