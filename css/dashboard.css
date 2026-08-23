@@ -753,18 +753,50 @@ body.dashboard-initialized #continueLearningList .glass-card {
 }
 
 .recording-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--error);
+    width: 12px;
+    height: 12px;
+    background-color: var(--warning);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--error);
-    animation: blink 1.5s infinite;
+    box-shadow: 0 0 15px 2px var(--warning);
+    display: inline-block;
+}
+
+.recording-dot.is-recording {
+    background-color: var(--error);
+    box-shadow: 0 0 15px 2px var(--error);
+    animation: glowFade 1.5s ease-in-out infinite;
+}
+
+.recording-dot.is-success {
+    background-color: var(--success);
+    box-shadow: 0 0 20px 4px rgba(16, 185, 129, 0.6); /* Soft green glow */
+}
+
+.recording-dot.is-error {
+    background-color: var(--error);
+    box-shadow: 0 0 20px 4px rgba(239, 68, 68, 0.6);
 }
 
 @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0.4; }
     100% { opacity: 1; }
+}
+
+@keyframes glowFade {
+    0% { 
+        opacity: 0.8; 
+        box-shadow: 0 0 10px 2px rgba(239, 68, 68, 0.5); 
+    }
+    50% { 
+        opacity: 1; 
+        box-shadow: 0 0 25px 6px rgba(239, 68, 68, 0.8); 
+        background-color: #ff6b8b; 
+    }
+    100% { 
+        opacity: 0.8; 
+        box-shadow: 0 0 10px 2px rgba(239, 68, 68, 0.5); 
+    }
 }
 
 .ai-avatar-wrapper {

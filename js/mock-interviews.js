@@ -8,6 +8,9 @@ let miTimeLeft = 0;
 let isRecording = false;
 let currentAttemptId = null;
 let currentQuestions = [];
+let mediaStream = null;
+let recognition = null;
+let transcriptText = "";
 
 document.addEventListener('AppDataLoaded', () => {
     initMockInterviews();
@@ -225,6 +228,13 @@ async function startInterview() {
         document.getElementById('miQuestionText').textContent = `"${currentQuestions[0].question_text || currentQuestions[0]}"`;
         
         resetMiUI();
+        await initMediaStream();
+        initSpeechRecognition();
+        
+        transcriptText = "";
+        const transcriptBox = document.getElementById('miTranscriptBox');
+        if (transcriptBox) transcriptBox.value = "";
+        
         showMiView('miInterfaceView');
         
         if (miTimerInterval) clearInterval(miTimerInterval);
@@ -259,7 +269,7 @@ function resetMiUI() {
     document.getElementById('btnFinishAns').classList.add('hidden');
     document.getElementById('btnNextQ').classList.add('hidden');
     
-    document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--warning); box-shadow: 0 0 8px var(--warning);"></span> LIVE';
+    document.getElementById('miStatus').innerHTML = '<span class="recording-dot"></span> LIVE';
 }
 
 function startAnswer() {
@@ -271,7 +281,11 @@ function startAnswer() {
     document.getElementById('btnPauseAns').classList.remove('hidden');
     document.getElementById('btnFinishAns').classList.remove('hidden');
     
-    document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--error); box-shadow: 0 0 8px var(--error); animation: blink 1s infinite;"></span> RECORDING';
+    document.getElementById('miStatus').innerHTML = '<span class="recording-dot is-recording"></span> RECORDING';
+    
+    if (recognition) {
+        try { recognition.start(); } catch(e) {}
+    }
 }
 
 function pauseAnswer() {
@@ -282,7 +296,11 @@ function pauseAnswer() {
     document.getElementById('btnStartAns').classList.remove('hidden');
     document.getElementById('btnPauseAns').classList.add('hidden');
     
-    document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--warning); box-shadow: 0 0 8px var(--warning); animation: none;"></span> PAUSED';
+    document.getElementById('miStatus').innerHTML = '<span class="recording-dot"></span> PAUSED';
+
+    if (recognition) {
+        try { recognition.stop(); } catch(e) {}
+    }
 }
 
 async function finishAnswer() {
@@ -294,15 +312,19 @@ async function finishAnswer() {
     document.getElementById('btnStartAns').classList.add('hidden');
     document.getElementById('btnNextQ').classList.add('hidden');
     
-    document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--warning); box-shadow: 0 0 8px var(--warning); animation: none;"></span> EVALUATING';
+    document.getElementById('miStatus').innerHTML = '<span class="recording-dot"></span> EVALUATING';
+    
+    if (recognition) {
+        try { recognition.stop(); } catch(e) {}
+    }
     
     const user = typeof AppState !== 'undefined' ? AppState.getUser() : null;
     const currentQ = currentQuestions[currentMiQuestion];
     const qId = currentQ.id;
     
     try {
-        // 1. Save mocked answer to interview_answers
-        const mockAnswerText = "This is a simulated user response to the question since no microphone input is processed.";
+        // 1. Save transcript answer to interview_answers
+        const mockAnswerText = transcriptText.trim() || "No audio detected. (Mock transcription fallback)";
         const { data: answerData, error: ansErr } = await window.db
             .from('interview_answers')
             .insert([{
@@ -340,7 +362,7 @@ async function finishAnswer() {
 
         // 4. Update UI to finished state
         document.getElementById('miFinishedUI').classList.remove('hidden');
-        document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--success); box-shadow: 0 0 8px var(--success); animation: none;"></span> COMPLETE';
+        document.getElementById('miStatus').innerHTML = '<span class="recording-dot is-success"></span> COMPLETE';
         document.getElementById('btnNextQ').classList.remove('hidden');
         
         if (currentMiQuestion === currentQuestions.length - 1) {
@@ -349,7 +371,7 @@ async function finishAnswer() {
     } catch (e) {
         console.error("Failed to process answer:", e);
         alert("Failed to save answer or evaluate. Please try again.");
-        document.getElementById('miStatus').innerHTML = '<span class="recording-dot" style="background-color: var(--error); box-shadow: 0 0 8px var(--error); animation: none;"></span> ERROR';
+        document.getElementById('miStatus').innerHTML = '<span class="recording-dot is-error"></span> ERROR';
         document.getElementById('btnFinishAns').classList.remove('hidden');
     }
 }
@@ -363,6 +385,10 @@ function nextMiQuestion() {
         const qText = currentQuestions[currentMiQuestion].question_text || currentQuestions[currentMiQuestion];
         document.getElementById('miQuestionText').textContent = `"${qText}"`;
         
+        transcriptText = "";
+        const transcriptBox = document.getElementById('miTranscriptBox');
+        if (transcriptBox) transcriptBox.value = "";
+        
         document.getElementById('btnStartAns').textContent = "Start Answer";
         resetMiUI();
     } else {
@@ -372,6 +398,10 @@ function nextMiQuestion() {
 
 async function finishInterview() {
     clearInterval(miTimerInterval);
+    stopMediaStream();
+    if (recognition) {
+        try { recognition.stop(); } catch(e) {}
+    }
     
     try {
         // 1. Fetch all feedbacks for this attempt
@@ -449,12 +479,108 @@ async function finishInterview() {
     }
 }
 
-// --- Cosmetic Toggles for New UI ---
+// --- Media Stream & Cosmetic Toggles for New UI ---
 let isMuted = false;
 let isVideoOff = false;
 
+async function initMediaStream() {
+    try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const videoElement = document.getElementById('userVideoPreview');
+        if (videoElement) {
+            videoElement.srcObject = mediaStream;
+            videoElement.style.display = 'block';
+        }
+        const pipPlaceholder = document.querySelector('.pip-placeholder');
+        if (pipPlaceholder) {
+            pipPlaceholder.style.display = 'none';
+        }
+        
+        isMuted = false;
+        isVideoOff = false;
+        
+        const micBtns = document.querySelectorAll('.ctrl-btn[onclick="toggleMute(this)"]');
+        micBtns.forEach(btn => {
+            btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+            btn.style.color = '#fff';
+        });
+        
+        const vidBtns = document.querySelectorAll('.ctrl-btn[onclick="toggleVideo(this)"]');
+        vidBtns.forEach(btn => {
+            btn.innerHTML = '<i class="fa-solid fa-video"></i>';
+            btn.style.color = '#fff';
+        });
+        
+    } catch (e) {
+        console.error("Camera/Mic access denied or unavailable", e);
+    }
+}
+
+function stopMediaStream() {
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+    }
+    const videoElement = document.getElementById('userVideoPreview');
+    if (videoElement) {
+        videoElement.srcObject = null;
+        videoElement.style.display = 'none';
+    }
+    const pipPlaceholder = document.querySelector('.pip-placeholder');
+    if (pipPlaceholder) {
+        pipPlaceholder.style.display = 'flex';
+        pipPlaceholder.innerHTML = '<i class="fa-solid fa-video-slash text-muted" style="font-size: 3rem;"></i>';
+    }
+}
+
+function initSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+            
+            if (finalTranscript) {
+                transcriptText += finalTranscript + ' ';
+            }
+            
+            const transcriptBox = document.getElementById('miTranscriptBox');
+            if (transcriptBox) {
+                transcriptBox.value = transcriptText + interimTranscript;
+                transcriptBox.scrollTop = transcriptBox.scrollHeight;
+            }
+        };
+        
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error);
+        };
+    } else {
+        console.warn("Speech recognition not supported in this browser.");
+    }
+}
+
 function toggleMute(btn) {
     isMuted = !isMuted;
+    
+    if (mediaStream) {
+        const audioTrack = mediaStream.getAudioTracks()[0];
+        if (audioTrack) {
+            audioTrack.enabled = !isMuted;
+        }
+    }
+    
     if (isMuted) {
         btn.innerHTML = '<i class=\"fa-solid fa-microphone-slash text-error\"></i>';
         btn.style.color = 'var(--error)';
@@ -467,11 +593,34 @@ function toggleMute(btn) {
 function toggleVideo(btn) {
     isVideoOff = !isVideoOff;
     const pipPlaceholder = document.querySelector('.pip-placeholder');
+    const videoElement = document.getElementById('userVideoPreview');
+    
+    if (mediaStream) {
+        const videoTrack = mediaStream.getVideoTracks()[0];
+        if (videoTrack) {
+            videoTrack.enabled = !isVideoOff;
+        }
+    }
+    
     if (isVideoOff) {
         btn.innerHTML = '<i class=\"fa-solid fa-video-slash text-error\"></i>';
-        if (pipPlaceholder) pipPlaceholder.innerHTML = '<i class=\"fa-solid fa-video-slash text-muted\" style=\"font-size: 1.5rem;\"></i>';
+        if (videoElement) videoElement.style.display = 'none';
+        if (pipPlaceholder) {
+            pipPlaceholder.style.display = 'flex';
+            pipPlaceholder.innerHTML = '<i class=\"fa-solid fa-video-slash text-muted\" style=\"font-size: 3rem;\"></i>';
+        }
     } else {
         btn.innerHTML = '<i class=\"fa-solid fa-video\"></i>';
-        if (pipPlaceholder) pipPlaceholder.innerHTML = '<i class=\"fa-solid fa-user\" style=\"font-size: 2rem; color: rgba(255,255,255,0.3);\"></i>';
+        btn.style.color = '#fff'; // Reset color
+        if (videoElement && mediaStream && mediaStream.getVideoTracks().length > 0) {
+             videoElement.style.display = 'block';
+             if (pipPlaceholder) pipPlaceholder.style.display = 'none';
+        } else {
+            // fallback if no camera
+            if (pipPlaceholder) {
+                pipPlaceholder.style.display = 'flex';
+                pipPlaceholder.innerHTML = '<i class=\"fa-solid fa-user\" style=\"font-size: 3rem; color: rgba(255,255,255,0.1);\"></i>';
+            }
+        }
     }
 }
