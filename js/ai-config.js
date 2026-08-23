@@ -10,7 +10,7 @@
  *   - mixtral-8x7b-32768       (great balance)
  *   - gemma2-9b-it             (Google Gemma via Groq)
  */
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "YOUR_API_KEY_HERE";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "llama-3.1-70b-versatile"; // Change model here if needed
