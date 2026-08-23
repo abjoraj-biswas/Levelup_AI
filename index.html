@@ -3,769 +3,504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up AI - Master Your Future</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>LevelUP.AI - Build Your Future</title>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Modern Minimalistic & Hyperistic Styles */
         :root {
-            --glass-bg: rgba(10, 11, 26, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --neon-glow: 0 0 20px rgba(0, 240, 255, 0.15);
-            --hyper-gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --navy: #0B132B;
+            --navy-light: #1A2542;
+            --green: #5A9E2F;
+            --green-hover: #4A8525;
+            --bg-gradient: linear-gradient(135deg, #FFF0E0 0%, #E8F5E9 50%, #D0ECE7 100%);
+            --white: #FFFFFF;
+            --gray-light: #F4F6F8;
+            --gray-text: #637381;
+            --border: #E5E8EB;
         }
 
-        body.landing-page {
-            font-size: 1.1rem;
-            background-color: var(--bg-primary);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(112, 0, 255, 0.04) 0%, transparent 50%);
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-primary);
+        * {
             margin: 0;
             padding: 0;
-        }
-
-        /* Navbar */
-        .landing-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 40px;
-            background: rgba(5, 5, 15, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 35px;
+        body {
+            background: var(--bg-gradient);
+            color: var(--navy);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .nav-links a {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-            text-decoration: none;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--hyper-gradient);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Typography Enhancements */
-        h1, h2, h3, .logo {
-            font-family: 'Outfit', sans-serif;
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--navy);
+            line-height: 1.2;
             letter-spacing: -0.02em;
         }
-
-        /* Hero Section */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 20px 60px;
-            position: relative;
-            box-sizing: border-box;
-        }
-
+        
         .hero-title {
-            font-size: 6rem;
-            font-weight: 800;
-            line-height: 1.1;
+            font-size: 5rem;
+            font-weight: 700;
             margin-bottom: 24px;
-            background: linear-gradient(to right, #ffffff, #a0a5cc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-subtitle {
             font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-            line-height: 1.6;
+            color: var(--navy-light);
+            max-width: 700px;
+            margin: 0 auto 40px;
         }
 
-        .hero-cta {
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-text);
+            margin-bottom: 48px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 20px 40px;
             display: flex;
-            gap: 20px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
         }
 
-        .btn-glow {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--green);
+            text-decoration: none;
+            display: flex;
             align-items: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
-            outline: none;
         }
+        .logo span { color: var(--navy); }
 
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--hyper-gradient);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .btn-glow.primary {
-            background: transparent;
-            border-color: transparent;
-            color: #000;
-            box-shadow: var(--neon-glow);
-        }
-
-        .btn-glow.primary::before {
-            opacity: 1;
-        }
-
-        .btn-glow:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.25);
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        /* 3D Floating Dash Preview */
-        .hero-visual {
-            margin-top: 80px;
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            height: 400px;
-            perspective: 1500px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease 0.6s forwards;
-        }
-
-        .floating-card {
-            position: absolute;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            transform-style: preserve-3d;
-            transition: transform 0.1s;
-            text-align: left;
-            box-sizing: border-box;
-        }
-
-        .fc-main {
-            width: 700px;
-            height: 350px;
-            left: 50%;
-            top: 0;
-            margin-left: -350px;
-            transform: rotateX(15deg) rotateY(0deg) translateZ(0);
+        nav {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            gap: 32px;
+            align-items: center;
         }
 
-        .fc-small-1 {
-            width: 250px;
-            right: -20px;
-            top: 80px;
-            transform: rotateX(10deg) rotateY(-15deg) translateZ(80px);
-            animation: float 6s ease-in-out infinite;
+        nav a {
+            text-decoration: none;
+            color: var(--navy-light);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
         }
 
-        .fc-small-2 {
-            width: 220px;
-            left: -10px;
-            bottom: 40px;
-            transform: rotateX(20deg) rotateY(15deg) translateZ(100px);
-            animation: float 8s ease-in-out infinite reverse;
+        nav a:hover {
+            color: var(--green);
         }
 
-        /* Bento Box Section */
-        .bento-section {
-            padding: 120px 20px;
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-black {
+            background: var(--navy);
+            color: var(--white);
+        }
+        .btn-black:hover {
+            background: #000;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: var(--navy);
+            background: var(--white);
+        }
+        .btn-outline:hover {
+            border-color: var(--navy);
+        }
+
+        .btn-green {
+            background: var(--green);
+            color: var(--white);
+        }
+        .btn-green:hover {
+            background: var(--green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(90, 158, 47, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 20px 100px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 80px;
+        }
+
+        .hero-illustration {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /* Sections */
+        .section-white {
+            background: var(--white);
+            padding: 100px 20px;
+        }
+
+        .section-gray {
+            background: var(--gray-light);
+            padding: 100px 20px;
+        }
+        
+        .container {
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .section-tag {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--primary);
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .section-title {
-            font-size: 3.5rem;
-            margin-bottom: 60px;
-        }
-
-        .bento-grid {
+        /* Cards */
+        .grid-2 {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: minmax(280px, auto);
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
         }
 
-        .bento-card {
-            padding: 50px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .bento-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            background: rgba(20, 22, 40, 0.6);
-            border-color: rgba(0, 240, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .bento-card.large {
-            grid-column: span 2;
-        }
-        
-        .bento-card.tall {
-            grid-row: span 2;
-        }
-
-        .bento-icon {
-            width: 60px;
-            height: 60px;
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border);
             border-radius: 16px;
-            background: rgba(255,255,255,0.03);
+            padding: 40px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.06);
+            border-color: var(--green);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(90, 158, 47, 0.1);
+            color: var(--green);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
-        .bento-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .bento-content p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Journey Timeline */
-        .journey-section {
-            padding: 120px 20px;
-            background: linear-gradient(180deg, transparent, rgba(5,5,15,0.8));
-        }
-
-        .journey-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .journey-line {
-            position: absolute;
-            top: 0; bottom: 0;
-            left: 50%;
-            width: 2px;
-            background: var(--glass-border);
-            transform: translateX(-50%);
-        }
-
-        .journey-line-fill {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            background: var(--hyper-gradient);
-            width: 100%;
-            height: 0%;
-            transition: height 0.5s ease-out;
-        }
-
-        .journey-step {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 80px;
-            position: relative;
-            width: 100%;
-        }
-
-        .journey-step:last-child { margin-bottom: 0; }
-        
-        .journey-step:nth-child(even) { flex-direction: row-reverse; }
-
-        .journey-content {
-            padding: 40px;
-            width: 42%;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+        /* Stats */
+        .stat-card {
+            text-align: center;
             padding: 30px;
-            border-radius: 24px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box;
+            border-right: 1px solid var(--border);
         }
-
-        .journey-step.visible .journey-content {
-            opacity: 1;
-            transform: translateY(0);
+        .stat-card:last-child { border-right: none; }
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 8px;
         }
-
-        .journey-dot {
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            background: var(--bg-primary);
-            border: 4px solid var(--glass-border);
-            position: absolute;
-            left: 50%; top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            transition: all 0.5s ease;
-        }
-
-        .journey-step.visible .journey-dot {
-            border-color: var(--primary);
-            box-shadow: var(--neon-glow);
-        }
-
+        
         /* Footer */
-        .minimal-footer {
-            padding: 60px 40px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-primary);
+        footer {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 80px 20px 40px;
         }
 
-        /* Animations */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .footer-col h4 {
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            color: var(--navy);
         }
 
-        @keyframes float {
-            0% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(0); }
-            50% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(-15px); }
-            100% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(0); }
+        .footer-col ul {
+            list-style: none;
         }
 
-        /* Reveal utility for intersection observer */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        .footer-col ul li {
+            margin-bottom: 12px;
         }
 
-        /* Mock UI Elements for Hero */
-        .mock-nav { height: 20px; background: rgba(255,255,255,0.05); border-radius: 10px; width: 30%; margin-bottom: 20px; }
-        .mock-bar { height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 10px; }
-        .mock-bar.w-full { width: 100%; }
-        .mock-bar.w-3-4 { width: 75%; }
-        .mock-bar.w-1-2 { width: 50%; }
-        .mock-accent { background: var(--primary); width: 60%; box-shadow: 0 0 10px rgba(0,240,255,0.4); }
+        .footer-col ul li a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-col ul li a:hover {
+            color: var(--green);
+        }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .hero-title { font-size: 3.5rem; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .bento-card.large, .bento-card.tall { grid-column: span 1; grid-row: span 1; }
-            .hero-visual { display: none; }
-            .journey-line { left: 20px; }
-            .journey-step, .journey-step:nth-child(even) { flex-direction: column; align-items: flex-start; }
-            .journey-content { width: calc(100% - 50px); margin-left: 50px; }
-            .journey-dot { left: 20px; top: 30px; transform: translate(-50%, -50%); }
-            .hidden-mobile { display: none; }
+            .grid-2, .grid-4, .footer-grid { grid-template-columns: 1fr; }
+            .stat-card { border-right: none; border-bottom: 1px solid var(--border); }
+            nav { display: none; } /* Mobile menu simplified */
         }
     </style>
 </head>
-<body class="landing-page">
+<body>
 
-    <!-- Navigation -->
-    <nav class="landing-nav">
-        <div class="logo">LevelUP<span style="color:var(--primary)">.AI</span></div>
-        <div class="nav-links hidden-mobile">
-            <a href="#features">Platform</a>
-            <a href="#journey">Journey</a>
-            <a href="bughunting.html">Bug Hunting</a>
-            <a href="corporate.html">For Enterprise</a>
-        </div>
-        <div style="display:flex; align-items:center; gap: 15px;">
-            <a href="login.html" style="color:var(--text-primary); text-decoration:none; font-weight:500; font-size:0.95rem;">Log in</a>
-            <button class="btn-glow primary" onclick="window.location.href='login.html'">
-                Get Started
-                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-            </button>
-        </div>
-    </nav>
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">LevelUP<span>.AI</span></a>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#impact">Impact</a>
+            <a href="#ecosystem">Ecosystem</a>
+            <a href="login.html" class="btn btn-outline" style="margin-left: 20px;">Public Map</a>
+            <a href="login.html" class="btn btn-black">Admin Portal</a>
+        </nav>
+    </header>
 
-    <!-- Hero -->
-    <section class="hero-section">
-        <h1 class="hero-title">Master Your Future<br>With AI-Guided Learning.</h1>
-        <p class="hero-subtitle">LevelUP.AI is the intelligent platform that tracks your skills, targets your weaknesses, and accelerates your career through hyper-personalized coaching and real-world challenges.</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">Claim your rights,<br>build your future</h1>
+        <p class="hero-subtitle">Take control of your civic life by discovering welfare schemes you qualify for and ensuring your grievances are heard securely.</p>
         
-        <div class="hero-cta">
-            <button class="btn-glow primary" onclick="window.location.href='login.html'">Start Learning Now</button>
-            <button class="btn-glow" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Explore Platform</button>
+        <div class="hero-actions">
+            <a href="login.html" class="btn btn-outline">Browse Schemes</a>
+            <a href="login.html" class="btn btn-green">Report Grievance</a>
         </div>
 
-        <div class="hero-visual" id="heroVisual">
-            <!-- Main Dashboard Card -->
-            <div class="floating-card fc-main">
-                <div class="mock-nav"></div>
-                <div style="display:flex; gap:16px; height:100%;">
-                    <div style="flex:2; background:rgba(255,255,255,0.02); border-radius:16px; padding:20px;">
-                        <h4 style="margin-bottom:15px; color:var(--text-secondary); margin-top:0;">Learning Velocity</h4>
-                        <div class="mock-bar w-full"></div>
-                        <div class="mock-bar mock-accent" style="height:4px; margin-bottom:30px;"></div>
-                        <div class="mock-bar w-3-4"></div>
-                        <div class="mock-bar w-1-2"></div>
+        <!-- Abstract Illustration matching the wireframe aesthetic -->
+        <div class="hero-illustration">
+            <div style="text-align:center; color: var(--green);">
+                <i data-lucide="building" style="width: 80px; height: 80px; stroke-width: 1;"></i>
+                <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem;">ENTERPRISE</p>
+            </div>
+            <div style="text-align:center; color: var(--navy-light);">
+                <i data-lucide="users" style="width: 60px; height: 60px; stroke-width: 1;"></i>
+                <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem;">COMMUNITY</p>
+            </div>
+            <div style="text-align:center; color: var(--green);">
+                <i data-lucide="tree-pine" style="width: 80px; height: 80px; stroke-width: 1;"></i>
+                <p style="margin-top: 10px; font-weight: 600; font-size: 0.9rem;">WELLNESS</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Steps -->
+    <section class="section-white" id="features">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 class="section-title">Engineered for Transparency</h2>
+                <p class="section-subtitle">A civic platform designed for accountability and rapid resolution.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="file-check-2"></i></div>
+                    <h3>Eligibility Verification</h3>
+                    <p style="color:var(--gray-text); margin-top:12px;">Instantly check your eligibility for hundreds of government and local welfare schemes using our adaptive matching engine.</p>
+                    <a href="login.html" style="color:var(--green); text-decoration:none; font-weight:600; display:inline-block; margin-top:20px;">Learn more &rarr;</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="shield-alert"></i></div>
+                    <h3>Secure Grievance Reporting</h3>
+                    <p style="color:var(--gray-text); margin-top:12px;">File reports and track civic issues with end-to-end encryption. Your identity remains protected while authorities take action.</p>
+                    <a href="login.html" style="color:var(--green); text-decoration:none; font-weight:600; display:inline-block; margin-top:20px;">Learn more &rarr;</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="line-chart"></i></div>
+                    <h3>Public Data Map</h3>
+                    <p style="color:var(--gray-text); margin-top:12px;">Visualize resolution rates, active grievances, and welfare distribution in your district via our real-time geographic portal.</p>
+                    <a href="login.html" style="color:var(--green); text-decoration:none; font-weight:600; display:inline-block; margin-top:20px;">Learn more &rarr;</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="building-2"></i></div>
+                    <h3>Department Portal</h3>
+                    <p style="color:var(--gray-text); margin-top:12px;">Dedicated interfaces for municipal workers and government officials to resolve tickets and manage scheme disbursements.</p>
+                    <a href="login.html" style="color:var(--green); text-decoration:none; font-weight:600; display:inline-block; margin-top:20px;">Learn more &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="section-gray" id="impact">
+        <div class="container">
+            <div class="grid-4" style="background:var(--white); border-radius:24px; box-shadow:0 10px 30px rgba(0,0,0,0.03); border:1px solid var(--border);">
+                <div class="stat-card">
+                    <div class="stat-number">12k+</div>
+                    <div style="color:var(--navy-light); font-weight:500;">Citizens Assisted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">850+</div>
+                    <div style="color:var(--navy-light); font-weight:500;">Issues Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">95%</div>
+                    <div style="color:var(--navy-light); font-weight:500;">Resolution Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">40+</div>
+                    <div style="color:var(--navy-light); font-weight:500;">Active Schemes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem -->
+    <section class="section-white" id="ecosystem">
+        <div class="container">
+            <h2 class="section-title" style="text-align:center;">Our Services</h2>
+            <p class="section-subtitle" style="text-align:center; max-width:600px; margin: 0 auto 60px;">Comprehensive tools to bridge the gap between citizens and administration.</p>
+
+            <div class="grid-2">
+                <!-- Service 1 -->
+                <div style="display:flex; gap:20px; padding:30px; background:var(--gray-light); border-radius:16px;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i data-lucide="file-text" style="color:var(--navy);"></i>
                     </div>
-                    <div style="flex:1; background:rgba(255,255,255,0.02); border-radius:16px; padding:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                        <i data-lucide="zap" style="color:var(--warning); margin-bottom:10px;"></i>
-                        <h3 style="font-size:2.5rem; margin:0;">14</h3>
-                        <span style="font-size:0.8rem; color:var(--text-secondary)">Day Streak</span>
+                    <div>
+                        <h3 style="margin-bottom:8px;">Scheme Enrollment</h3>
+                        <p style="color:var(--gray-text); margin-bottom:16px;">Step-by-step guidance for applying to welfare schemes without intermediaries.</p>
+                        <a href="login.html" style="color:var(--navy); font-weight:600; text-decoration:none;">Apply Now &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div style="display:flex; gap:20px; padding:30px; background:var(--gray-light); border-radius:16px;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i data-lucide="alert-triangle" style="color:var(--navy);"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom:8px;">Grievance Redressal</h3>
+                        <p style="color:var(--gray-text); margin-bottom:16px;">Log complaints regarding water, electricity, roads, and track their status in real-time.</p>
+                        <a href="login.html" style="color:var(--navy); font-weight:600; text-decoration:none;">Lodge Complaint &rarr;</a>
+                    </div>
+                </div>
+                
+                <!-- Service 3 -->
+                <div style="display:flex; gap:20px; padding:30px; background:var(--gray-light); border-radius:16px;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i data-lucide="map" style="color:var(--navy);"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom:8px;">Local Mapping</h3>
+                        <p style="color:var(--gray-text); margin-bottom:16px;">Interactive map showing locations of ongoing civil works, healthcare centers, and camps.</p>
+                        <a href="login.html" style="color:var(--navy); font-weight:600; text-decoration:none;">View Map &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div style="display:flex; gap:20px; padding:30px; background:var(--gray-light); border-radius:16px;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--white); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i data-lucide="users" style="color:var(--navy);"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom:8px;">Community Forum</h3>
+                        <p style="color:var(--gray-text); margin-bottom:16px;">Connect with local representatives and community leaders to discuss neighborhood issues.</p>
+                        <a href="login.html" style="color:var(--navy); font-weight:600; text-decoration:none;">Join Discussion &rarr;</a>
                     </div>
                 </div>
             </div>
-
-            <!-- Floating Assessment Card -->
-            <div class="floating-card fc-small-1">
-                <i data-lucide="brain-circuit" style="color:var(--secondary); margin-bottom:15px;"></i>
-                <h4 style="margin-top:0; margin-bottom:5px;">AI Coach</h4>
-                <p style="font-size:0.75rem; color:var(--text-secondary); margin:0;">Your personalized learning path has been updated.</p>
-            </div>
-
-            <!-- Floating Skill Card -->
-            <div class="floating-card fc-small-2" style="display:flex; align-items:center; gap:15px;">
-                <div style="width:40px; height:40px; border-radius:10px; background:rgba(0,240,255,0.1); color:var(--primary); display:flex; justify-content:center; align-items:center;">
-                    <i class="fa-brands fa-js" style="font-size: 1.2rem;"></i>
-                </div>
-                <div>
-                    <h4 style="margin:0; font-size:0.9rem;">JavaScript</h4>
-                    <span style="font-size:0.7rem; color:var(--success)">Advanced Level</span>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Bento Features Section -->
-    <section class="bento-section" id="features">
-        <div style="text-align:center;" class="reveal">
-            <span class="section-tag">The Platform</span>
-            <h2 class="section-title">Everything you need to level up.</h2>
-        </div>
-
-        <div class="bento-grid">
-            <!-- Large Card 1 -->
-            <div class="bento-card large reveal">
-                <div class="bento-icon"><i data-lucide="brain"></i></div>
-                <div class="bento-content">
-                    <h3>AI Learning Coach</h3>
-                    <p>Stop guessing what to learn next. Our proprietary AI analyzes your assessment data to pinpoint exactly which topics you need to practice, generating custom learning paths and explanations on the fly.</p>
-                </div>
-                <!-- Abstract visual -->
-                <div style="position:absolute; right:-50px; bottom:-50px; width:200px; height:200px; background:radial-gradient(circle, rgba(112,0,255,0.2) 0%, transparent 70%); border-radius:50%; z-index:0; pointer-events:none;"></div>
-            </div>
-
-            <!-- Tall Card 2 -->
-            <div class="bento-card tall reveal">
-                <div class="bento-icon" style="color:var(--warning)"><i data-lucide="video"></i></div>
-                <div class="bento-content">
-                    <h3>Interactive Mock Interviews</h3>
-                    <p>Practice makes perfect. Face our AI interviewer in real-time video sessions. It listens to your voice, transcribes your answers, and provides instant feedback on your communication and technical accuracy.</p>
-                </div>
-            </div>
-
-            <!-- Normal Card 3 -->
-            <div class="bento-card reveal">
-                <div class="bento-icon" style="color:var(--success)"><i data-lucide="target"></i></div>
-                <div class="bento-content">
-                    <h3>Adaptive Assessments</h3>
-                    <p>Test your limits with dynamically generated challenges that adjust to your skill level in real-time.</p>
-                </div>
-            </div>
-
-            <!-- Normal Card 4 -->
-            <div class="bento-card reveal">
-                <div class="bento-icon" style="color:var(--danger)"><i data-lucide="bug"></i></div>
-                <div class="bento-content">
-                    <h3>Bug Hunting</h3>
-                    <p>Prove your mettle. Solve real-world code bugs and earn bounties to showcase your practical expertise.</p>
-                </div>
-            </div>
-
-            <!-- Large Card 5 -->
-            <div class="bento-card large reveal">
-                <div class="bento-icon" style="color:#e0e0e0"><i data-lucide="building-2"></i></div>
-                <div class="bento-content">
-                    <h3>Corporate Matches</h3>
-                    <p>Your skills act as your resume. Top enterprises browse LevelUP.AI to recruit proven talent directly based on their assessment scores, interview performance, and bug-hunting track record.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Journey Timeline -->
-    <section class="journey-section" id="journey">
-        <div style="text-align:center; margin-bottom:80px;" class="reveal">
-            <span class="section-tag">Your Journey</span>
-            <h2 class="section-title">From Student to Hired Professional</h2>
-        </div>
-
-        <div class="journey-container" id="journeyContainer">
-            <div class="journey-line">
-                <div class="journey-line-fill" id="journeyLineFill"></div>
-            </div>
-
-            <div class="journey-step reveal-step">
-                <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">01</h1>
-                    <h3 style="margin:0 0 10px 0; color:var(--text-primary);">Learn & Track</h3>
-                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Select your desired tech stack and dive into structured curricula while the dashboard maps your progress in real-time.</p>
-                </div>
-                <div class="journey-dot"></div>
-                <div style="width: 42%;"></div> <!-- Spacer -->
-            </div>
-
-            <div class="journey-step reveal-step">
-                <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">02</h1>
-                    <h3 style="margin:0 0 10px 0; color:var(--primary);">Practice & Refine</h3>
-                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Take adaptive assessments. Let the AI coach analyze your weak spots and guide you through highly targeted practice loops.</p>
-                </div>
-                <div class="journey-dot"></div>
-                <div style="width: 42%;"></div> <!-- Spacer -->
-            </div>
-
-            <div class="journey-step reveal-step">
-                <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">03</h1>
-                    <h3 style="margin:0 0 10px 0; color:var(--secondary);">Prove & Earn</h3>
-                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Participate in mock interviews and bug-hunting campaigns to earn verifiable credentials and stand out from the crowd.</p>
-                </div>
-                <div class="journey-dot"></div>
-                <div style="width: 42%;"></div> <!-- Spacer -->
-            </div>
-
-            <div class="journey-step reveal-step">
-                <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">04</h1>
-                    <h3 style="margin:0 0 10px 0; color:var(--success);">Get Discovered</h3>
-                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Top tech companies review your verified skill profile and offer direct matches for roles that perfectly fit your proven abilities.</p>
-                </div>
-                <div class="journey-dot"></div>
-                <div style="width: 42%;"></div> <!-- Spacer -->
-            </div>
-        </div>
-    </section>
-
-    
-    <!-- Ecosystem Summary Section -->
-    <section class="ecosystem-section" id="ecosystem" style="padding: 120px 20px; max-width: 1200px; margin: 0 auto;">
-        <div style="text-align:center; margin-bottom:80px;" class="reveal">
-            <span class="section-tag">Complete Overview</span>
-            <h2 class="section-title">The LevelUP Ecosystem</h2>
-            <p style="color:var(--text-secondary); max-width:700px; margin: 0 auto; font-size:1.1rem;">Explore every tool and feature designed to take you from a curious beginner to a hired professional.</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-            <!-- Categories -->
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px;">
-                <i data-lucide="book-open" style="color:var(--primary); margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Learning & Skills</h3>
-                <ul style="list-style:none; padding:0; margin:0; color:var(--text-secondary); line-height:2.2;">
-                    <li><a href="skills.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Skill Library</a></li>
-                    <li><a href="skill-details.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Interactive Courses</a></li>
-                    <li><a href="learning.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Learning Paths</a></li>
-                </ul>
-            </div>
-
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px;">
-                <i data-lucide="target" style="color:var(--success); margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Assessment</h3>
-                <ul style="list-style:none; padding:0; margin:0; color:var(--text-secondary); line-height:2.2;">
-                    <li><a href="assessments.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Adaptive Tests</a></li>
-                    <li><a href="progress.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Progress Analytics</a></li>
-                    <li><a href="recommendations.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">AI Recommendations</a></li>
-                </ul>
-            </div>
-
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px;">
-                <i data-lucide="shield-alert" style="color:var(--danger); margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Prove Your Skills</h3>
-                <ul style="list-style:none; padding:0; margin:0; color:var(--text-secondary); line-height:2.2;">
-                    <li><a href="bughunting.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Bug Hunting</a></li>
-                    <li><a href="bug-details.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Active Bounties</a></li>
-                    <li><a href="mock-interviews.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">AI Mock Interviews</a></li>
-                </ul>
-            </div>
-
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px;">
-                <i data-lucide="building-2" style="color:#e0e0e0; margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Enterprise & Jobs</h3>
-                <ul style="list-style:none; padding:0; margin:0; color:var(--text-secondary); line-height:2.2;">
-                    <li><a href="corporate.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Corporate Portal</a></li>
-                    <li><a href="company-details.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Company Profiles</a></li>
-                    <li><a href="opportunity-details.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Job Opportunities</a></li>
-                </ul>
-            </div>
-
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px;">
-                <i data-lucide="user" style="color:var(--secondary); margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Your Profile</h3>
-                <ul style="list-style:none; padding:0; margin:0; color:var(--text-secondary); line-height:2.2;">
-                    <li><a href="dashboard.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Main Dashboard</a></li>
-                    <li><a href="profile.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">User Profile</a></li>
-                    <li><a href="career-profile.html" style="color:inherit; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='inherit'">Career Profile</a></li>
-                </ul>
-            </div>
-            
-            <div class="glass-card reveal" style="padding:40px; border-radius:24px; background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.2); display:flex; flex-direction:column; justify-content:center;">
-                <i data-lucide="rocket" style="color:var(--primary); margin-bottom:20px; width:40px; height:40px;"></i>
-                <h3 style="margin-bottom:15px; font-size:1.5rem;">Ready to Start?</h3>
-                <p style="color:var(--text-secondary); margin-bottom: 25px; line-height:1.6;">Join thousands of developers leveling up their careers today.</p>
-                <button class="btn-glow primary" onclick="window.location.href='login.html'" style="width:100%; justify-content:center;">Create Account</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fat Footer -->
-    <footer style="background: rgba(5,5,15,0.9); border-top: 1px solid var(--glass-border); padding: 80px 20px 40px; margin-top: 50px;">
-        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px;">
-            <!-- Brand -->
-            <div style="grid-column: span 2;">
-                <div class="logo" style="font-size:2rem; margin-bottom: 15px;">LevelUP<span style="color:var(--primary)">.AI</span></div>
-                <p style="color:var(--text-secondary); font-size: 0.95rem; line-height: 1.6; max-width: 300px; margin-bottom: 25px;">
-                    The intelligent platform that tracks your skills, targets your weaknesses, and accelerates your tech career.
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col" style="grid-column: span 2;">
+                <div class="logo" style="margin-bottom:16px;">LevelUP<span>.AI</span></div>
+                <p style="color:var(--gray-text); max-width:300px; margin-bottom:24px;">
+                    Empowering citizens through transparency, accessibility, and efficient civic management.
                 </p>
-                <div style="display:flex; gap: 15px;">
-                    <a href="#" style="color:var(--text-secondary); font-size:1.4rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" style="color:var(--text-secondary); font-size:1.4rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" style="color:var(--text-secondary); font-size:1.4rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fa-brands fa-discord"></i></a>
-                    <a href="#" style="color:var(--text-secondary); font-size:1.4rem; transition: color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fa-brands fa-linkedin"></i></a>
+                <div style="display:flex; gap:16px;">
+                    <a href="#" style="color:var(--navy);"><i data-lucide="twitter"></i></a>
+                    <a href="#" style="color:var(--navy);"><i data-lucide="linkedin"></i></a>
+                    <a href="#" style="color:var(--navy);"><i data-lucide="facebook"></i></a>
                 </div>
             </div>
-
-            <!-- Product -->
-            <div>
-                <h4 style="color: #fff; margin-bottom: 20px; font-size: 1.2rem;">Product</h4>
-                <ul style="list-style:none; padding:0; margin:0; line-height: 2.2;">
-                    <li><a href="assessments.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Adaptive Assessments</a></li>
-                    <li><a href="mock-interviews.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Mock Interviews</a></li>
-                    <li><a href="bughunting.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Bug Hunting</a></li>
-                    <li><a href="recommendations.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">AI Coach</a></li>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="login.html">Find Schemes</a></li>
+                    <li><a href="login.html">Report Issue</a></li>
+                    <li><a href="login.html">Public Map</a></li>
+                    <li><a href="login.html">Admin Portal</a></li>
                 </ul>
             </div>
-
-            <!-- Resources -->
-            <div>
-                <h4 style="color: #fff; margin-bottom: 20px; font-size: 1.2rem;">Resources</h4>
-                <ul style="list-style:none; padding:0; margin:0; line-height: 2.2;">
-                    <li><a href="skills.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Skill Library</a></li>
-                    <li><a href="learning.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Learning Paths</a></li>
-                    <li><a href="#" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Help Center</a></li>
-                    <li><a href="#" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">API Documentation</a></li>
-                </ul>
-            </div>
-
-            <!-- Company -->
-            <div>
-                <h4 style="color: #fff; margin-bottom: 20px; font-size: 1.2rem;">Company</h4>
-                <ul style="list-style:none; padding:0; margin:0; line-height: 2.2;">
-                    <li><a href="corporate.html" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">For Enterprise</a></li>
-                    <li><a href="#" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">About Us</a></li>
-                    <li><a href="#" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Privacy Policy</a></li>
-                    <li><a href="#" style="color:var(--text-secondary); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Terms of Service</a></li>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
                 </ul>
             </div>
         </div>
-
-        <div style="max-width: 1200px; margin: 0 auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <p style="color:var(--text-muted); font-size:0.9rem; margin:0;">© 2024 LevelUP AI. All rights reserved.</p>
-            <div style="display:flex; gap: 20px; color:var(--text-muted); font-size:0.9rem;">
-                <span>Designed with precision</span>
-                <span>System Status: <span style="color:var(--success);">● All Systems Operational</span></span>
-            </div>
+        <div class="container" style="border-top: 1px solid var(--border); padding-top: 24px; display:flex; justify-content:space-between; align-items:center; color:var(--gray-text); font-size:0.9rem;">
+            <p>&copy; 2024 LevelUP.AI platform. Inspired by JanSuvidha.</p>
+            <p>System Status: <span style="color:var(--green); font-weight:600;">Operational</span></p>
         </div>
     </footer>
 
-
-    <!-- Scripts for animations -->
     <script>
+        // Initialize lucide icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
