@@ -973,5 +973,57 @@
 
     <!-- Scripts for animations -->
     <script>
-</body >
-</html >
+        lucide.createIcons();
+
+        // 3D Hover Effect for Hero
+        const heroVisual = document.getElementById('heroVisual');
+        document.addEventListener('mousemove', (e) => {
+            if(!heroVisual) return;
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            heroVisual.style.transform = `perspective(1500px) rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+
+        // Intersection Observer for scroll animations (Reveal)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if(entry.target.classList.contains('reveal-step')) {
+                        entry.target.classList.add('visible');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, .reveal-step').forEach(el => observer.observe(el));
+
+        // Journey Timeline Fill Animation
+        const journeyContainer = document.getElementById('journeyContainer');
+        const journeyLineFill = document.getElementById('journeyLineFill');
+        
+        window.addEventListener('scroll', () => {
+            if(!journeyContainer || !journeyLineFill) return;
+            
+            const rect = journeyContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate how far we've scrolled into the container
+            if(rect.top < viewportHeight / 2 && rect.bottom > 0) {
+                const totalHeight = rect.height;
+                const scrolled = (viewportHeight / 2) - rect.top;
+                let percentage = (scrolled / totalHeight) * 100;
+                
+                // Clamp between 0 and 100
+                percentage = Math.max(0, Math.min(100, percentage));
+                journeyLineFill.style.height = `${percentage}%`;
+            }
+        });
+    </script>
+</body>
+</html>
