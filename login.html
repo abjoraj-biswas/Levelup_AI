@@ -704,6 +704,15 @@
             }
         }
         
+
+        // Check for mode=register in URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'register') {
+                switchTab('register');
+            }
+        });
+
         function mockSocialAuth() {
             showToast('Social authentication processing...', 'success');
             setTimeout(() => {
