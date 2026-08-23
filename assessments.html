@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessments - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .assessment-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .question-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 40px; box-shadow: var(--shadow-soft); }
+        .option-btn { width: 100%; padding: 20px; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--border-radius-md); color: var(--text-primary); font-size: 1.1rem; margin-bottom: 15px; transition: var(--transition-normal); display: flex; align-items: center; gap: 15px; }
+        .option-btn:hover { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); transform: translateX(5px); }
+        .option-btn.selected { background: rgba(0, 85, 255, 0.2); border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); }
+        .option-letter { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .selected .option-letter { background: var(--primary); color: #000; }
+        .score-circle { width: 180px; height: 180px; border-radius: 50%; border: 10px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; margin: 0 auto 30px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); position: relative; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; align-items: center; }
+        .filter-select { padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); border-radius: var(--border-radius-md); }
+        .filter-search { flex: 1; min-width: 200px; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); border-radius: var(--border-radius-md); }
+        .question-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .q-nav-item { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.05); }
+        .q-nav-item.completed { background: rgba(0, 255, 170, 0.2); border-color: #00ffaa; color: #00ffaa; }
+        .q-nav-item.current { background: var(--primary); color: #000; font-weight: bold; }
+        .q-nav-item.marked { border-color: var(--warning); color: var(--warning); }
+        
+        .mic-animation {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: rgba(0, 229, 255, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: var(--primary); margin: 0 auto 20px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+    </style>
+</head>
+
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item active">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item ">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                            </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h2>Assessments</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- LIBRARY VIEW -->
+                <div id="assessmentsLibraryView">
+                    <h1 class="mb-1">Assessments</h1>
+                    <p class="text-secondary mb-4">Test your knowledge, identify your weak areas and improve your skills.</p>
+                    
+                    <div class="grid-4 mb-4">
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Available Assessments</p>
+                            <h2 style="font-size: 2rem;" id="sumAvailable">0</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Completed</p>
+                            <h2 style="font-size: 2rem;" class="text-success" id="sumCompleted">0</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Average Score</p>
+                            <h2 style="font-size: 2rem;" class="text-primary" id="sumScore">0%</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Recommended</p>
+                            <h2 style="font-size: 2rem;" class="text-warning" id="sumRecommended">0</h2>
+                        </div>
+                    </div>
+
+                    <div class="filter-bar">
+                        <input type="text" id="assessmentSearch" class="filter-search" placeholder="Search assessments...">
+                        <select id="assessmentStatus" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="new">New</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="assessmentDifficulty" class="filter-select">
+                            <option value="all">Any Difficulty</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                        <select id="assessmentCategory" class="filter-select">
+                            <option value="all">Any Category</option>
+                            <option value="Programming">Programming</option>
+                            <option value="DSA">DSA</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="AI/ML">AI/ML</option>
+                        </select>
+                    </div>
+
+                    <h2 class="mb-3">New Assessments</h2>
+                    <div class="grid-3 mb-5" id="newAssessmentsGrid"></div>
+
+                    <h2 class="mb-3">All Assessments</h2>
+                    <div class="grid-3 mb-5" id="allAssessmentsGrid"></div>
+
+                    <h2 class="mb-3">Assessment History</h2>
+                    <div class="glass-card mb-5">
+                        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--border);">
+                                    <th style="padding: 15px;">Assessment</th>
+                                    <th style="padding: 15px;">Date</th>
+                                    <th style="padding: 15px;">Score</th>
+                                    <th style="padding: 15px;">Status</th>
+                                    <th style="padding: 15px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DETAIL VIEW -->
+                <div id="assessmentDetailView" class="hidden assessment-container">
+                    <button class="btn-outline mb-4" onclick="showView('assessmentsLibraryView')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <h1 class="mb-2" id="detailTitle">Assessment Title</h1>
+                    <p class="text-secondary mb-4" id="detailDesc">Test your understanding of fundamentals.</p>
+                    
+                    <div class="grid-2 gap-4 mb-4">
+                        <div class="glass-card" style="padding: 25px;">
+                            <h3 class="mb-3">Assessment Information</h3>
+                            <ul class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;">
+                                <li><i class="fa-solid fa-list-ol mr-2"></i> Questions: <span id="detailQuestions">20</span></li>
+                                <li><i class="fa-solid fa-clock mr-2"></i> Duration: <span id="detailDuration">25 Minutes</span></li>
+                                <li><i class="fa-solid fa-layer-group mr-2"></i> Difficulty: <span id="detailDifficulty">Intermediate</span></li>
+                                <li><i class="fa-solid fa-bullseye mr-2"></i> Passing Score: <span id="detailPass">60%</span></li>
+                            </ul>
+                        </div>
+                        <div class="glass-card" style="padding: 25px;">
+                            <h3 class="mb-3">Skills Tested</h3>
+                            <ul class="text-secondary" style="line-height: 1.8;" id="detailSkills">
+                                <li>JavaScript</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card mb-4" style="padding: 25px;">
+                        <h3 class="mb-3">Instructions</h3>
+                        <ol class="text-secondary" style="line-height: 1.8; padding-left: 20px;">
+                            <li>Read every question carefully.</li>
+                            <li>Select the best answer.</li>
+                            <li>You can move between questions.</li>
+                            <li>Submit before the timer ends.</li>
+                            <li>Your performance will be analyzed after submission.</li>
+                        </ol>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="mb-3">Select Difficulty Level</h3>
+                        <div class="grid-3 gap-4" id="levelSelection">
+                            <label class="glass-card cursor-pointer level-option text-center" style="padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px solid var(--success); transition: all 0.3s ease; opacity: 1; transform: scale(1); height: 100%;">
+                                <input type="radio" name="assessmentLevel" value="Basic" checked class="hidden" onchange="updateLevelSelection()">
+                                <div class="flex items-center justify-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(46, 213, 115, 0.1); color: var(--success); font-size: 2rem; margin: 0;">
+                                    <i class="fa-solid fa-leaf"></i>
+                                </div>
+                                <div style="margin: 0;">
+                                    <h4 style="margin: 0 0 5px 0;">Basic</h4>
+                                    <p class="text-secondary" style="font-size: 0.85rem; margin: 0;">Core fundamentals</p>
+                                </div>
+                            </label>
+                            
+                            <label class="glass-card cursor-pointer level-option text-center" style="padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px solid transparent; transition: all 0.3s ease; opacity: 0.6; transform: scale(0.98); height: 100%;">
+                                <input type="radio" name="assessmentLevel" value="Intermediate" class="hidden" onchange="updateLevelSelection()">
+                                <div class="flex items-center justify-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(55, 125, 255, 0.1); color: #377dff; font-size: 2rem; margin: 0;">
+                                    <i class="fa-solid fa-fire"></i>
+                                </div>
+                                <div style="margin: 0;">
+                                    <h4 style="margin: 0 0 5px 0;">Intermediate</h4>
+                                    <p class="text-secondary" style="font-size: 0.85rem; margin: 0;">Practical application</p>
+                                </div>
+                            </label>
+                            
+                            <label class="glass-card cursor-pointer level-option text-center" style="padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px solid transparent; transition: all 0.3s ease; opacity: 0.6; transform: scale(0.98); height: 100%;">
+                                <input type="radio" name="assessmentLevel" value="Advance" class="hidden" onchange="updateLevelSelection()">
+                                <div class="flex items-center justify-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(233, 69, 96, 0.1); color: var(--accent-color); font-size: 2rem; margin: 0;">
+                                    <i class="fa-solid fa-crown"></i>
+                                </div>
+                                <div style="margin: 0;">
+                                    <h4 style="margin: 0 0 5px 0;">Advance</h4>
+                                    <p class="text-secondary" style="font-size: 0.85rem; margin: 0;">Expert techniques</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary w-100 py-3" style="font-size: 1.1rem;" onclick="startAssessment()">Start Assessment</button>
+                </div>
+
+                <!-- QUIZ VIEW -->
+                <div id="assessmentQuizView" class="hidden">
+                    <button class="btn-outline mb-4" onclick="exitAssessment()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 id="quizTitle">Assessment</h2>
+                        <div class="flex gap-4 items-center">
+                            <span class="text-primary font-weight-bold" id="questionCounter">Question 1 / 20</span>
+                            <span class="glass-card px-3 py-1 text-warning" style="font-family: monospace; font-size: 1.2rem;" id="quizTimer">25:00</span>
+                        </div>
+                    </div>
+                    <div class="progress-container mb-4">
+                        <div class="progress-bar" id="quizProgress" style="width: 5%"></div>
+                    </div>
+                    
+                    <div class="grid-3" style="grid-template-columns: 3fr 1fr; gap: 20px;">
+                        <div class="question-card">
+                            <h3 class="mb-4" id="questionText">What concept allows a function to remember variables from its outer scope?</h3>
+                            <div id="optionsContainer">
+                                <!-- Options populated by JS -->
+                            </div>
+                            <div class="flex justify-between mt-4">
+                                <div>
+                                    <button class="btn-outline" onclick="prevQuestion()" id="btnPrev">Previous</button>
+                                    <button class="btn-secondary ml-2" onclick="markForReview()">Mark for Review</button>
+                                </div>
+                                <div>
+                                    <button class="btn-outline" onclick="nextQuestion()" id="btnNext">Next</button>
+                                    <button class="btn-primary hidden" id="btnSubmit" onclick="submitAssessment()">Submit Assessment</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <h4 class="mb-3 text-center">Question Navigator</h4>
+                            <div class="question-nav" id="questionNavigator">
+                                <!-- Navigator populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULTS VIEW -->
+                <div id="assessmentResultsView" class="hidden assessment-container text-center">
+                    <h1 class="mb-2 text-gradient text-center">Assessment Completed 🎉</h1>
+                    
+                    <div class="score-circle mt-5">
+                        <span id="resultScore">82</span><span style="font-size: 2rem">%</span>
+                    </div>
+                    <h3 class="mb-1 text-center" id="resultPerformance">Strong Performance</h3>
+                    <p class="text-secondary mb-4 text-center">Great effort! The AI has analyzed your responses.</p>
+                    
+                    <div id="badgeContainer" class="hidden mb-5" style="display: flex; justify-content: center;">
+                        <div class="glass-card inline-block text-center" style="padding: 15px 30px; border: 2px solid var(--accent-color); background: rgba(233, 69, 96, 0.1);">
+                            <h3 class="text-accent mb-1"><i class="fa-solid fa-medal mr-2"></i> Badge Earned!</h3>
+                            <p class="font-weight-bold" style="font-size: 1.2rem; margin: 0;" id="resultBadgeText">Basic Python Programmer</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 gap-4 mb-5 text-left">
+                        <div class="glass-card" style="padding: 25px; border-top: 3px solid var(--success);">
+                            <h4 class="mb-3 text-success">Strong Areas</h4>
+                            <ul class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;" id="resultStrong">
+                                <li><i class="fa-solid fa-check text-success mr-2"></i> Variables</li>
+                                <li><i class="fa-solid fa-check text-success mr-2"></i> Functions</li>
+                            </ul>
+                        </div>
+                        <div class="glass-card" style="padding: 25px; border-top: 3px solid var(--warning);">
+                            <h4 class="mb-3 text-warning">Needs Improvement</h4>
+                            <ul class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;" id="resultWeak">
+                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Async JavaScript</li>
+                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> DOM Manipulation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 gap-3 mb-4">
+                        <button class="btn-outline w-100" onclick="showView('assessmentsLibraryView')">Review Answers</button>
+                        <button class="btn-outline w-100" onclick="window.location.reload()">Try Again</button>
+                        <button class="btn-primary w-100" onclick="window.location.href='learning.html'">Improve Weak Areas</button>
+                        <button class="btn-secondary w-100" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/assessments.js"></script>
+</body>
+</html>
+

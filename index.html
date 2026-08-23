@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up AI - Learn & Grow</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Landing Page Specific Styles */
+        .landing-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(5, 5, 15, 0.8);
+            backdrop-filter: var(--glass-blur);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .hero-section {
+            padding: 150px 20px 100px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-inline: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .hero-visual {
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .hero-visual-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            display: flex;
+            gap: 20px;
+            box-shadow: var(--shadow-glow);
+            backdrop-filter: var(--glass-blur);
+            transform: perspective(1000px) rotateX(10deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .hero-visual-card:hover {
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .features-section, .how-it-works, .skills-preview {
+            padding: 100px 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+        }
+
+        .feature-card {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            z-index: 0;
+        }
+
+        .step {
+            width: 200px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-primary);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .skill-card-preview {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .skill-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="landing-page">
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <!-- Navbar -->
+    <nav class="landing-nav">
+        <div class="logo">LevelUP<span>.AI</span></div>
+        <div class="nav-links hidden-mobile">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#skills">Skills</a>
+            <a href="bughunting.html">Bug Hunting</a>
+            <a href="corporate.html">Corporate Matches</a>
+        </div>
+        <div class="flex gap-2">
+            <button class="btn-secondary" onclick="window.location.href='login.html'">Login</button>
+            <button class="btn-primary" onclick="window.location.href='login.html'">
+                Get Started
+                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <h1 class="text-gradient">LEVEL UP YOUR SKILLS.<br>LEVEL UP YOUR FUTURE.</h1>
+        <p>An intelligent learning platform designed to help you discover skills, build knowledge, track your progress and become career ready.</p>
+        
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="window.location.href='login.html'">
+                Start Learning
+                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+            </button>
+            <button class="btn-outline" onclick="window.location.href='skills.html'">
+                Explore Skills
+                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+            </button>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-visual-card">
+                <div style="flex:1; text-align:left;">
+                    <h3 class="mb-2">Your Dashboard</h3>
+                    <div class="progress-container mb-1"><div class="progress-bar" style="width: 72%;"></div></div>
+                    <p class="text-secondary" style="font-size:0.9rem;">JavaScript Progress: 72%</p>
+                </div>
+                <div style="width: 150px; background: rgba(0,240,255,0.1); border-radius: 12px; padding: 15px;">
+                    <i class="fa-solid fa-fire" style="color:var(--warning); font-size:1.5rem"></i>
+                    <h4 class="mt-1">14 Days</h4>
+                    <p style="font-size:0.8rem; color:var(--text-secondary)">Learning Streak</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section container" id="features">
+        <div class="section-header">
+            <h2>Why Choose Level Up AI?</h2>
+            <p>A completely new way to approach your career growth.</p>
+        </div>
+        
+        <div class="grid-3">
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-robot feature-icon"></i>
+                <h3>AI-Powered Learning</h3>
+                <p class="text-secondary mt-1">Get personalized learning recommendations tailored to your goals.</p>
+            </div>
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-chart-line feature-icon"></i>
+                <h3>Smart Skill Tracking</h3>
+                <p class="text-secondary mt-1">Track learning progress across multiple skills seamlessly.</p>
+            </div>
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-list-check feature-icon"></i>
+                <h3>Assessments</h3>
+                <p class="text-secondary mt-1">Test your knowledge and instantly identify weak areas.</p>
+            </div>
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-lightbulb feature-icon"></i>
+                <h3>AI Recommendations</h3>
+                <p class="text-secondary mt-1">Know exactly what to learn next based on performance.</p>
+            </div>
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-chart-pie feature-icon"></i>
+                <h3>Progress Analytics</h3>
+                <p class="text-secondary mt-1">Understand your learning velocity and study habits.</p>
+            </div>
+            <div class="glass-card feature-card">
+                <i class="fa-solid fa-briefcase feature-icon"></i>
+                <h3>Career Growth</h3>
+                <p class="text-secondary mt-1">Build skills that directly improve your career readiness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works container" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+        </div>
+        
+        <div class="timeline" style="overflow-x: auto; padding-bottom: 20px;">
+            <div class="step">
+                <div class="step-number">01</div>
+                <h3>Choose Your Skill</h3>
+                <p class="text-secondary mt-1" style="font-size:0.9rem">Explore programming, development, AI, cloud and more.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">02</div>
+                <h3>Learn</h3>
+                <p class="text-secondary mt-1" style="font-size:0.9rem">Follow structured sub-skills and interactive lectures.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">03</div>
+                <h3>Practice</h3>
+                <p class="text-secondary mt-1" style="font-size:0.9rem">Take assessments and identify your weaknesses.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">04</div>
+                <h3>Level Up</h3>
+                <p class="text-secondary mt-1" style="font-size:0.9rem">Follow recommendations and improve continuously.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Preview -->
+    <section class="skills-preview container" id="skills">
+        <div class="section-header">
+            <h2>Popular Skills</h2>
+        </div>
+        
+        <div class="grid-4" id="landingSkillsContainer">
+            <!-- Will be populated by JS or Static -->
+            <div class="glass-card skill-card-preview">
+                <div class="skill-header">
+                    <i class="fa-brands fa-python skill-icon"></i>
+                    <div>
+                        <h3>Python</h3>
+                        <span class="badge primary">Programming</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-secondary" style="font-size:0.8rem">Intermediate</span>
+                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s2'">Explore</button>
+                </div>
+            </div>
+
+            <div class="glass-card skill-card-preview">
+                <div class="skill-header">
+                    <i class="fa-brands fa-js skill-icon"></i>
+                    <div>
+                        <h3>JavaScript</h3>
+                        <span class="badge primary">Frontend</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-secondary" style="font-size:0.8rem">Beginner</span>
+                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s1'">Explore</button>
+                </div>
+            </div>
+
+            <div class="glass-card skill-card-preview">
+                <div class="skill-header">
+                    <i class="fa-brands fa-react skill-icon"></i>
+                    <div>
+                        <h3>React</h3>
+                        <span class="badge primary">Frontend</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-secondary" style="font-size:0.8rem">Intermediate</span>
+                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s4'">Explore</button>
+                </div>
+            </div>
+
+            <div class="glass-card skill-card-preview">
+                <div class="skill-header">
+                    <i class="fa-solid fa-brain skill-icon"></i>
+                    <div>
+                        <h3>AI / ML</h3>
+                        <span class="badge primary">Data Science</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-secondary" style="font-size:0.8rem">Advanced</span>
+                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s6'">Explore</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Ecosystem Section -->
+    <section class="container" style="padding: 100px 20px; text-align: center;">
+        <div class="section-header">
+            <h2 class="text-gradient">Learn → Practice → Prove → Get Discovered</h2>
+            <p>Your complete journey from student to hired professional.</p>
+        </div>
+        
+        <div class="grid-4" style="margin-top: 50px;">
+            <div class="glass-card" style="padding: 30px;">
+                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">01</h1>
+                <h3 class="mb-1 text-primary">Learn</h3>
+                <p class="text-secondary" style="font-size: 0.9rem;">Build technical skills through structured, AI-guided courses.</p>
+            </div>
+            
+            <div class="glass-card" style="padding: 30px;">
+                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">02</h1>
+                <h3 class="mb-1 text-primary">Practice</h3>
+                <p class="text-secondary" style="font-size: 0.9rem;">Complete lectures and take intelligent assessments.</p>
+            </div>
+            
+            <div class="glass-card" style="padding: 30px;">
+                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">03</h1>
+                <h3 class="mb-1" style="color: #00f0ff">Prove</h3>
+                <p class="text-secondary" style="font-size: 0.9rem;">Earn certificates and real-world bug-hunting experience.</p>
+            </div>
+            
+            <div class="glass-card" style="padding: 30px; background: rgba(0, 85, 255, 0.1); border-color: rgba(0, 85, 255, 0.3);">
+                <h1 style="font-size: 3rem; color: rgba(0, 85, 255, 0.3); margin-bottom: 10px;">04</h1>
+                <h3 class="mb-1" style="color: #0055ff">Get Discovered</h3>
+                <p class="text-secondary" style="font-size: 0.9rem;">Get matched with top companies and agencies based on verified skills.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="text-align:center; padding: 40px; border-top: 1px solid var(--border); margin-top: 50px;">
+        <div class="logo mb-2">LEVEL UP <span>AI</span></div>
+        <p class="text-secondary">© 2024 Level Up AI. Frontend Demo Project.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-section {
+            padding: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid var(--border);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3px;
+            background-color: var(--text-secondary);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h2>Settings</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+                    
+                    <!-- Appearance -->
+                    <div class="settings-section">
+                        <h3 class="mb-3">Appearance</h3>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block">Dark Mode</strong>
+                                <span class="text-secondary" style="font-size:0.9rem">Switch between dark and light theme</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="themeToggle" checked onchange="toggleTheme(this)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="settings-section">
+                        <h3 class="mb-3">Notifications</h3>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block">Learning Reminders</strong>
+                                <span class="text-secondary" style="font-size:0.9rem">Get reminded to keep your streak alive</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="showToast('Notification settings updated')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block">Assessment Notifications</strong>
+                                <span class="text-secondary" style="font-size:0.9rem">Alerts when new assessments are available</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="showToast('Notification settings updated')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block">AI Recommendations</strong>
+                                <span class="text-secondary" style="font-size:0.9rem">Get daily insights from your AI Coach</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="showToast('Notification settings updated')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Learning Preferences -->
+                    <div class="settings-section">
+                        <h3 class="mb-3">Learning Preferences</h3>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block; margin-bottom:10px">Daily Learning Goal</strong>
+                            </div>
+                            <select class="form-control" style="width: 200px;" onchange="showToast('Learning goal updated')">
+                                <option>15 mins / day</option>
+                                <option selected>30 mins / day</option>
+                                <option>1 hour / day</option>
+                                <option>2+ hours / day</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div>
+                                <strong style="display:block; margin-bottom:10px">Preferred Difficulty</strong>
+                            </div>
+                            <select class="form-control" style="width: 200px;" onchange="showToast('Difficulty updated')">
+                                <option>Beginner</option>
+                                <option selected>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Account -->
+                    <div class="settings-section">
+                        <h3 class="mb-3">Account</h3>
+                        
+                        <div class="flex-col gap-2">
+                            <button class="btn-outline" style="width:fit-content" onclick="window.location.href='profile.html'">Edit Profile</button>
+                            
+                            <button class="btn-outline" style="width:fit-content; border-color:var(--danger); color:var(--danger)" onclick="confirmLogout()">Logout</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Confirm Logout</h3>
+                <button class="close-btn" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="mb-4">Are you sure you want to log out of Level Up AI?</p>
+            <div class="flex gap-2 justify-end">
+                <button class="btn-secondary" data-close-modal>Cancel</button>
+                <button class="btn-primary" style="background:var(--danger); border:none;" onclick="window.location.href='index.html'">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/settings.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

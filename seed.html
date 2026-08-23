@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Migration - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { padding: 40px; font-family: monospace; background: var(--bg-secondary); }
+        .log-container {
+            background: #111;
+            padding: 20px;
+            border-radius: 8px;
+            height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+            color: #0f0;
+        }
+        .log-error { color: #f44; }
+        .log-warn { color: #fd0; }
+        .log-success { color: #0f0; }
+        .log-info { color: #0cf; }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <h2>Supabase Data Migration Tool</h2>
+    <p>This tool will attempt to insert your local mock data into your Supabase tables.</p>
+    <p class="text-secondary">Note: Your Supabase table columns MUST exactly match the keys of the JSON data, or the insert will fail.</p>
+    
+    <button id="startBtn" class="btn-primary" style="margin-top: 20px;">Start Migration</button>
+    <button id="clearBtn" class="btn-outline" style="margin-top: 20px; margin-left: 10px;">Clear Logs</button>
+
+    <div class="log-container" id="logBox">
+        <div class="log-info">Ready to migrate...</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        const logBox = document.getElementById('logBox');
+        
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'log-' + type;
+            div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logBox.appendChild(div);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        async function seedData(tableName, dataArray) {
+            if (!dataArray || dataArray.length === 0) {
+                log(`Skipping ${tableName} - no data to insert.`, 'warn');
+                return;
+            }
+            log(`Starting migration for table: ${tableName} (${dataArray.length} rows)`, 'info');
+            
+            // We use upsert or just insert. Since IDs might conflict if run multiple times, we'll try standard insert
+            const { data, error } = await window.db.from(tableName).insert(dataArray);
+            
+            if (error) {
+                log(`ERROR in ${tableName}: ${error.message} (Code: ${error.code})`, 'error');
+                console.error(error);
+            } else {
+                log(`SUCCESS: Inserted ${dataArray.length} rows into ${tableName}`, 'success');
+            }
+        }
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            logBox.innerHTML = '<div class="log-info">Logs cleared.</div>';
+        });
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            document.getElementById('startBtn').disabled = true;
+            log('Migration started...', 'info');
+
+            if (!window.db) {
+                log('CRITICAL: Supabase client not found. Check your js/supabase-config.js file.', 'error');
+                return;
+            }
+
+            try {
+                // 1. Migrate Skills -> 'skills' table
+                if (MOCK_DATA.skills) {
+                    await seedData('skills', MOCK_DATA.skills);
+                }
+
+                // 2. Migrate Companies -> 'compaies' table (using user's exact spelling)
+                if (MOCK_DATA.companies) {
+                    await seedData('compaies', MOCK_DATA.companies);
+                }
+
+                // 3. Migrate User Profile -> 'profiles' table
+                if (MOCK_DATA.user) {
+                    await seedData('profiles', [MOCK_DATA.user]);
+                }
+
+                // 4. Migrate Bug Hunts -> 'projects' table (Assumption based on user table names)
+                if (MOCK_DATA.bugHunts) {
+                    await seedData('projects', MOCK_DATA.bugHunts);
+                }
+
+                // 5. Migrate Assessments -> 'assessments' table (if they created it)
+                if (MOCK_DATA.assessments) {
+                    // Just as a bonus
+                    await seedData('assessments', MOCK_DATA.assessments);
+                }
+
+                log('Migration execution finished. Please review any errors above.', 'info');
+                log('If you saw column errors, you need to add those exact column names to your Supabase tables.', 'warn');
+            } catch (err) {
+                log(`CRITICAL ERROR: ${err.message}`, 'error');
+            } finally {
+                document.getElementById('startBtn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+

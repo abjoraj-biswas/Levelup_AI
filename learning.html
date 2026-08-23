@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .learning-layout {
+            display: flex;
+            height: calc(100vh - var(--topbar-height));
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .learning-main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        /* Custom Scrollbar for Learning Areas */
+        .learning-main::-webkit-scrollbar, .learning-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .learning-main::-webkit-scrollbar-track, .learning-sidebar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        .learning-main::-webkit-scrollbar-thumb, .learning-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        .learning-main::-webkit-scrollbar-thumb:hover, .learning-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Staggered Animations */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-item:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .learning-sidebar {
+            width: 380px;
+            background: rgba(10, 11, 26, 0.95);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transform: translateX(30px);
+            opacity: 0;
+            animation: slideLeftFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            backdrop-filter: blur(20px);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .video-placeholder:hover {
+            box-shadow: 0 15px 50px rgba(0, 240, 255, 0.15);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .video-placeholder:hover .play-btn {
+            transform: scale(1.15);
+            background: rgba(0, 240, 255, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Sidebar Lecture List Animations */
+        .lecture-list-item {
+            padding: 18px 25px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lecture-list-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.08), transparent);
+            transition: width 0.3s ease;
+            z-index: 0;
+        }
+
+        .lecture-list-item:hover::before {
+            width: 100%;
+        }
+
+        .lecture-list-item:not(.locked):hover {
+            padding-left: 32px;
+        }
+
+        .lecture-list-item > div {
+            z-index: 1;
+        }
+
+        .lecture-list-item.active {
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            padding-left: 21px; /* Offset the border */
+        }
+        
+        .lecture-list-item.active:hover {
+            padding-left: 28px;
+        }
+
+        .lecture-list-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .lecture-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .lecture-list-item:hover .lecture-icon {
+            transform: scale(1.1);
+        }
+
+        .lecture-list-item.completed .lecture-icon {
+            background: var(--success);
+            color: #000;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .lecture-list-item.active .lecture-icon {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .lecture-list-item.locked .lecture-icon {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+        }
+
+        .lecture-list-item:not(.completed):not(.active):not(.locked) .lecture-icon {
+            border: 1px solid var(--text-muted);
+            color: var(--text-secondary);
+        }
+
+        /* Tab Content Animation */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideLeftFade {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item active">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                            </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" style="overflow: hidden; background: linear-gradient(135deg, var(--bg-primary) 0%, #0a0b14 100%);">
+            
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2 id="courseTitle" style="font-size: 1.2rem; opacity: 0; animation: fadeIn 0.5s ease forwards;" class="text-gradient">Loading Course...</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="btn-outline" style="padding: 6px 18px; font-size:0.9rem" onclick="window.location.href='dashboard.html'">Exit Course</button>
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="learning-layout">
+                <!-- Video & Content Area -->
+                <div class="learning-main">
+                    
+                    <!-- Video Player Placeholder -->
+                    <div class="video-placeholder stagger-item">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Code Background" style="position:absolute; width:100%; height:100%; object-fit:cover; opacity:0.25; mix-blend-mode: luminosity;">
+                        
+                        <div class="play-btn">
+                            <i class="fa-solid fa-play" style="margin-left: 5px;"></i>
+                        </div>
+                        
+                        <!-- Video Controls -->
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); display:flex; align-items:center; gap: 20px; z-index: 5;">
+                            <i class="fa-solid fa-pause" style="cursor:pointer; font-size: 1.2rem; color: white;"></i>
+                            <div class="progress-container" style="flex:1; height: 6px; cursor:pointer; background: rgba(255,255,255,0.2);">
+                                <div class="progress-bar" style="width: 35%; box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);"></div>
+                            </div>
+                            <span style="font-size:0.85rem; font-weight: 500;">04:12 / 12:45</span>
+                            <i class="fa-solid fa-volume-high cursor-pointer text-secondary"></i>
+                            <i class="fa-solid fa-expand cursor-pointer text-secondary"></i>
+                        </div>
+                    </div>
+
+                    <!-- Lecture Actions -->
+                    <div class="flex justify-between items-center mb-4 pb-4 stagger-item" style="border-bottom: 1px solid var(--border);">
+                        <button class="btn-secondary" id="prevLectureBtn" onclick="prevLecture()"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+                        <button class="btn-primary" id="markCompleteBtn" onclick="markLectureComplete()" style="padding: 12px 30px; font-size: 1.05rem;"><i class="fa-solid fa-check"></i> Mark as Complete</button>
+                        <button class="btn-secondary" id="nextLectureBtn" onclick="nextLecture()">Next <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+
+                    <div class="stagger-item">
+                        <h1 class="mb-2" id="lectureTitle" style="font-size: 2.2rem;">Functions</h1>
+                        <p class="text-secondary mb-4" style="font-size: 1.1rem; max-width: 800px;">Learn how to declare, invoke, and use functions to write reusable code blocks in JavaScript.</p>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs stagger-item">
+                        <div class="tab active" onclick="switchTab('overview')" id="tab-overview-btn">Overview</div>
+                        <div class="tab" onclick="switchTab('notes')" id="tab-notes-btn">Notes</div>
+                        <div class="tab" onclick="switchTab('resources')" id="tab-resources-btn">Resources</div>
+                    </div>
+
+                    <div class="stagger-item" style="padding-bottom: 50px;">
+                        <div id="tab-overview" class="tab-pane active">
+                            <h3 class="mb-3">Learning Objectives</h3>
+                            <div class="glass-card" style="padding: 25px;">
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li class="mb-3 flex items-center gap-3">
+                                        <i class="fa-solid fa-circle-check text-primary"></i>
+                                        <span>Understand function declarations vs expressions.</span>
+                                    </li>
+                                    <li class="mb-3 flex items-center gap-3">
+                                        <i class="fa-solid fa-circle-check text-primary"></i>
+                                        <span>Master arrow functions and lexical scope.</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <i class="fa-solid fa-circle-check text-primary"></i>
+                                        <span>Learn about parameters, arguments, and default values.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="tab-notes" class="tab-pane">
+                            <textarea class="form-control" rows="6" placeholder="Write your notes here... (Saves automatically)" style="font-size: 1.05rem; padding: 20px; background: rgba(0,0,0,0.5);"></textarea>
+                            <button class="btn-primary mt-3">Save Notes</button>
+                        </div>
+
+                        <div id="tab-resources" class="tab-pane">
+                            <div class="glass-card flex items-center justify-between" style="padding: 20px; margin-bottom: 15px;">
+                                <div class="flex items-center gap-3">
+                                    <div style="width: 45px; height: 45px; border-radius: 8px; background: rgba(255, 51, 102, 0.1); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-file-pdf" style="color:var(--danger); font-size:1.5rem"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1">Functions_CheatSheet.pdf</h4>
+                                        <p class="text-secondary" style="font-size: 0.85rem;">2.4 MB • PDF Document</p>
+                                    </div>
+                                </div>
+                                <button class="btn-outline" style="padding: 8px 20px"><i class="fa-solid fa-download"></i> Download</button>
+                            </div>
+                            <div class="glass-card flex items-center justify-between" style="padding: 20px;">
+                                <div class="flex items-center gap-3">
+                                    <div style="width: 45px; height: 45px; border-radius: 8px; background: rgba(0, 240, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-link" style="color:var(--primary); font-size:1.5rem"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1">MDN Web Docs - Functions</h4>
+                                        <p class="text-secondary" style="font-size: 0.85rem;">External Reference</p>
+                                    </div>
+                                </div>
+                                <button class="btn-outline" style="padding: 8px 20px"><i class="fa-solid fa-external-link"></i> Open</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Sidebar -->
+                <div class="learning-sidebar">
+                    <div style="padding: 25px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 10;">
+                        <h3 class="mb-2">Course Progress</h3>
+                        <div class="flex justify-between items-center mb-2" style="font-size: 0.85rem; font-weight: 500;">
+                            <span class="text-secondary" id="progressText">3/6 Completed</span>
+                            <span class="text-primary" id="progressPercent">50%</span>
+                        </div>
+                        <div class="progress-container" style="height: 6px; background: rgba(255,255,255,0.05);">
+                            <div class="progress-bar" id="courseProgressBar" style="width: 50%; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);"></div>
+                        </div>
+                    </div>
+
+                    <div id="lectureList" style="flex:1;">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/learning.js"></script>
+    <script>
+        // Override switchTab to use animation classes instead of .hidden
+        window.switchTab = function(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+            
+            // Update panes
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            
+            const targetPane = document.getElementById(`tab-${tabName}`);
+            
+            // Force reflow for animation
+            void targetPane.offsetWidth;
+            
+            targetPane.classList.add('active');
+        }
+    </script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

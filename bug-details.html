@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Hunt Details - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bug-type-card {
+            background: rgba(10, 11, 26, 0.5);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .bug-type-card:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .rule-list {
+            list-style: none;
+            padding: 0;
+        }
+        .rule-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        .rule-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--success);
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 136, 0.2), inset 0 0 5px rgba(0, 255, 136, 0.1); }
+            100% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.5), inset 0 0 15px rgba(0, 255, 136, 0.3); }
+        }
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 5px var(--success); }
+            100% { box-shadow: 0 0 15px var(--success); }
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item active">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+
+            
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2>Bug Hunt Details</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="glass-card" style="padding: 40px; margin-bottom: 30px;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Student Portal Website</h1>
+                            <p class="text-secondary" style="font-size: 1.2rem;"><i class="fa-solid fa-building"></i> EduTech Labs</p>
+                        </div>
+                        <div class="badge" style="background: rgba(0,255,136,0.1); color: var(--success); font-size: 1rem; padding: 8px 20px; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0,255,136,0.4); height: fit-content; max-height: 40px; box-shadow: 0 0 15px rgba(0, 255, 136, 0.2), inset 0 0 10px rgba(0, 255, 136, 0.1); animation: pulseGlow 1.5s infinite alternate ease-in-out;">
+                            <span class="status-dot" style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--success); box-shadow: 0 0 8px var(--success); animation: pulseDot 1.5s infinite alternate ease-in-out;"></span> Active
+                        </div>
+                    </div>
+
+                    <div class="grid-4 mb-4" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 0;">
+                        <div>
+                            <p class="text-secondary mb-1">Reward Pool</p>
+                            <h3 class="text-success">₹25,000</h3>
+                        </div>
+                        <div>
+                            <p class="text-secondary mb-1">Deadline</p>
+                            <h3>August 15, 2026</h3>
+                        </div>
+                        <div>
+                            <p class="text-secondary mb-1">Difficulty</p>
+                            <h3>Intermediate</h3>
+                        </div>
+                        <div>
+                            <p class="text-secondary mb-1">Category</p>
+                            <h3>Websites</h3>
+                        </div>
+                    </div>
+
+                    <h2 class="mb-2">About This Hunt</h2>
+                    <p class="text-secondary" style="line-height: 1.6; max-width: 800px;">
+                        Find security, usability, performance, and functional bugs in the target website and submit responsible reports. This environment mimics a real-world student portal, containing intentionally placed logic flaws and UI defects for you to discover.
+                    </p>
+                </div>
+
+                <div class="grid-2" style="gap: 30px;">
+                    <!-- Left Column: Bug Types -->
+                    <div>
+                        <h2 class="mb-3">Bug Types to Look For</h2>
+                        
+                        <div class="bug-type-card" style="border-color: var(--danger);">
+                            <h3 class="mb-1"><i class="fa-solid fa-bug text-danger"></i> Functional Bug</h3>
+                            <p class="text-secondary">Broken features, incorrect logic, or unexpected behavior.</p>
+                        </div>
+                        <div class="bug-type-card" style="border-color: var(--warning);">
+                            <h3 class="mb-1"><i class="fa-solid fa-lock text-warning"></i> Security Bug</h3>
+                            <p class="text-secondary">Potential security vulnerabilities (XSS, CSRF, insecure data).</p>
+                        </div>
+                        <div class="bug-type-card" style="border-color: var(--primary);">
+                            <h3 class="mb-1"><i class="fa-solid fa-pen-ruler text-primary"></i> UI/UX Bug</h3>
+                            <p class="text-secondary">Visual glitches, alignment issues, or severe usability problems.</p>
+                        </div>
+                        <div class="bug-type-card" style="border-color: var(--success);">
+                            <h3 class="mb-1"><i class="fa-solid fa-bolt text-success"></i> Performance Bug</h3>
+                            <p class="text-secondary">Extremely slow loading times or severe memory leaks.</p>
+                        </div>
+                        <div class="bug-type-card" style="border-color: var(--text-secondary);">
+                            <h3 class="mb-1"><i class="fa-solid fa-mobile-screen text-secondary"></i> Compatibility Bug</h3>
+                            <p class="text-secondary">Issues appearing only on specific browsers or devices.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Rules & Submit -->
+                    <div>
+                        <div class="glass-card" style="padding: 30px; margin-bottom: 30px;">
+                            <h2 class="mb-3">Bug Hunt Rules</h2>
+                            <ul class="rule-list">
+                                <li>Only report genuine bugs that affect the user experience or security.</li>
+                                <li>Do not intentionally damage the website or perform disruptive DDoS testing.</li>
+                                <li>Do not access, modify, or leak private user information.</li>
+                                <li>Provide clear reproduction steps for every report.</li>
+                                <li>Include screenshots or screen recordings where appropriate.</li>
+                                <li>Duplicate reports will be rejected and will not receive rewards.</li>
+                                <li>Follow responsible disclosure practices at all times.</li>
+                            </ul>
+                        </div>
+                        <div class="glass-card text-center" style="padding: 40px;">
+                            <i class="fa-solid fa-bug" style="font-size: 3rem; color: var(--danger); margin-bottom: 20px;"></i>
+                            <h2 class="mb-2">Found Something?</h2>
+                            <p class="text-secondary mb-4">Submit a detailed bug report for a chance to earn rewards from the pool.</p>
+                            <button class="btn-primary w-full" style="padding: 15px; font-size: 1.1rem; background: var(--danger); box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);" data-modal="submitBugModal">Submit a Bug Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Submit Bug Modal -->
+    <div class="modal-overlay" id="submitBugModal">
+        <div class="modal" style="max-width: 800px; width: 90%;">
+            <div class="modal-header">
+                <h3>Submit Bug Report</h3>
+                <button class="close-btn" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body custom-scroll" style="max-height: 70vh; overflow-y: auto; padding-right: 15px;">
+                <div class="form-group mb-3">
+                    <label class="form-label">Bug Title</label>
+                    <input type="text" id="bugTitle" class="form-control" placeholder="e.g. Login button stops responding after invalid password attempt">
+                </div>
+                
+                <div class="grid-2 mb-3" style="gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Bug Type</label>
+                        <select id="bugType" class="form-control">
+                            <option value="Functional">Functional</option>
+                            <option value="Security">Security</option>
+                            <option value="UI/UX">UI/UX</option>
+                            <option value="Performance">Performance</option>
+                            <option value="Compatibility">Compatibility</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Severity</label>
+                        <select id="bugSeverity" class="form-control" style="background: var(--bg-primary);">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea id="bugDescription" class="form-control" rows="3" placeholder="Provide a brief overview of the issue."></textarea>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Steps to Reproduce</label>
+                    <textarea id="bugSteps" class="form-control" rows="4" placeholder="1. Go to URL...&#10;2. Click on...&#10;3. Observe..."></textarea>
+                </div>
+
+                <div class="grid-2 mb-3" style="gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Expected Behavior</label>
+                        <textarea class="form-control" rows="3" placeholder="What should happen?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Actual Behavior</label>
+                        <textarea class="form-control" rows="3" placeholder="What actually happens?"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Screenshot / Evidence</label>
+                    <div style="border: 2px dashed var(--border); padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                        <i class="fa-solid fa-cloud-arrow-up mb-2" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        <p class="text-secondary">Drag & drop images here, or click to browse</p>
+                    </div>
+                </div>
+
+                <button class="btn-primary w-full" style="padding: 15px;" onclick="submitBugReport()">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/bughunting.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

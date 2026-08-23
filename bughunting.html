@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Hunting - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bug-hero {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.2) 0%, rgba(10, 11, 26, 0.95) 100%), url('https://images.unsplash.com/photo-1614064641913-6b7140414c71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;
+            padding: 60px 40px;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            text-align: center;
+        }
+
+        .bug-stat-card {
+            background: rgba(10, 11, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .bug-stat-card h3 {
+            font-size: 2rem;
+            color: var(--danger);
+            margin-bottom: 5px;
+        }
+
+        .bug-hunt-card {
+            transition: all 0.3s ease;
+        }
+        .bug-hunt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.2);
+            border-color: rgba(255, 51, 102, 0.4);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            min-width: 150px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background: var(--success);
+        }
+        .status-dot.ending { background: var(--warning); }
+        .status-dot.closed { background: var(--text-muted); }
+
+        .reward-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .reward-table th, .reward-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .reward-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item active">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+
+            
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2>Bug Hunting</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- Hero -->
+                <div class="bug-hero">
+                    <h1 style="font-size: 3rem; margin-bottom: 10px; color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.3);">HUNT BUGS. EARN REWARDS. LEVEL UP.</h1>
+                    <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px;">Put your testing skills to work. Discover bugs, report them responsibly, earn rewards and build verified experience.</p>
+                    <div class="flex justify-center gap-3">
+                        <button class="btn-primary" onclick="document.getElementById('active-hunts').scrollIntoView({behavior:'smooth'})" style="box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);">Explore Bug Hunts</button>
+                        <button class="btn-outline" style="box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);">How It Works</button>
+                    </div>
+
+                    <div class="grid-4 mt-4">
+                        <div class="bug-stat-card">
+                            <h3><span class="stat-counter" data-target="24">0</span></h3>
+                            <p class="text-secondary">Active Bug Hunts</p>
+                        </div>
+                        <div class="bug-stat-card">
+                            <h3>₹<span class="stat-counter" data-target="2.5" data-decimals="1">0</span>L+</h3>
+                            <p class="text-secondary">Total Rewards</p>
+                        </div>
+                        <div class="bug-stat-card">
+                            <h3><span class="stat-counter" data-target="1840">0</span>+</h3>
+                            <p class="text-secondary">Bugs Reported</p>
+                        </div>
+                        <div class="bug-stat-card">
+                            <h3><span class="stat-counter" data-target="3200">0</span>+</h3>
+                            <p class="text-secondary">Participating</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beginner Friendly -->
+                <div class="mb-4">
+                    <h2 class="mb-1">No Professional Experience? Start Here.</h2>
+                    <p class="text-secondary mb-3">LEVEL UP AI is designed to help students gain practical experience before entering the professional world.</p>
+                    
+                    <div class="grid-3">
+                        <div class="glass-card" style="padding: 25px; border-top: 3px solid var(--success);">
+                            <h3 class="mb-1">Beginner Hunt</h3>
+                            <p class="text-secondary mb-2" style="font-size: 0.9rem;">Simple bugs • Low difficulty</p>
+                            <h4 class="text-success mb-3">₹500 - ₹2,000 rewards</h4>
+                            <button class="btn-outline w-full" onclick="document.getElementById('active-hunts').scrollIntoView({behavior:'smooth'})">Start Your First Hunt</button>
+                        </div>
+                        <div class="glass-card" style="padding: 25px; border-top: 3px solid var(--warning);">
+                            <h3 class="mb-1">Skill Builder</h3>
+                            <p class="text-secondary mb-2" style="font-size: 0.9rem;">Intermediate bugs</p>
+                            <h4 class="text-warning mb-3">₹2,000 - ₹10,000 rewards</h4>
+                            <button class="btn-outline w-full" onclick="document.getElementById('active-hunts').scrollIntoView({behavior:'smooth'})">Find Intermediate Hunts</button>
+                        </div>
+                        <div class="glass-card" style="padding: 25px; border-top: 3px solid var(--danger);">
+                            <h3 class="mb-1">Advanced Hunter</h3>
+                            <p class="text-secondary mb-2" style="font-size: 0.9rem;">Complex functional & security bugs</p>
+                            <h4 class="text-danger mb-3">₹10,000+ rewards</h4>
+                            <button class="btn-outline w-full" onclick="document.getElementById('active-hunts').scrollIntoView({behavior:'smooth'})">Find Advanced Hunts</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Bug Hunts -->
+                <div id="active-hunts" class="mb-4 pt-2">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2>Active Bug Hunts</h2>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-bar">
+                        <select class="filter-select" id="filterCategory" onchange="filterHunts()">
+                            <option value="All">Category: All</option>
+                            <option value="Websites">Websites</option>
+                            <option value="Web Apps">Web Apps</option>
+                            <option value="Mobile Apps">Mobile Apps</option>
+                            <option value="E-Commerce">E-Commerce</option>
+                            <option value="FinTech">FinTech</option>
+                            <option value="SaaS">SaaS</option>
+                        </select>
+                        <select class="filter-select" id="filterDifficulty" onchange="filterHunts()">
+                            <option value="All">Difficulty: All</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                        <select class="filter-select" id="filterReward" onchange="filterHunts()">
+                            <option value="All">Reward: All</option>
+                            <option value="Under5k">Under ₹5,000</option>
+                            <option value="5kto10k">₹5,000 - ₹10,000</option>
+                            <option value="10kto25k">₹10,000 - ₹25,000</option>
+                            <option value="Over25k">₹25,000+</option>
+                        </select>
+                        <select class="filter-select" id="filterStatus" onchange="filterHunts()">
+                            <option value="All">Status: All</option>
+                            <option value="Active">Active</option>
+                            <option value="Ending Soon">Ending Soon</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="grid-3" id="bugHuntsContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                
+                <!-- Bug Finder Profile & Rewards -->
+                <div class="grid-2 mb-4">
+                    <div class="glass-card" style="padding: 30px;">
+                        <h2 class="mb-3">Bug Finder Profile</h2>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="avatar" style="width: 80px; height: 80px; font-size: 2.5rem; background: var(--danger);">A</div>
+                            <div>
+                                <h3 style="font-size: 1.5rem;" class="user-name">Alex Sharma</h3>
+                                <p class="text-secondary">Student Bug Finder</p>
+                                <div class="badge mt-2" style="background: rgba(255, 51, 102, 0.2); color: var(--danger); border-color: var(--danger);">Level 7</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-secondary">Bug Hunting XP</span>
+                                <strong>2,480 XP</strong>
+                            </div>
+                            <div class="progress-container"><div class="progress-bar" style="width: 65%; background: var(--danger);"></div></div>
+                        </div>
+                        
+                        <div class="grid-2 mt-4" style="gap: 10px;">
+                            <div class="glass-card text-center" style="padding: 10px;">
+                                <h4 class="text-primary">24</h4>
+                                <p style="font-size:0.8rem;" class="text-secondary">Reported</p>
+                            </div>
+                            <div class="glass-card text-center" style="padding: 10px;">
+                                <h4 class="text-success">18</h4>
+                                <p style="font-size:0.8rem;" class="text-secondary">Accepted</p>
+                            </div>
+                            <div class="glass-card text-center" style="padding: 10px;">
+                                <h4 class="text-danger">2</h4>
+                                <p style="font-size:0.8rem;" class="text-secondary">Critical</p>
+                            </div>
+                            <div class="glass-card text-center" style="padding: 10px;">
+                                <h4 class="text-warning">4</h4>
+                                <p style="font-size:0.8rem;" class="text-secondary">Certificates</p>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4 mb-2">Badges</h4>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="badge"><i class="fa-solid fa-trophy text-warning"></i> First Bug Found</span>
+                            <span class="badge"><i class="fa-solid fa-fire text-danger"></i> 10 Bugs Accepted</span>
+                            <span class="badge"><i class="fa-solid fa-sack-dollar text-success"></i> First Reward</span>
+                            <span class="badge"><i class="fa-solid fa-bullseye text-primary"></i> Critical Finder</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card flex" style="flex-direction: column; padding: 30px;">
+                        <h2 class="mb-1">Earn While You Learn</h2>
+                        <p class="text-secondary mb-4">You can potentially earn rewards for valid bug reports.</p>
+                        
+                        <div class="grid-2 mb-4" style="gap: 15px;">
+                            <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 20px;">
+                                <p class="text-secondary" style="font-size: 0.9rem;">Total Earned</p>
+                                <h2 class="text-success">₹8,500</h2>
+                            </div>
+                            <div style="background: rgba(255,184,0,0.1); border: 1px solid rgba(255,184,0,0.3); border-radius: 12px; padding: 20px;">
+                                <p class="text-secondary" style="font-size: 0.9rem;">Pending Rewards</p>
+                                <h2 class="text-warning">₹3,000</h2>
+                            </div>
+                        </div>
+
+                        <h3 class="mb-3 mt-2">Earn Verified Certificates</h3>
+                        <div class="glass-card flex items-center justify-between" style="padding: 20px;">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-award" style="font-size: 2rem; color: var(--warning);"></i>
+                                <div>
+                                    <h4 class="mb-1">Certificate of Bug Discovery</h4>
+                                    <p class="text-secondary" style="font-size: 0.8rem;">ID: LUA-BUG-2026-00124</p>
+                                </div>
+                            </div>
+                            <button class="btn-outline" data-modal="certificateModal">View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submitted Reports Table -->
+                <div class="glass-card" style="padding: 30px;">
+                    <h2 class="mb-3">Bug Report Status</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="reward-table">
+                            <thead>
+                                <tr>
+                                    <th>Bug</th>
+                                    <th>Website</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Reward</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userBugsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="modal-overlay" id="certificateModal">
+        <div class="modal-content" style="max-width: 600px; text-align: center;">
+            <div class="modal-header">
+                <h3>Certificate Preview</h3>
+                <button class="close-btn" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="border: 10px solid var(--border); padding: 40px; background: rgba(0,0,0,0.5); position: relative;">
+                    <i class="fa-solid fa-award" style="font-size: 4rem; color: var(--warning); margin-bottom: 20px;"></i>
+                    <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; margin-bottom: 10px;" class="text-gradient">Certificate of Bug Discovery</h1>
+                    <p class="text-secondary mb-3">Awarded to:</p>
+                    <h2 class="user-name mb-3" style="font-size: 2rem;">Alex Sharma</h2>
+                    <p style="font-size: 1.1rem; line-height: 1.5; margin-bottom: 30px;">For successfully identifying and responsibly reporting bugs through LEVEL UP AI.</p>
+                    <p class="text-secondary" style="font-size: 0.8rem;">Certificate ID: LUA-BUG-2026-00124</p>
+                </div>
+                <div class="flex gap-2 justify-center mt-4">
+                    <button class="btn-primary" onclick="showToast('Downloading certificate...'); closeAllModals();"><i class="fa-solid fa-download"></i> Download Certificate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/bughunting.js"></script>
+    <script src="js/notifications.js"></script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Coach - Level Up AI</title>
+    <meta name="description" content="Personalized AI-powered learning recommendations based on your assessments and skill progress.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ── Skeleton Loader ── */
+        .skeleton-box {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 400% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 6px;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+
+        /* ── Hero Section ── */
+        .rec-hero {
+            background: linear-gradient(135deg, rgba(0,240,255,0.06), rgba(112,0,255,0.06));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--border-radius-md);
+            padding: 32px 36px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .rec-hero::before {
+            content: "";
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(0,240,255,0.08), transparent 70%);
+            pointer-events: none;
+        }
+        .rec-hero-icon {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: var(--primary);
+            flex-shrink: 0;
+            animation: coachPulse 3s ease-in-out infinite;
+        }
+        @keyframes coachPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,240,255,0.2); }
+            50%       { box-shadow: 0 0 0 16px rgba(0,240,255,0); }
+        }
+        .rec-status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            color: var(--success);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .rec-status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulseDot 1.5s infinite alternate ease-in-out;
+        }
+
+        /* ── Refresh Button ── */
+        .rec-refresh-btn {
+            margin-left: auto;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,240,255,0.3);
+            background: rgba(0,240,255,0.06);
+            color: var(--primary);
+            font-size: 0.9rem; font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .rec-refresh-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+        .rec-refresh-btn.spinning i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── AI Coach Floating Button ── */
+        .ai-coach-fab {
+            position: fixed;
+            bottom: 28px; right: 28px;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: #000;
+            box-shadow: 0 4px 24px rgba(0,240,255,0.35);
+            z-index: 900;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .ai-coach-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 32px rgba(0,240,255,0.5);
+        }
+        .ai-coach-fab .fab-tooltip {
+            position: absolute;
+            right: 72px; top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem; font-weight: 500;
+            white-space: nowrap;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .ai-coach-fab:hover .fab-tooltip { opacity: 1; }
+
+        /* ── Chat Drawer ── */
+        .drawer-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+        .ai-coach-drawer {
+            position: fixed;
+            right: 0; top: 0; bottom: 0;
+            width: 400px;
+            max-width: 95vw;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            z-index: 1001;
+            display: flex; flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.34, 1.1, 0.64, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.4);
+        }
+        .ai-coach-drawer.open { transform: translateX(0); }
+
+        .drawer-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(135deg, rgba(0,240,255,0.06), rgba(112,0,255,0.06));
+        }
+        .drawer-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; color: #000;
+            flex-shrink: 0;
+        }
+        .drawer-close {
+            margin-left: auto;
+            background: none; border: none; cursor: pointer;
+            color: var(--text-secondary); font-size: 1.2rem;
+            padding: 6px; border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .drawer-close:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+
+        .drawer-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .drawer-msg {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            animation: msgFadeIn 0.3s ease;
+        }
+        @keyframes msgFadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+        .drawer-msg.ai {
+            background: rgba(0,240,255,0.08);
+            border: 1px solid rgba(0,240,255,0.15);
+            color: var(--text-primary);
+            border-radius: 4px 14px 14px 14px;
+            align-self: flex-start;
+        }
+        .drawer-msg.user {
+            background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(112,0,255,0.15));
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border-radius: 14px 4px 14px 14px;
+            align-self: flex-end;
+        }
+
+        /* Typing Dots */
+        .typing-dots { display: inline-flex; gap: 5px; align-items: center; padding: 4px 0; }
+        .typing-dots span {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.5;
+            animation: typingBounce 1.2s infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30%            { transform: translateY(-8px); opacity: 1; }
+        }
+
+        .drawer-input-area {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex; gap: 10px; align-items: flex-end;
+        }
+        .drawer-input-area textarea {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 12px 14px;
+            font-size: 0.9rem;
+            resize: none;
+            min-height: 44px; max-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+        .drawer-input-area textarea:focus {
+            outline: none;
+            border-color: rgba(0,240,255,0.4);
+        }
+        .drawer-send-btn {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000; font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+        .drawer-send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(0,240,255,0.3); }
+
+        /* Quick Prompts */
+        .quick-prompts {
+            padding: 0 20px 12px;
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .quick-prompt {
+            padding: 5px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quick-prompt:hover {
+            background: rgba(0,240,255,0.1);
+            border-color: rgba(0,240,255,0.3);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem("levelup_theme") === "light" || (!localStorage.getItem("levelup_theme") && window.matchMedia("(prefers-color-scheme: light)").matches)) {
+        document.body.classList.add("light-mode");
+    }
+</script>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">LevelUP<span>.AI</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="skills.html" class="nav-item"><i class="fa-solid fa-compass"></i> Explore Skills</a>
+            <a href="learning.html" class="nav-item"><i class="fa-solid fa-book-open"></i> My Learning</a>
+            <a href="assessments.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Assessments</a>
+            <a href="mock-interviews.html" class="nav-item"><i class="fa-solid fa-video"></i> Mock Interviews</a>
+            <a href="bughunting.html" class="nav-item"><i class="fa-solid fa-bug"></i> Bug Hunting</a>
+            <a href="corporate.html" class="nav-item"><i class="fa-solid fa-handshake"></i> Corporate Matches</a>
+            <a href="recommendations.html" class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations</a>
+        </nav>
+        <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+            <a href="settings.html" class="nav-item" style="padding:10px; margin:0; min-width:auto;" title="Settings">
+                <i class="fa-solid fa-gear" style="font-size:1.2rem; color:var(--text-secondary);"></i>
+            </a>
+            <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding:10px; margin:0; min-width:auto;" title="Help">
+                <i class="fa-solid fa-circle-question" style="font-size:1.2rem; color:var(--text-secondary);"></i>
+            </a>
+            <a href="index.html" class="nav-item" style="padding:10px; margin:0; min-width:auto;" title="Logout">
+                <i class="fa-solid fa-arrow-right-from-bracket" style="font-size:1.2rem; color:var(--danger);"></i>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="flex items-center gap-2">
+                <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                <h2>AI Learning Coach</h2>
+            </div>
+            <div class="topbar-right">
+                <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                    <i class="fa-solid fa-moon" id="themeIcon"></i>
+                </button>
+                <div class="notification-bell">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="notification-dot" style="display:none;"></span>
+                    <div class="dropdown-menu notif-dropdown" style="width:320px; right:-80px;">
+                        <div class="flex justify-between items-center" style="padding:10px 15px; border-bottom:1px solid var(--border)">
+                            <strong style="color:var(--text-primary)">Notifications</strong>
+                            <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                        </div>
+                        <div class="notification-list" style="max-height:300px; overflow-y:auto;"></div>
+                    </div>
+                </div>
+                <a href="profile.html" class="user-profile-menu" style="text-decoration:none;">
+                    <div class="avatar" id="topAvatar">A</div>
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <!-- Hero -->
+            <div class="rec-hero">
+                <div class="rec-hero-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div class="rec-status-badge">
+                        <span class="rec-status-dot"></span>
+                        AI Coach Online
+                    </div>
+                    <h1 style="margin: 0 0 6px; font-size: 1.7rem;">Your AI Learning Coach</h1>
+                    <p class="text-secondary" style="margin:0; font-size: 0.95rem;">
+                        Personalized recommendations generated by analyzing your assessments, skill progress, and learning patterns.
+                    </p>
+                </div>
+                <button class="rec-refresh-btn" id="refreshBtn" onclick="refreshRecommendations()">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- Recommendation Cards Grid -->
+            <div class="grid-3" id="recommendationsGrid" style="gap: 24px;">
+                <!-- Populated by recommendations.js -->
+            </div>
+
+            <!-- Ask AI Section -->
+            <div class="glass-card" style="margin-top: 32px; padding: 28px; background: linear-gradient(135deg, rgba(112,0,255,0.06), rgba(0,240,255,0.04)); border: 1px solid rgba(112,0,255,0.2);">
+                <div class="flex items-center gap-3" style="margin-bottom: 16px;">
+                    <i class="fa-solid fa-comment-dots" style="color: var(--secondary); font-size: 1.4rem;"></i>
+                    <div>
+                        <h3 style="margin: 0 0 4px;">Ask Your AI Coach</h3>
+                        <p class="text-secondary" style="margin: 0; font-size: 0.88rem;">Have doubts? Get instant explanations on your weak topics.</p>
+                    </div>
+                    <button class="rec-refresh-btn" style="background: rgba(112,0,255,0.1); border-color: rgba(112,0,255,0.3); color: var(--secondary);"
+                            onmouseenter="this.style.background='var(--secondary)'; this.style.color='#fff';"
+                            onmouseleave="this.style.background='rgba(112,0,255,0.1)'; this.style.color='var(--secondary)';"
+                            onclick="toggleAICoachDrawer()">
+                        <i class="fa-solid fa-robot"></i>
+                        Open Chat
+                    </button>
+                </div>
+                <div class="quick-prompts" id="heroQuickPrompts">
+                    <button class="quick-prompt" onclick="openChatWithPrompt('Explain Big O notation simply')">📊 Big O Notation</button>
+                    <button class="quick-prompt" onclick="openChatWithPrompt('How do I improve my SQL query performance?')">🗄️ SQL Performance</button>
+                    <button class="quick-prompt" onclick="openChatWithPrompt('What is the difference between React hooks and class components?')">⚛️ React Hooks</button>
+                    <button class="quick-prompt" onclick="openChatWithPrompt('Give me a 7-day study plan for Data Structures')">📅 Study Plan</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Drawer Overlay -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeAICoachDrawer()"></div>
+
+<!-- AI Coach Chat Drawer -->
+<div class="ai-coach-drawer" id="aiCoachDrawer" role="dialog" aria-label="AI Learning Coach Chat">
+    <div class="drawer-header">
+        <div class="drawer-avatar">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+        <div>
+            <strong style="display:block; font-size: 1rem;">AI Learning Coach</strong>
+            <span class="rec-status-badge" style="margin: 0; font-size: 0.72rem; padding: 2px 10px;">
+                <span class="rec-status-dot"></span> Online
+            </span>
+        </div>
+        <button class="drawer-close" onclick="closeAICoachDrawer()" aria-label="Close chat">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="drawer-messages" id="drawerMessages"></div>
+
+    <div class="quick-prompts" id="drawerQuickPrompts" style="border-top: 1px solid var(--border); padding-top: 12px;">
+        <button class="quick-prompt" onclick="quickAsk('Explain this concept simply')">✨ Simplify</button>
+        <button class="quick-prompt" onclick="quickAsk('Give me a practice problem')">🧠 Practice</button>
+        <button class="quick-prompt" onclick="quickAsk('What should I study next?')">🗺️ Next Steps</button>
+    </div>
+
+    <div class="drawer-input-area">
+        <textarea id="drawerInput"
+            placeholder="Ask anything about your weak topics..."
+            rows="1"
+            onkeydown="handleDrawerKey(event)"
+            oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">
+        </textarea>
+        <button class="drawer-send-btn" onclick="sendDrawerMessage()" aria-label="Send message">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- AI Coach FAB (Mobile / extra shortcut) -->
+<button class="ai-coach-fab" onclick="toggleAICoachDrawer()" aria-label="Open AI Coach">
+    <i class="fa-solid fa-robot"></i>
+    <span class="fab-tooltip">Ask AI Coach</span>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/ai-config.js"></script>
+<script src="js/recommendations.js"></script>
+<script src="js/notifications.js"></script>
+<script>
+    // Refresh button with spinner
+    function refreshRecommendations() {
+        const btn = document.getElementById("refreshBtn");
+        btn.classList.add("spinning");
+        btn.disabled = true;
+        initRecommendations().finally(() => {
+            btn.classList.remove("spinning");
+            btn.disabled = false;
+        });
+    }
+
+    // Quick-ask helper from hero section
+    function openChatWithPrompt(text) {
+        toggleAICoachDrawer();
+        setTimeout(() => {
+            const input = document.getElementById("drawerInput");
+            if (input) {
+                input.value = text;
+                input.dispatchEvent(new Event("input"));
+                input.focus();
+            }
+        }, 350);
+    }
+
+    // Quick ask from inside drawer
+    function quickAsk(text) {
+        const input = document.getElementById("drawerInput");
+        if (input) {
+            input.value = text;
+            sendDrawerMessage();
+        }
+    }
+</script>
+</body>
+</html>

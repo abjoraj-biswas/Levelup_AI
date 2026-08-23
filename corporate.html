@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Matches - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .corp-hero {
+            background: linear-gradient(135deg, rgba(0, 85, 255, 0.2) 0%, rgba(10, 11, 26, 0.95) 100%), url('https://images.unsplash.com/photo-1614064641913-6b7140414c71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;
+            padding: 80px 40px;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 85, 255, 0.3);
+            text-align: center;
+        }
+
+        .company-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 85, 255, 0.2);
+            border-color: rgba(0, 85, 255, 0.4);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            min-width: 150px;
+        }
+
+        /* Circular Progress for Match Score */
+        .match-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) calc(var(--percent) * 1%), rgba(255,255,255,0.1) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .match-circle::before {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+        }
+        .match-circle span {
+            position: relative;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item active">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+
+            
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2>Corporate Matches</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- Hero -->
+                <div class="corp-hero">
+                    <h1 style="font-size: 3rem; margin-bottom: 10px; color: #00FFFF; text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);">YOUR SKILLS CAN OPEN CORPORATE DOORS.</h1>
+                    <p style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 30px; color: #e2e8f0;">Discover companies, agencies and opportunities that match your verified skills, projects, and career goals.</p>
+                    <div class="flex justify-center gap-3">
+                        <button class="btn-primary" onclick="document.getElementById('company-directory').scrollIntoView({behavior:'smooth'})" style="box-shadow: 0 0 15px rgba(0, 85, 255, 0.4);">Explore Companies</button>
+                        <button class="btn-outline" onclick="window.location.href='career-profile.html'">Build My Career Profile</button>
+                    </div>
+                </div>
+
+                <!-- Match Dashboard -->
+                <div class="grid-3 mb-4 text-center">
+                    <div class="glass-card" style="padding: 30px; border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.02);">
+                        <h3 class="mb-3">Best Match</h3>
+                        <div class="match-circle mb-3" style="--percent: 92;">
+                            <span>92%</span>
+                        </div>
+                        <div class="flex justify-center items-center gap-2 mb-2">
+                            <i class="fa-brands fa-linkedin" style="font-size: 1.5rem; color: #0077b5;"></i>
+                            <h2 style="font-size: 1.3rem;">LinkedIn</h2>
+                        </div>
+                        <p class="text-secondary mb-3" style="font-size: 0.9rem;">Professional Networking</p>
+                        <button class="btn-primary w-full" onclick="window.location.href='company-details.html?id=1'">View Company</button>
+                    </div>
+
+                    <div class="glass-card" style="padding: 30px;">
+                        <h3 class="mb-3">Great Match</h3>
+                        <div class="match-circle mb-3" style="--percent: 88; --success: var(--primary);">
+                            <span>88%</span>
+                        </div>
+                        <div class="flex justify-center items-center gap-2 mb-2">
+                            <i class="fa-brands fa-microsoft" style="font-size: 1.5rem; color: #00a4ef;"></i>
+                            <h2 style="font-size: 1.3rem;">Microsoft</h2>
+                        </div>
+                        <p class="text-secondary mb-3" style="font-size: 0.9rem;">Technology</p>
+                        <button class="btn-outline w-full" onclick="window.location.href='company-details.html?id=2'">View Company</button>
+                    </div>
+
+                    <div class="glass-card" style="padding: 30px;">
+                        <h3 class="mb-3">Strong Match</h3>
+                        <div class="match-circle mb-3" style="--percent: 84; --success: var(--warning);">
+                            <span>84%</span>
+                        </div>
+                        <div class="flex justify-center items-center gap-2 mb-2">
+                            <i class="fa-solid fa-building" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+                            <h2 style="font-size: 1.3rem;">Deloitte</h2>
+                        </div>
+                        <p class="text-secondary mb-3" style="font-size: 0.9rem;">Consulting</p>
+                        <button class="btn-outline w-full" onclick="window.location.href='company-details.html?id=4'">View Company</button>
+                    </div>
+                </div>
+
+                <!-- Company Directory -->
+                <div id="company-directory" class="mb-4 pt-2">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2>Companies Hiring & Collaborating</h2>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-bar">
+                        <select class="filter-select" id="filterIndustry" onchange="filterCompanies()">
+                            <option value="All">Industry: All</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Professional Networking">Professional Networking</option>
+                            <option value="IT Services">IT Services</option>
+                        </select>
+                        <select class="filter-select" id="filterType" onchange="filterCompanies()">
+                            <option value="All">Type: All</option>
+                            <option value="Startup">Startup</option>
+                            <option value="Agency">Agency</option>
+                            <option value="Enterprise">Enterprise</option>
+                        </select>
+                        <select class="filter-select" id="filterSkill" onchange="filterCompanies()">
+                            <option value="All">Skill: All</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="Python">Python</option>
+                            <option value="React">React</option>
+                            <option value="AI">AI/ML</option>
+                            <option value="Cloud">Cloud</option>
+                            <option value="Data">Data</option>
+                        </select>
+                    </div>
+
+                    <div class="grid-3" id="companiesContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- For Companies Marketing -->
+                <div class="glass-card mb-4" style="padding: 50px; background: linear-gradient(90deg, rgba(10, 11, 26, 0.9) 0%, rgba(0, 85, 255, 0.1) 100%);">
+                    <h1 class="mb-2 text-gradient">FOR COMPANIES & AGENCIES</h1>
+                    <h2 class="mb-3">Find Talent Based on Skills, Not Just Resumes.</h2>
+                    <p class="text-secondary mb-4" style="max-width: 600px; line-height: 1.6;">Discover students with verified skills, projects, assessments, certificates, and real-world bug-hunting experience.</p>
+                    
+                    <div class="grid-3 mb-4">
+                        <div>
+                            <h4 class="mb-1 text-primary"><i class="fa-solid fa-magnifying-glass"></i> Skill-Based Discovery</h4>
+                            <p class="text-secondary" style="font-size: 0.9rem;">Find students based on actual skills and proficiency scores.</p>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 text-primary"><i class="fa-solid fa-shield-halved"></i> Verified Performance</h4>
+                            <p class="text-secondary" style="font-size: 0.9rem;">Review verified assessment and learning metrics.</p>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 text-primary"><i class="fa-solid fa-bug"></i> Practical Experience</h4>
+                            <p class="text-secondary" style="font-size: 0.9rem;">See real-world bug hunting and project experience.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button class="btn-primary" onclick="showToast('This is a demo frontend interaction', 'info')">Explore Talent</button>
+                        <button class="btn-outline" onclick="showToast('This is a demo frontend interaction', 'info')">For Companies</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/corporate.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

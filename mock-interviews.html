@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Interviews - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .assessment-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .question-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--border-radius-lg); padding: 40px; box-shadow: var(--shadow-soft); }
+        .option-btn { width: 100%; padding: 20px; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--border-radius-md); color: var(--text-primary); font-size: 1.1rem; margin-bottom: 15px; transition: var(--transition-normal); display: flex; align-items: center; gap: 15px; }
+        .option-btn:hover { background: rgba(0, 240, 255, 0.05); border-color: rgba(0, 240, 255, 0.3); transform: translateX(5px); }
+        .option-btn.selected { background: rgba(0, 85, 255, 0.2); border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); }
+        .option-letter { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .selected .option-letter { background: var(--primary); color: #000; }
+        .score-circle { width: 180px; height: 180px; border-radius: 50%; border: 10px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: 800; margin: 0 auto 30px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); position: relative; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; align-items: center; }
+        .filter-select { padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); border-radius: var(--border-radius-md); }
+        .filter-search { flex: 1; min-width: 200px; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); border-radius: var(--border-radius-md); }
+        .question-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .q-nav-item { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.05); }
+        .q-nav-item.completed { background: rgba(0, 255, 170, 0.2); border-color: #00ffaa; color: #00ffaa; }
+        .q-nav-item.current { background: var(--primary); color: #000; font-weight: bold; }
+        .q-nav-item.marked { border-color: var(--warning); color: var(--warning); }
+        
+        .mic-animation {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: rgba(0, 229, 255, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: var(--primary); margin: 0 auto 20px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+        
+        /* Enhanced Detail View Styles */
+        .mi-detail-box { text-align: center; padding: 15px 10px; transition: 0.3s; }
+        .mi-detail-box:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0, 240, 255, 0.1); }
+        .mi-detail-box i { font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; }
+        .mi-detail-box p.label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+        .mi-detail-box p.value { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        
+        .mi-timeline { border-left: 2px solid rgba(255,255,255,0.1); margin-left: 15px; padding-left: 25px; position: relative; list-style: none; }
+        .mi-timeline li { position: relative; padding-bottom: 20px; color: var(--text-secondary); font-size: 1.1rem; }
+        .mi-timeline li::before { content: ''; position: absolute; left: -32px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary); border: 2px solid var(--bg-dark); }
+        .mi-timeline li:last-child { padding-bottom: 0; }
+        .mi-timeline li strong { color: var(--text-primary); margin-right: 10px; }
+    </style>
+</head>
+
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item ">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item active">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+            </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h2>Mock Interviews</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- LIBRARY VIEW -->
+                <div id="miLibraryView">
+                    <h1 class="mb-1">Mock Interviews</h1>
+                    <p class="text-secondary mb-4">Practice realistic interview scenarios, improve your communication and prepare for your dream career.</p>
+                    
+                    <div class="grid-4 mb-4">
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Available Interviews</p>
+                            <h2 style="font-size: 2rem;" id="miAvailable">8</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Completed Interviews</p>
+                            <h2 style="font-size: 2rem;" class="text-success" id="miCompleted">5</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Average Score</p>
+                            <h2 style="font-size: 2rem;" class="text-primary" id="miAvgScore">78%</h2>
+                        </div>
+                        <div class="glass-card" style="padding: 20px;">
+                            <p class="text-secondary mb-1">Interview Readiness</p>
+                            <h2 style="font-size: 2rem;" class="text-warning" id="miReadiness">74%</h2>
+                        </div>
+                    </div>
+
+                    <div class="filter-bar">
+                        <input type="text" id="miSearch" class="filter-search" placeholder="Search mock interviews...">
+                        <select id="miType" class="filter-select">
+                            <option value="all">All Types</option>
+                            <option value="Technical">Technical</option>
+                            <option value="HR">HR / Behavioral</option>
+                        </select>
+                        <select id="miExperience" class="filter-select">
+                            <option value="all">Any Experience</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Entry Level">Entry Level</option>
+                            <option value="Intermediate">Intermediate</option>
+                        </select>
+                    </div>
+
+                    <h2 class="mb-3">New Mock Interviews</h2>
+                    <div class="grid-3 mb-5" id="newMiGrid"></div>
+                    
+                    <h2 class="mb-3">Upcoming Interviews</h2>
+                    <div class="grid-3 mb-5" id="upcomingMiGrid">
+                        <!-- Simulated Static Upcoming -->
+                        <div class="glass-card" style="padding: 20px; border-left: 3px solid var(--warning);">
+                            <h3 class="mb-1">Backend Developer Mock Interview</h3>
+                            <p class="text-secondary mb-2">Tomorrow • 10:00 AM</p>
+                            <div class="flex gap-2 text-secondary" style="font-size: 0.85rem;">
+                                <span><i class="fa-solid fa-briefcase"></i> Technical</span>
+                                <span><i class="fa-solid fa-clock"></i> 30 Min</span>
+                            </div>
+                            <button class="btn-outline w-100 mt-3" style="padding:5px;">View Details</button>
+                        </div>
+                        <div class="glass-card" style="padding: 20px; border-left: 3px solid var(--warning);">
+                            <h3 class="mb-1">HR Behavioral Interview</h3>
+                            <p class="text-secondary mb-2">Aug 12 • 4:00 PM</p>
+                            <div class="flex gap-2 text-secondary" style="font-size: 0.85rem;">
+                                <span><i class="fa-solid fa-users"></i> HR</span>
+                                <span><i class="fa-solid fa-clock"></i> 20 Min</span>
+                            </div>
+                            <button class="btn-outline w-100 mt-3" style="padding:5px;">View Details</button>
+                        </div>
+                    </div>
+
+                    <h2 class="mb-3">All Mock Interviews</h2>
+                    <div class="grid-3 mb-5" id="allMiGrid"></div>
+
+                    <h2 class="mb-3">Interview History</h2>
+                    <div class="glass-card mb-5">
+                        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--border);">
+                                    <th style="padding: 15px;">Interview Name</th>
+                                    <th style="padding: 15px;">Type</th>
+                                    <th style="padding: 15px;">Date</th>
+                                    <th style="padding: 15px;">Score</th>
+                                    <th style="padding: 15px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="miHistoryBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DETAIL VIEW -->
+                <div id="miDetailView" class="hidden assessment-container">
+                    <button class="btn-outline mb-4" onclick="showMiView('miLibraryView')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    
+                    <div class="mb-5 text-center">
+                        <h1 class="mb-2" id="miDetailTitle" style="font-size: 2.5rem; text-shadow: 0 0 10px rgba(0,240,255,0.3);">Mock Interview Title</h1>
+                        <p class="text-secondary">Comprehensive AI-powered interview simulation</p>
+                    </div>
+                    
+                    <h3 class="mb-3">Interview Details</h3>
+                    <div class="grid-4 gap-3 mb-5">
+                        <div class="glass-card mi-detail-box">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <p class="label">Type</p>
+                            <p class="value" id="miDetailType">Technical</p>
+                        </div>
+                        <div class="glass-card mi-detail-box">
+                            <i class="fa-solid fa-star"></i>
+                            <p class="label">Experience</p>
+                            <p class="value" id="miDetailExp">Entry Level</p>
+                        </div>
+                        <div class="glass-card mi-detail-box">
+                            <i class="fa-solid fa-clock"></i>
+                            <p class="label">Duration</p>
+                            <p class="value" id="miDetailDuration">30 Minutes</p>
+                        </div>
+                        <div class="glass-card mi-detail-box">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                            <p class="label">Questions</p>
+                            <p class="value" id="miDetailQs">12</p>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-4 mt-5">Interview Structure</h3>
+                    <ul class="mi-timeline mb-5">
+                        <li><strong>01</strong> Introduction & Background</li>
+                        <li><strong>02</strong> Core Technical Questions</li>
+                        <li><strong>03</strong> Scenario-Based Architecture</li>
+                        <li><strong>04</strong> Problem Solving Challenge</li>
+                        <li><strong>05</strong> Final Discussion</li>
+                    </ul>
+
+                    <button class="btn-primary w-100 py-3" style="font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,240,255,0.3); transition: 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" id="startMiBtnAction" onclick="startInterview()">Start Mock Interview <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                </div>
+
+                <!-- SIMULATED INTERFACE VIEW -->
+                <div id="miInterfaceView" class="hidden">
+                    <div class="grid-3 gap-4" style="grid-template-columns: 2fr 1fr;">
+                        
+                        <!-- Left Column: Video Stage -->
+                        <div class="glass-card video-stage-container flex-col" style="min-height: 550px; position: relative; overflow: hidden; padding: 0;">
+                            
+                            <!-- Status Badge -->
+                            <div class="status-badge" id="miStatus">
+                                <span class="recording-dot" style="background-color: var(--warning); box-shadow: 0 0 8px var(--warning);"></span> LIVE
+                            </div>
+
+                            <!-- Main AI Avatar Area -->
+                            <div class="video-main-area flex-col items-center" style="flex: 1; justify-content: center;">
+                                <!-- Avatar Removed as requested -->
+                                <div id="miRecordingUI" class="hidden flex-col items-center">
+                                    <div class="mic-animation"><i class="fa-solid fa-microphone"></i></div>
+                                    <p class="text-primary font-weight-bold mt-2">Listening to your answer...</p>
+                                </div>
+                                <div id="miFinishedUI" class="hidden flex-col items-center">
+                                    <div style="font-size: 3rem;" class="text-success mb-2"><i class="fa-solid fa-circle-check"></i></div>
+                                    <p class="text-success font-weight-bold">Answer submitted</p>
+                                </div>
+                            </div>
+
+                            <!-- User Picture-in-Picture (PIP) -->
+                            <div class="user-pip">
+                                <div class="pip-placeholder">
+                                    <i class="fa-solid fa-video-slash text-muted" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <span class="pip-label">You</span>
+                            </div>
+
+                            <!-- Live Captions (Question Text) -->
+                            <div class="captions-box">
+                                <p id="miQuestionText">"Loading question..."</p>
+                            </div>
+
+                            <!-- Bottom Control Bar -->
+                            <div class="video-controls flex justify-center items-center gap-3">
+                                <button class="ctrl-btn icon-btn" title="Toggle Microphone" onclick="toggleMute(this)">
+                                    <i class="fa-solid fa-microphone"></i>
+                                </button>
+                                <button class="ctrl-btn icon-btn" title="Toggle Camera" onclick="toggleVideo(this)">
+                                    <i class="fa-solid fa-video-slash text-muted"></i>
+                                </button>
+                                
+                                <div id="miActionBtns" class="flex gap-2">
+                                    <button class="ctrl-btn record-btn" id="btnStartAns" onclick="startAnswer()">
+                                        <i class="fa-solid fa-record-vinyl"></i> Start Answer
+                                    </button>
+                                    <button class="ctrl-btn record-btn hidden" id="btnPauseAns" onclick="pauseAnswer()">
+                                        <i class="fa-solid fa-pause"></i> Pause
+                                    </button>
+                                    <button class="ctrl-btn finish-btn hidden" id="btnFinishAns" onclick="finishAnswer()">
+                                        <i class="fa-solid fa-stop"></i> Finish
+                                    </button>
+                                    <button class="ctrl-btn next-btn hidden" id="btnNextQ" onclick="nextMiQuestion()">
+                                        Next Question <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+
+                                <button class="ctrl-btn end-btn icon-btn" title="End Interview" onclick="finishInterview()">
+                                    <i class="fa-solid fa-phone-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Sidebar -->
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <!-- Progress & Timer -->
+                            <div class="glass-card" style="padding: 24px;">
+                                <h3 class="mb-4">Interview Progress</h3>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-primary font-weight-bold" id="miProgressText">Question 1 / 12</span>
+                                    <span class="text-warning font-weight-bold timer-display" id="miTimer">30:00</span>
+                                </div>
+                                <div class="progress-container mb-3">
+                                    <div class="progress-bar" id="miProgressBar" style="width: 8%"></div>
+                                </div>
+                                <p class="text-secondary text-sm mb-4"><i class="fa-solid fa-circle-info mr-1 text-primary"></i> Speak clearly and structure your answers.</p>
+                                
+                                <div class="flex-col gap-2">
+                                    <button class="btn-outline w-100 flex items-center justify-center gap-2" style="padding: 12px 20px;"><i class="fa-solid fa-repeat"></i> Repeat Question</button>
+                                    <button class="btn-outline w-100 flex items-center justify-center gap-2" style="padding: 12px 20px;"><i class="fa-solid fa-lightbulb text-warning"></i> Request Hint</button>
+                                </div>
+                            </div>
+
+                            <!-- Scratchpad / Notes -->
+                            <div class="glass-card flex-col flex-1" style="padding: 24px;">
+                                <h3 class="mb-3 flex justify-between items-center">
+                                    <span><i class="fa-solid fa-pen-to-square mr-2"></i> Interview Notes</span>
+                                    <i class="fa-solid fa-lock text-muted text-sm" title="Private to you"></i>
+                                </h3>
+                                <textarea class="filter-search flex-1" style="resize: none; border-radius: 8px; padding: 12px; height: 100%; min-height: 150px; background: rgba(0,0,0,0.3);" placeholder="Jot down your thoughts, structure your answer, or write key points here..."></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- FEEDBACK VIEW -->
+                <div id="miFeedbackView" class="hidden assessment-container">
+                    <h1 class="mb-1 text-center">Interview Completed</h1>
+                    <p class="text-secondary mb-5 text-center">Your performance has been analyzed by the AI.</p>
+                    
+                    <div class="score-circle">
+                        <span id="miScoreText">78</span><span style="font-size: 2rem">%</span>
+                    </div>
+                    <h2 class="text-center mb-5">Overall Score</h2>
+                    
+                    <h3 class="mb-3">Performance Breakdown</h3>
+                    <div class="grid-2 gap-3 mb-5">
+                        <div class="glass-card p-3 flex justify-between items-center">
+                            <span>Technical Knowledge</span><strong class="text-primary" id="miScoreTech">82%</strong>
+                        </div>
+                        <div class="glass-card p-3 flex justify-between items-center">
+                            <span>Communication</span><strong class="text-primary" id="miScoreComm">76%</strong>
+                        </div>
+                        <div class="glass-card p-3 flex justify-between items-center">
+                            <span>Problem Solving</span><strong class="text-primary">74%</strong>
+                        </div>
+                        <div class="glass-card p-3 flex justify-between items-center">
+                            <span>Confidence</span><strong class="text-primary">80%</strong>
+                        </div>
+                        <div class="glass-card p-3 flex justify-between items-center">
+                            <span>Concept Clarity</span><strong class="text-primary">78%</strong>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-3 mt-5">AI Interview Feedback</h3>
+                    <div class="grid-2 gap-4 mb-5">
+                        <div class="glass-card p-4 border-l-4" style="border-left: 4px solid var(--success);">
+                            <h4 class="mb-3 text-success">Strengths</h4>
+                            <ul id="miStrengthsList" class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;">
+                                <li><i class="fa-solid fa-check text-success mr-2"></i> Good understanding of frontend fundamentals</li>
+                                <li><i class="fa-solid fa-check text-success mr-2"></i> Clear explanation of concepts</li>
+                                <li><i class="fa-solid fa-check text-success mr-2"></i> Good problem-solving approach</li>
+                            </ul>
+                        </div>
+                        <div class="glass-card p-4 border-l-4" style="border-left: 4px solid var(--warning);">
+                            <h4 class="mb-3 text-warning">Areas to Improve</h4>
+                            <ul id="miWeaknessesList" class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;">
+                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Improve explanation structure</li>
+                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Practice JavaScript asynchronous concepts</li>
+                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Give more specific project examples</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h1 class="mb-3 text-center mt-5">Recommended Next Steps</h1>
+                    <div class="grid-3 gap-3 mb-5">
+                        <div class="glass-card text-center p-4">
+                            <h4 class="mb-2">Practice JS Async</h4>
+                            <button class="btn-primary w-100" onclick="window.location.href='learning.html'">Practice Skill</button>
+                        </div>
+                        <div class="glass-card text-center p-4">
+                            <h4 class="mb-2">Take Frontend Assessment</h4>
+                            <button class="btn-outline w-100" onclick="window.location.href='assessments.html'">Take Assessment</button>
+                        </div>
+                        <div class="glass-card text-center p-4">
+                            <h4 class="mb-2">Retry Mock Interview</h4>
+                            <button class="btn-secondary w-100" onclick="window.location.reload()">Try Again</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/mock-interviews.js"></script>
+</body>
+</html>

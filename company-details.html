@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .company-header-bg {
+            background: linear-gradient(135deg, rgba(0, 119, 181, 0.2) 0%, rgba(10, 11, 26, 0.9) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;
+            height: 200px;
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+            position: relative;
+        }
+        
+        .company-logo-large {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #0077b5;
+            position: absolute;
+            bottom: -60px;
+            left: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid var(--bg-primary);
+        }
+
+        .match-score-badge {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .opportunity-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .opportunity-card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item active">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                    <button onclick="history.back()" title="Go Back" style="
+                        display: inline-flex; align-items: center; gap: 8px;
+                        background: rgba(255,255,255,0.05);
+                        border: 1px solid var(--border);
+                        color: var(--text-secondary);
+                        padding: 7px 16px;
+                        border-radius: 8px;
+                        font-size: 0.88rem;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    "
+                    onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='var(--text-primary)';"
+                    onmouseleave="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-secondary)';" >
+                        <i class="fa-solid fa-arrow-left" style="font-size: 0.85rem;"></i>
+                        Back
+                    </button>
+                    <h2>Company Profile</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="glass-card mb-4" style="padding: 0; overflow: visible;">
+                    <div class="company-header-bg">
+                        <div class="company-logo-large">
+                            <i class="fa-brands fa-linkedin" id="companyLogoIcon"></i>
+                        </div>
+                    </div>
+                    <div style="padding: 80px 40px 40px 40px;">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h1 style="font-size: 2.5rem;" id="companyName">LinkedIn</h1>
+                                <p class="text-secondary" style="font-size: 1.1rem;" id="companyCategory">Professional Networking</p>
+                            </div>
+                            <div class="match-score-badge">
+                                <i class="fa-solid fa-bolt"></i> <span id="companyMatchScore">92% Match</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 mb-4 text-secondary">
+                            <span><i class="fa-solid fa-location-dot"></i> Global</span>
+                            <span><i class="fa-solid fa-building"></i> <span id="companyType">Enterprise</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="grid-3" style="gap: 30px;">
+                    <div style="grid-column: span 2;">
+                        <!-- About Section -->
+                        <div class="glass-card mb-4" style="padding: 25px;">
+                            <h2 class="mb-3">About the Company</h2>
+                            <p id="companyDescription" class="text-secondary" style="line-height: 1.6;">Loading description...</p>
+                            
+                            <div class="grid-2 gap-4 mt-4">
+                                <div>
+                                    <h4 class="mb-2 text-primary"><i class="fa-solid fa-users mr-2"></i>Culture</h4>
+                                    <p id="companyCulture" class="text-secondary" style="font-size: 0.95rem;">Loading culture...</p>
+                                </div>
+                                <div>
+                                    <h4 class="mb-2 text-primary"><i class="fa-solid fa-gift mr-2"></i>Benefits</h4>
+                                    <ul id="companyBenefits" style="list-style: none; padding: 0; font-size: 0.95rem;" class="text-secondary">
+                                        <li>Loading benefits...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="mb-3">Open Opportunities</h2>
+                        <div id="opportunitiesList">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="glass-card mb-4" style="padding: 25px;">
+                            <h3 class="mb-3">Roles Hiring</h3>
+                            <ul id="companyRoles" style="list-style: none; padding: 0;">
+                                <li class="mb-2 text-secondary"><i class="fa-solid fa-check text-primary mr-2"></i> Loading roles...</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="glass-card" style="padding: 25px;">
+                            <h3 class="mb-3">Skills They Value</h3>
+                            <div id="companySkills" class="flex flex-wrap gap-2">
+                                <span class="badge">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        // Simple script to mock dynamic data based on URL if needed
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+            
+            if(idParam) {
+                const companies = AppState.getCompanies();
+                const company = companies.find(c => c.id == idParam);
+                if(company) {
+                    document.getElementById('companyName').textContent = company.name;
+                    document.getElementById('companyCategory').textContent = company.category || 'Technology';
+                    if (document.getElementById('companyType')) document.getElementById('companyType').textContent = company.type || 'Enterprise';
+                    if(document.querySelector('.company-logo-large') && company.logo) {
+                        const logoContainer = document.querySelector('.company-logo-large');
+                        if(company.logo.startsWith('http')) {
+                            logoContainer.innerHTML = `<img src="${company.logo}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px; padding: 10px;">`;
+                        } else {
+                            logoContainer.innerHTML = `<i class="${company.logo}" id="companyLogoIcon"></i>`;
+                        }
+                    }
+                    const getMatchScore = (cName) => {
+                        const hash = cName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                        return 65 + (hash % 34);
+                    };
+                    const matchScore = getMatchScore(company.name);
+                    if (document.getElementById('companyMatchScore')) document.getElementById('companyMatchScore').textContent = matchScore + '% Match';
+
+                    // Detailed Data Injection
+                    if(document.getElementById('companyDescription')) document.getElementById('companyDescription').textContent = company.description || 'A forward-thinking organization dedicated to innovation, delivering high-quality solutions, and empowering professionals globally.';
+                    if(document.getElementById('companyCulture')) document.getElementById('companyCulture').textContent = company.culture || 'Innovative, inclusive, and fast-paced environment focusing on continuous growth and collaboration.';
+                    
+                    const defaultBenefits = ['Comprehensive Health & Wellness', 'Flexible Working Hours', 'Professional Development Stipend', '401(k) Matching & Equity'];
+                    const benefitsToDisplay = (company.benefits && company.benefits.length > 0) ? company.benefits : defaultBenefits;
+                    
+                    if(document.getElementById('companyBenefits')) {
+                        document.getElementById('companyBenefits').innerHTML = benefitsToDisplay.map(b => `<li class="mb-2"><i class="fa-solid fa-star text-warning mr-2"></i> ${b}</li>`).join('');
+                    }
+
+                    if(document.getElementById('companyRoles') && company.roles) {
+                        document.getElementById('companyRoles').innerHTML = company.roles.map(r => `<li class="mb-2 text-secondary"><i class="fa-solid fa-check text-primary mr-2"></i> ${r}</li>`).join('');
+                    }
+
+                    if(document.getElementById('companySkills') && company.skills) {
+                        document.getElementById('companySkills').innerHTML = company.skills.map(s => `<span class="badge" style="border: 1px solid var(--primary); color: var(--primary);">${s}</span>`).join('');
+                    }
+
+                    if(document.getElementById('opportunitiesList') && company.roles) {
+                        document.getElementById('opportunitiesList').innerHTML = company.roles.map((r, idx) => `
+                            <div class="opportunity-card flex justify-between items-center">
+                                <div>
+                                    <h3 class="mb-1 text-primary">${r}</h3>
+                                    <p class="text-secondary mb-2" style="font-size: 0.9rem;">Full-Time • Remote/Hybrid</p>
+                                    <div class="flex gap-2">
+                                        ${company.skills.slice(0, 2).map(s => `<span class="badge">${s}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="match-score-badge mb-2" style="justify-content: center; font-size: 0.8rem;">${matchScore - (idx*2)}% Match</div>
+                                    <button class="btn-primary" onclick="applyForCompany('${company.name}')">Apply Now</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+            
+            // Expose apply logic globally for the cards
+            window.applyForCompany = function(companyName) {
+                if (typeof showToast === 'function') {
+                    showToast(`Application successfully sent to ${companyName}!`, 'success');
+                } else {
+                    alert(`Application successfully sent to ${companyName}!`);
+                }
+            }
+        });
+    </script>
+<script src="js/notifications.js"></script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Details - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .skill-hero {
+            background: linear-gradient(135deg, rgba(0, 85, 255, 0.1), rgba(112, 0, 255, 0.1));
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-hero::before {
+            content: '\f3e2'; /* Python icon */
+            font-family: 'Font Awesome 6 Brands';
+            position: absolute;
+            right: -20px;
+            bottom: -50px;
+            font-size: 20rem;
+            opacity: 0.03;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        .roadmap-container {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .roadmap-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .roadmap-item {
+            position: relative;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-md);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition-normal);
+        }
+
+        .roadmap-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.1);
+        }
+
+        .roadmap-item.locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .roadmap-item.completed {
+            border-left: 4px solid var(--success);
+        }
+
+        .roadmap-item.in-progress {
+            border-left: 4px solid var(--primary);
+        }
+
+        .roadmap-node {
+            position: absolute;
+            left: -37px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            z-index: 2;
+        }
+
+        .completed .roadmap-node {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .in-progress .roadmap-node {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item active">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                            </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar (simplified) -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2>Skill Details</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area" id="skillDetailsArea">
+                <div class="flex items-center gap-2 mb-3 cursor-pointer text-secondary" onclick="window.history.back()">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Skills
+                </div>
+
+                <div class="skill-hero">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i class="fa-brands fa-python" style="font-size: 3rem; color: var(--primary)"></i>
+                        <div>
+                            <h1 style="font-size: 2.5rem;" id="sdName">Python</h1>
+                            <span class="badge primary mt-1" id="sdCategory">Programming Language</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-secondary mb-4 max-w-lg" id="sdDesc" style="max-width: 600px; font-size: 1.1rem">
+                        Build a strong foundation in Python from fundamentals to advanced programming concepts.
+                    </p>
+
+                    <div class="grid-4 mb-4">
+                        <div class="glass-card" style="padding: 15px;">
+                            <p class="text-secondary" style="font-size:0.8rem">Progress</p>
+                            <h3 id="sdProgress">48%</h3>
+                        </div>
+                        <div class="glass-card" style="padding: 15px;">
+                            <p class="text-secondary" style="font-size:0.8rem">Difficulty</p>
+                            <h3 id="sdDiff">Intermediate</h3>
+                        </div>
+                        <div class="glass-card" style="padding: 15px;">
+                            <p class="text-secondary" style="font-size:0.8rem">Estimated Duration</p>
+                            <h3 id="sdHours">32 Hours</h3>
+                        </div>
+                        <div class="glass-card" style="padding: 15px;">
+                            <p class="text-secondary" style="font-size:0.8rem">Total Lectures</p>
+                            <h3 id="sdLectures">45 Lectures</h3>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="window.location.href='learning.html'">Start Learning</button>
+                </div>
+
+                <h2 class="mb-4" id="sdRoadmapTitle">Roadmap</h2>
+                
+                <div class="roadmap-container" id="sdRoadmapList">
+                    <!-- Roadmap items will be injected here dynamically -->
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        // Simple script to map URL parameter 'id' to skill details dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const skillId = urlParams.get('id');
+            if(skillId) {
+                const skills = AppState.getSkills();
+                const skill = skills.find(s => s.id === skillId);
+                if(skill) {
+                    document.getElementById('sdName').textContent = skill.name;
+                    document.getElementById('sdCategory').textContent = skill.category;
+                    document.getElementById('sdDesc').textContent = skill.desc;
+                    document.getElementById('sdProgress').textContent = skill.progress + '%';
+                    document.getElementById('sdDiff').textContent = skill.difficulty;
+                    document.getElementById('sdHours').textContent = skill.hours + ' Hours';
+                    document.getElementById('sdLectures').textContent = skill.lectures + ' Lectures';
+                    
+                    // Update hero icon dynamically
+                    const heroIcon = document.querySelector('.skill-hero i');
+                    heroIcon.className = skill.icon;
+                    
+                    // Update roadmap title
+                    document.getElementById('sdRoadmapTitle').textContent = skill.name + ' Roadmap';
+                    
+                    // Generate roadmap dynamically based on skill.lectures
+                    const roadmapList = document.getElementById('sdRoadmapList');
+                    roadmapList.innerHTML = '';
+                    
+                    // Calculate how many lectures are completed based on progress percentage
+                    let completedCount = Math.floor((skill.progress / 100) * skill.lectures);
+                    if (skill.progress > 0 && completedCount === 0) completedCount = 1;
+                    
+                    let roadmapHTML = '';
+                    for(let i = 1; i <= skill.lectures; i++) {
+                        let statusClass = 'locked';
+                        let badgeHtml = '<span class="badge secondary"><i class="fa-solid fa-lock"></i> Locked</span>';
+                        let clickAction = '';
+                        
+                        if (i <= completedCount) {
+                            statusClass = 'completed';
+                            badgeHtml = '<span class="badge success">Completed <i class="fa-solid fa-check"></i></span>';
+                        } else if (i === completedCount + 1 || skill.progress === 0 && i === 1) {
+                            // The very next uncompleted lecture is 'in-progress'
+                            statusClass = 'in-progress cursor-pointer';
+                            badgeHtml = '<span class="badge primary">In Progress <i class="fa-solid fa-spinner"></i></span>';
+                            clickAction = `onclick="window.location.href='learning.html'"`;
+                        }
+                        
+                        // Generic but context-aware titles
+                        let lectureTitle = `${skill.name} Module ${i}`;
+                        if (i === 1) lectureTitle = `Introduction to ${skill.name}`;
+                        if (i === skill.lectures) lectureTitle = `Advanced ${skill.name} Project`;
+                        
+                        roadmapHTML += `
+                            <div class="roadmap-item ${statusClass}" ${clickAction}>
+                                <div class="roadmap-node"></div>
+                                <div>
+                                    <p class="text-secondary" style="font-size:0.8rem">${String(i).padStart(2, '0')}</p>
+                                    <h3>${lectureTitle}</h3>
+                                </div>
+                                ${badgeHtml}
+                            </div>
+                        `;
+                    }
+                    roadmapList.innerHTML = roadmapHTML;
+                }
+            }
+        });
+    </script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-header {
+            position: relative;
+            padding-top: 120px;
+            margin-bottom: 20px;
+        }
+
+        .cover-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.8), rgba(0, 240, 255, 0.6)), url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E');
+            border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+            z-index: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-info {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 25px;
+            padding: 0 40px;
+        }
+
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(5, 5, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(0, 240, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .profile-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            border-color: var(--primary);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            text-align: center;
+            transition: var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        #profileName {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            letter-spacing: -0.5px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item active">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h2>Profile</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="grid-2" style="align-items: stretch;">
+                    <div class="glass-card">
+                        <div class="profile-header">
+                            <div class="cover-photo"></div>
+                            <div class="profile-info">
+                                <div class="profile-avatar" id="profileAvatar">&nbsp;</div>
+                                <div style="padding-bottom: 10px;">
+                                    <h1 id="profileName">&nbsp;</h1>
+                                    <p class="text-secondary" id="profileSubtext">&nbsp;</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid-4" style="padding: 20px 30px 30px; border-top: 1px solid rgba(255,255,255,0.05); gap: 15px;">
+                            <div class="stat-box">
+                                <i class="fa-solid fa-book-open text-primary mb-2" style="font-size: 1.2rem;"></i>
+                                <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Skills</p>
+                                <h3 id="statSkills" style="font-size: 1.6rem; color: white;">12</h3>
+                            </div>
+                            <div class="stat-box">
+                                <i class="fa-solid fa-check-circle text-secondary mb-2" style="font-size: 1.2rem;"></i>
+                                <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Completed</p>
+                                <h3 id="statCompleted" style="font-size: 1.6rem; color: white;">5</h3>
+                            </div>
+                            <div class="stat-box">
+                                <i class="fa-solid fa-clock text-primary mb-2" style="font-size: 1.2rem;"></i>
+                                <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Hours</p>
+                                <h3 id="statHours" style="font-size: 1.6rem; color: white;">48</h3>
+                            </div>
+                            <div class="stat-box">
+                                <i class="fa-solid fa-fire mb-2" style="font-size: 1.2rem; color: #ff6b6b;"></i>
+                                <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Streak</p>
+                                <h3 id="statStreak" style="font-size: 1.6rem; color: white;">14 Days</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="padding: 30px;">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3>Personal Information</h3>
+                            <div id="actionButtons">
+                                <button class="btn-outline" onclick="toggleEditMode(true)">Edit Profile</button>
+                            </div>
+                        </div>
+
+                        <form id="profileForm" onsubmit="saveProfile(event)">
+                            <div class="form-grid mb-3">
+                                <div>
+                                    <label class="text-secondary mb-1" style="display:block; font-size:0.9rem;">Full Name</label>
+                                    <input type="text" id="inputName" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="text-secondary mb-1" style="display:block; font-size:0.9rem;">Email Address</label>
+                                    <input type="email" id="inputEmail" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="text-secondary mb-1" style="display:block; font-size:0.9rem;">College / University</label>
+                                    <input type="text" id="inputCollege" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="text-secondary mb-1" style="display:block; font-size:0.9rem;">Branch / Major</label>
+                                    <input type="text" id="inputBranch" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="text-secondary mb-1" style="display:block; font-size:0.9rem;">Date of Birth</label>
+                                    <input type="date" id="inputDob" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div id="editButtons" class="hidden mt-4 flex gap-2">
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                                <button type="button" class="btn-secondary" onclick="toggleEditMode(false)">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+<!-- PROGRESS SECTION -->
+<div style="margin-top: 40px;"></div>
+<div class="grid-2 mb-4" style="gap: 30px;">
+                    
+                    <!-- Overall Progress -->
+                    <div class="glass-card text-center" style="padding: 40px 20px;">
+                        <h3 class="mb-4">Overall Learning Progress</h3>
+                        <div class="circular-progress">
+                            <span class="progress-value">68%</span>
+                            <span class="progress-label">Total Completion</span>
+                        </div>
+                    </div>
+
+                    <!-- Skill Progress List -->
+                    <div class="glass-card" style="padding: 30px;">
+                        <h3 class="mb-3">Skill Progress</h3>
+                        <div class="flex-col gap-3" id="skillProgressList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 30px;">
+                    <!-- Weekly Activity -->
+                    <div class="glass-card" style="padding: 30px;">
+                        <h3 class="mb-1">Weekly Activity</h3>
+                        <p class="text-secondary mb-4">Total learning hours this week.</p>
+                        
+                        <div class="chart-container" id="weeklyChart">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Achievements -->
+                    <div class="glass-card" style="padding: 30px;">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3>Achievements</h3>
+                            <span class="text-primary" style="font-size: 0.9rem;">4 Unlocked</span>
+                        </div>
+                        
+                        <div class="flex-col gap-2">
+                            <div class="achievement-card">
+                                <div class="badge-icon" style="background: rgba(255, 215, 0, 0.1); color: gold;">
+                                    <i class="fa-solid fa-trophy"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">First Skill Completed</h4>
+                                    <p class="text-secondary" style="font-size: 0.8rem;">Completed HTML & CSS</p>
+                                </div>
+                            </div>
+                            
+                            <div class="achievement-card">
+                                <div class="badge-icon" style="background: rgba(255, 100, 0, 0.1); color: #ff6400;">
+                                    <i class="fa-solid fa-fire"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">7 Day Streak</h4>
+                                    <p class="text-secondary" style="font-size: 0.8rem;">Learned consistently for a week</p>
+                                </div>
+                            </div>
+                            
+                            <div class="achievement-card">
+                                <div class="badge-icon" style="background: rgba(0, 240, 255, 0.1); color: var(--primary);">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">10 Lectures Completed</h4>
+                                    <p class="text-secondary" style="font-size: 0.8rem;">You are a fast learner!</p>
+                                </div>
+                            </div>
+                            
+                            <div class="achievement-card">
+                                <div class="badge-icon" style="background: rgba(112, 0, 255, 0.1); color: var(--secondary);">
+                                    <i class="fa-solid fa-bullseye"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">First Assessment</h4>
+                                    <p class="text-secondary" style="font-size: 0.8rem;">Tested your knowledge successfully</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

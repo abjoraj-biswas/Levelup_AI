@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Profile - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">LevelUP<span>.AI</span></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+                <a href="skills.html" class="nav-item">
+                    <i class="fa-solid fa-compass"></i> Explore Skills
+                </a>
+                <a href="learning.html" class="nav-item">
+                    <i class="fa-solid fa-book-open"></i> My Learning
+                </a>
+                <a href="assessments.html" class="nav-item">
+                    <i class="fa-solid fa-clipboard-check"></i> Assessments
+                </a>
+                <a href="mock-interviews.html" class="nav-item">
+                    <i class="fa-solid fa-video"></i> Mock Interviews
+                </a>
+                <a href="bughunting.html" class="nav-item">
+                    <i class="fa-solid fa-bug"></i> Bug Hunting
+                </a>
+                <a href="corporate.html" class="nav-item active">
+                    <i class="fa-solid fa-handshake"></i> Corporate Matches
+                </a>
+                <a href="recommendations.html" class="nav-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations
+                </a>
+                                <a href="profile.html" class="nav-item">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+                </nav>
+        
+            <div class="sidebar-footer" style="display: flex; justify-content: center; gap: 30px; padding: 20px 10px;">
+                <a href="settings.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Settings" aria-label="Settings">
+                    <i class="fa-solid fa-gear" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="#" class="nav-item" onclick="showToast('Help center opened');" style="padding: 10px; margin: 0; min-width: auto;" title="Help" aria-label="Help">
+                    <i class="fa-solid fa-circle-question" style="font-size: 1.2rem; color: var(--text-secondary); transition: var(--transition-fast);"></i>
+                </a>
+                <a href="index.html" class="nav-item" style="padding: 10px; margin: 0; min-width: auto;" title="Logout" aria-label="Logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.2rem; color: var(--danger); transition: var(--transition-fast);"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="flex items-center gap-2">
+                    <button class="hamburger-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2>Career Profile</h2>
+                </div>
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="notification-bell">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-dot" style="display:none;"></span>
+                        
+                        <div class="dropdown-menu notif-dropdown" style="width: 320px; right: -80px;">
+                            <div class="flex justify-between items-center" style="padding: 10px 15px; border-bottom: 1px solid var(--border)">
+                                <strong style="color:var(--text-primary)">Notifications</strong>
+                                <button onclick="markAllRead(event)" style="font-size:0.8rem; color:var(--primary); background:none; border:none; cursor:pointer;">Mark all read</button>
+                            </div>
+                            <div class="notification-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="profile.html" class="user-profile-menu" style="text-decoration: none;">
+                        <div class="avatar" id="topAvatar">A</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="grid-3" style="gap: 30px;">
+                    <!-- Left: Profile Data -->
+                    <div style="grid-column: span 2;">
+                        <div class="glass-card mb-4" style="padding: 30px;">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="avatar" style="width: 80px; height: 80px; font-size: 2.5rem; background: var(--primary);">A</div>
+                                    <div>
+                                        <h2 style="font-size: 1.8rem;">Alex Sharma</h2>
+                                        <p class="text-secondary">Aspiring Frontend Developer</p>
+                                    </div>
+                                </div>
+                                <button class="btn-outline"><i class="fa-solid fa-pen"></i> Edit Info</button>
+                            </div>
+                            <p class="text-secondary" style="line-height: 1.6;">
+                                I am a passionate self-taught developer focusing on creating intuitive and accessible frontend experiences. I enjoy solving UI logic problems and am actively participating in bug hunts to sharpen my debugging skills in real-world scenarios.
+                            </p>
+                        </div>
+
+                        <div class="glass-card mb-4" style="padding: 30px;">
+                            <h3 class="mb-3">Verified Skills</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span>JavaScript</span>
+                                    <span class="text-primary">85% Proficiency</span>
+                                </div>
+                                <div class="progress-container"><div class="progress-bar" style="width: 85%;"></div></div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span>React</span>
+                                    <span class="text-primary">78% Proficiency</span>
+                                </div>
+                                <div class="progress-container"><div class="progress-bar" style="width: 78%;"></div></div>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span>Python</span>
+                                    <span class="text-primary">70% Proficiency</span>
+                                </div>
+                                <div class="progress-container"><div class="progress-bar" style="width: 70%;"></div></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card" style="padding: 30px;">
+                            <h3 class="mb-3">Platform Achievements</h3>
+                            
+                            <div class="grid-2" style="gap: 20px;">
+                                <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3); padding: 20px; border-radius: 12px;">
+                                    <h4 class="mb-2"><i class="fa-solid fa-bug text-danger"></i> Bug Hunting</h4>
+                                    <p class="text-secondary mb-1">Accepted Reports: <span class="text-white">18</span></p>
+                                    <p class="text-secondary">Earned: <span class="text-success">₹8,500</span></p>
+                                </div>
+                                <div style="background: rgba(255, 184, 0, 0.1); border: 1px solid rgba(255, 184, 0, 0.3); padding: 20px; border-radius: 12px;">
+                                    <h4 class="mb-2"><i class="fa-solid fa-certificate text-warning"></i> Education</h4>
+                                    <p class="text-secondary mb-1">Certificates: <span class="text-white">4</span></p>
+                                    <p class="text-secondary">Avg Assessment Score: <span class="text-success">82%</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Visibility Toggle -->
+                    <div>
+                        <div class="glass-card mb-4" style="padding: 30px; text-align: center;">
+                            <i class="fa-solid fa-eye mb-3" style="font-size: 3rem; color: var(--primary);"></i>
+                            <h2 class="mb-2">Recruiter Visibility</h2>
+                            <p class="text-secondary mb-4" style="font-size: 0.9rem; line-height: 1.5;">
+                                When enabled, your profile, verified skills, and bug hunting stats become visible to matched partner companies looking for talent.
+                            </p>
+                            
+                            <div class="flex justify-center items-center gap-3 mb-2">
+                                <span class="text-secondary" id="visibilityStatusText">Invisible</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="visibilityToggle" onchange="toggleVisibility()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profile = AppState.getCareerProfile();
+            const toggle = document.getElementById('visibilityToggle');
+            const statusText = document.getElementById('visibilityStatusText');
+            
+            if(profile && profile.visible) {
+                toggle.checked = true;
+                statusText.textContent = "Visible to Recruiters";
+                statusText.style.color = "var(--success)";
+            } else {
+                toggle.checked = false;
+                statusText.textContent = "Invisible";
+                statusText.style.color = "var(--text-secondary)";
+            }
+        });
+
+        function toggleVisibility() {
+            const toggle = document.getElementById('visibilityToggle');
+            const statusText = document.getElementById('visibilityStatusText');
+            
+            if(toggle.checked) {
+                statusText.textContent = "Visible to Recruiters";
+                statusText.style.color = "var(--success)";
+                showToast("Your profile is now visible to matched companies.", "success");
+            } else {
+                statusText.textContent = "Invisible";
+                statusText.style.color = "var(--text-secondary)";
+                showToast("Your profile is now hidden from recruiters.");
+            }
+
+            // Save state
+            AppState.updateCareerProfile({ visible: toggle.checked });
+        }
+    </script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+
