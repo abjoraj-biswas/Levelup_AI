@@ -73,12 +73,6 @@
             background: transparent;
         }
 
-        .nav-links a i {
-            width: 16px;
-            height: 16px;
-            stroke-width: 2.5;
-            transition: all 0.3s ease;
-        }
 
         .nav-links a:hover {
             color: #fff;
@@ -87,11 +81,6 @@
             transform: translateY(-2px);
         }
 
-        .nav-links a:hover i {
-            stroke: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary));
-            transform: scale(1.1) rotate(-5deg);
-        }
 
         
         /* Lenis Smooth Scroll Setup */
@@ -656,14 +645,14 @@
 
     <!-- Navigation -->
     <nav class="landing-nav">
-        <div class="logo">LevelUP<span style="color:var(--primary)">.AI</span></div>
+        <div class="logo" style="flex: 1;">LevelUP<span style="color:var(--primary)">.AI</span></div>
         <div class="nav-links hidden-mobile">
-            <a href="#"><i data-lucide="home"></i> Home</a>
-            <a href="#features"><i data-lucide="layout"></i> Platform</a>
-            <a href="#journey"><i data-lucide="map"></i> Journey</a>
-            <a href="#ecosystem"><i data-lucide="component"></i> Ecosystem</a>
+            <a href="#">Home</a>
+            <a href="#features">Platform</a>
+            <a href="#journey">Journey</a>
+            <a href="#ecosystem">Ecosystem</a>
         </div>
-        <div style="display:flex; align-items:center; gap: 15px;">
+        <div style="flex: 1; display:flex; justify-content: flex-end; align-items:center; gap: 15px;">
             <a href="login.html"
                 style="color:var(--text-primary); text-decoration:none; font-weight:500; font-size:0.95rem;">Log in</a>
             <button class="btn-glow primary" onclick="window.location.href='login.html'">
