@@ -140,6 +140,7 @@ button {
     overflow: hidden;
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 /* Primary Button - Glowing Cyan */
@@ -869,6 +870,7 @@ input:checked + .slider:before {
             outline: none;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            white-space: nowrap;
         }
 
         .btn-glow.primary {
