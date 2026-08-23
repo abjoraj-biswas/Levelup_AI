@@ -319,49 +319,99 @@
 
 /* Dashboard specific cards */
 .stat-card {
-    padding: 20px;
+    padding: 24px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 .stat-info h3 {
-    font-size: 2rem;
-    margin: 5px 0;
+    font-size: 2.2rem;
+    margin: 8px 0;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #ffffff;
 }
 
 .stat-info p {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .stat-icon {
     width: 48px;
     height: 48px;
-    border-radius: var(--border-radius-sm);
-    background: rgba(0, 240, 255, 0.1);
-    color: var(--primary);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.stat-icon.icon-primary {
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+}
+
+.stat-icon.icon-success {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+}
+
+.stat-icon.icon-secondary {
+    background: rgba(112, 0, 255, 0.1);
+    color: var(--secondary);
+    border: 1px solid rgba(112, 0, 255, 0.2);
+    box-shadow: 0 0 20px rgba(112, 0, 255, 0.1);
+}
+
+.stat-icon.icon-warning {
+    background: rgba(255, 184, 0, 0.1);
+    color: var(--warning);
+    border: 1px solid rgba(255, 184, 0, 0.2);
+    box-shadow: 0 0 20px rgba(255, 184, 0, 0.1);
 }
 
 .stat-card:hover .stat-icon {
-    transform: scale(1.15) rotate(5deg);
-    box-shadow: 0 0 15px currentColor;
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 25px currentColor;
 }
 
 .trend {
     font-size: 0.8rem;
-    font-weight: 500;
-    display: flex;
+    font-weight: 600;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 5px;
 }
-.trend.up { color: var(--success); }
-.trend.down { color: var(--danger); }
+.trend.up { 
+    color: var(--success); 
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.15);
+}
+.trend.down { 
+    color: var(--error); 
+    background: rgba(255, 50, 50, 0.1);
+    border: 1px solid rgba(255, 50, 50, 0.15);
+}
 
 /* Chat Window */
 .chat-window {

@@ -20,7 +20,7 @@ function initDashboard() {
                     <h3>${user.totalSkillsLearning ?? '-'}</h3>
                     <div class="trend up"><i class="fa-solid fa-arrow-up"></i> 2 this week</div>
                 </div>
-                <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                <div class="stat-icon icon-primary"><i class="fa-solid fa-book-open"></i></div>
             </div>
             
             <div class="glass-card stat-card">
@@ -29,7 +29,7 @@ function initDashboard() {
                     <h3>${user.completedSkills ?? '-'}</h3>
                     <div class="trend up"><i class="fa-solid fa-arrow-up"></i> 1 this month</div>
                 </div>
-                <div class="stat-icon" style="background: rgba(0, 255, 136, 0.1); color: var(--success)"><i class="fa-solid fa-certificate"></i></div>
+                <div class="stat-icon icon-success"><i class="fa-solid fa-certificate"></i></div>
             </div>
             
             <div class="glass-card stat-card">
@@ -38,7 +38,7 @@ function initDashboard() {
                     <h3>${user.learningHours ?? '-'}h</h3>
                     <div class="trend up"><i class="fa-solid fa-arrow-up"></i> 12h this week</div>
                 </div>
-                <div class="stat-icon" style="background: rgba(112, 0, 255, 0.1); color: var(--secondary)"><i class="fa-regular fa-clock"></i></div>
+                <div class="stat-icon icon-secondary"><i class="fa-regular fa-clock"></i></div>
             </div>
             
             <div class="glass-card stat-card">
@@ -47,7 +47,7 @@ function initDashboard() {
                     <h3>${user.streak ?? '-'} Days</h3>
                     <div class="trend up"><i class="fa-solid fa-fire"></i> Keep it up!</div>
                 </div>
-                <div class="stat-icon" style="background: rgba(255, 184, 0, 0.1); color: var(--warning)"><i class="fa-solid fa-fire"></i></div>
+                <div class="stat-icon icon-warning"><i class="fa-solid fa-fire"></i></div>
             </div>
         `;
     }
