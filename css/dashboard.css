@@ -241,7 +241,6 @@
 
 .notification-bell:hover {
     color: var(--text-primary);
-    transform: scale(1.2);
 }
 
 .notification-dot {
@@ -1164,9 +1163,7 @@ body.dashboard-initialized #continueLearningList .glass-card {
 
 /* Notification Styles */
 .notif-dropdown {
-    background: var(--bg-card);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: #0f1123;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-glow);
     border-radius: var(--border-radius-md);
