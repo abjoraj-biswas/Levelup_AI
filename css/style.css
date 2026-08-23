@@ -120,54 +120,55 @@ button {
 }
 
 /* Components - Colorful Buttons */
+/* Components - Hyperistic Minimal Buttons */
 .btn-primary, .btn-secondary, .btn-outline {
     position: relative;
-    height: 40px;
-    padding: 0 16px;
-    overflow: hidden;
+    height: 42px;
+    padding: 0 24px;
     color: #ffffff;
-    transition: var(--transition-normal);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: var(--border-radius-md);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-weight: 500;
-    background: transparent;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 1;
-    box-shadow: none;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.btn-primary::after, .btn-secondary::after, .btn-outline::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: #18181b; /* zinc-900 */
-    z-index: -2;
-    transition: var(--transition-normal);
-    border-radius: inherit;
+/* Primary Button - Glowing Cyan */
+.btn-primary {
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
 }
 
-.btn-primary::before, .btn-secondary::before, .btn-outline::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
-    opacity: 0.4;
-    filter: blur(8px);
-    transition: opacity 0.5s;
-    z-index: -1;
-    border-radius: inherit;
+.btn-primary:hover {
+    background: rgba(0, 240, 255, 0.2);
+    border-color: rgba(0, 240, 255, 0.8);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    transform: translateY(-2px);
 }
 
-.btn-primary:hover::before, .btn-secondary:hover::before, .btn-outline:hover::before {
-    opacity: 0.8;
+/* Outline Button - Frosted Glass */
+.btn-outline, .btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.btn-primary:hover, .btn-secondary:hover, .btn-outline:hover {
-    transform: none;
-    box-shadow: none;
+.btn-outline:hover, .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Glass Card */
@@ -848,50 +849,45 @@ input:checked + .slider:before {
 
 
         .btn-glow {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
             padding: 12px 28px;
             border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             position: relative;
             overflow: hidden;
             outline: none;
-        }
-
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--hyper-gradient);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .btn-glow.primary {
-            background: transparent;
-            border-color: transparent;
-            color: #000;
-            box-shadow: var(--neon-glow);
-        }
-
-        .btn-glow.primary::before {
-            opacity: 1;
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+            color: #ffffff;
         }
 
         .btn-glow:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-glow.primary:hover {
+            background: rgba(0, 240, 255, 0.2);
+            border-color: rgba(0, 240, 255, 0.8);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
         }
 
