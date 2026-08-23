@@ -413,7 +413,7 @@ function updateLevelSelection() {
         } else if (checked.value === 'Intermediate') {
             option.style.border = '2px solid #377dff'; // Match icon color
         } else if (checked.value === 'Advance') {
-            option.style.border = '2px solid var(--accent-color)';
+            option.style.border = '2px solid #e94560';
         }
     }
 }
