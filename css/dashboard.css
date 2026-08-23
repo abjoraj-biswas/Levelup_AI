@@ -9,12 +9,14 @@
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: var(--bg-secondary);
+    background: rgba(10, 11, 26, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--glass-border, rgba(255,255,255,0.05));
     display: flex;
     flex-direction: column;
     transition: var(--transition-normal);
@@ -134,8 +136,9 @@
 /* Topbar */
 .topbar {
     height: var(--topbar-height);
-    background: rgba(5, 5, 15, 0.8);
-    backdrop-filter: var(--glass-blur);
+    background: rgba(5, 5, 15, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -143,6 +146,7 @@
     position: sticky;
     top: 0;
     z-index: 90;
+    border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.05));
 }
 
 .hamburger-btn {

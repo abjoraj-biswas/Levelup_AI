@@ -7,7 +7,8 @@
     --bg-card: rgba(15, 17, 35, 0.6);
     --bg-card-hover: rgba(25, 28, 55, 0.8);
     
-    --primary: #00f0ff; /* Cyan highlight */
+    --primary: #00f0ff;
+    --hyper-gradient: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%); /* Cyan highlight */
     --secondary: #7000ff; /* Purple secondary */
     --accent: #0055ff; /* Electric blue primary */
     
@@ -797,3 +798,68 @@ input:checked + .slider:before {
 .back-btn:active {
     transform: translateX(-2px) scale(0.98);
 }
+
+/* --- Brand Typography --- */
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+        }
+        .logo span {
+            color: var(--primary);
+        }
+
+/* --- Interactive Glow Buttons --- */
+
+
+        .btn-glow {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--hyper-gradient);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-glow.primary {
+            background: transparent;
+            border-color: transparent;
+            color: #000;
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-glow.primary::before {
+            opacity: 1;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
