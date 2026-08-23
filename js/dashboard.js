@@ -68,8 +68,8 @@ function initDashboard() {
         learningList.innerHTML = inProgress.map((skill, index) => {
             const completedLectures = Math.floor((skill.progress / 100) * skill.lectures);
             return `
-                <div class="glass-card" style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-                    <div style="flex: 1;">
+                <div class="glass-card liquid-glass-card" style="padding: 20px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; z-index: 1;">
+                    <div style="flex: 1; position: relative; z-index: 2;">
                         <div class="flex items-center gap-2 mb-1">
                             <i class="${skill.icon}" style="color: var(--primary); font-size: 1.2rem;"></i>
                             <h3 style="font-size: 1.1rem;">${skill.name}</h3>
@@ -84,7 +84,7 @@ function initDashboard() {
                             <span style="font-size: 0.8rem; font-weight: bold; width: 40px; text-align: right;">${skill.progress}%</span>
                         </div>
                     </div>
-                    <div style="margin-left: 20px;">
+                    <div style="margin-left: 20px; position: relative; z-index: 2;">
                         <button class="btn-outline" onclick="window.location.href='learning.html'">Continue</button>
                     </div>
                 </div>
