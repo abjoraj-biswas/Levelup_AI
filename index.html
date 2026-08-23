@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
     <style>
         /* Modern Minimalistic & Hyperistic Styles */
         :root {
@@ -80,6 +81,24 @@
 
         .nav-links a:hover::after {
             width: 100%;
+        }
+
+        
+        /* Lenis Smooth Scroll Setup */
+        html.lenis, html.lenis body {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
         }
 
         /* Typography Enhancements */
@@ -467,13 +486,15 @@
         /* Reveal utility for intersection observer */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: perspective(1000px) rotateX(15deg) translateY(50px) scale(0.95);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
         }
 
         .reveal.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
         }
 
         /* Mock UI Elements for Hero */
@@ -983,13 +1004,42 @@
     <script>
         lucide.createIcons();
 
+        // Initialize Lenis for Butter-Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        
+        // Add parallax to Hero Visual
+        lenis.on('scroll', (e) => {
+            const scrollY = window.scrollY;
+            if(heroVisual) {
+                heroVisual.style.transform = `perspective(1500px) translateY(${scrollY * 0.2}px)`; // Only Y translation, preserving 3D hover via mousemove
+            }
+        });
+
+
         // 3D Hover Effect for Hero
         const heroVisual = document.getElementById('heroVisual');
         document.addEventListener('mousemove', (e) => {
             if(!heroVisual) return;
             const x = (window.innerWidth / 2 - e.pageX) / 50;
             const y = (window.innerHeight / 2 - e.pageY) / 50;
-            heroVisual.style.transform = `perspective(1500px) rotateY(${x}deg) rotateX(${y}deg)`;
+            const scrollY = window.scrollY;
+            heroVisual.style.transform = `perspective(1500px) rotateY(${x}deg) rotateX(${y}deg) translateY(${scrollY * 0.2}px)`;
         });
 
         // Intersection Observer for scroll animations (Reveal)
