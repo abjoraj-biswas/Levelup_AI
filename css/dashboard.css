@@ -79,19 +79,20 @@
 .nav-item {
     display: flex;
     align-items: center;
-    padding: 12px 24px;
+    padding: 10px 20px;
     color: var(--text-secondary);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    margin-bottom: 5px;
-    gap: 15px;
+    margin-bottom: 2px;
+    gap: 12px;
     font-weight: 500;
+    font-size: 0.95rem;
     position: relative;
     overflow: hidden;
 }
 
 .nav-item i {
-    font-size: 1.2rem;
-    width: 24px;
+    font-size: 1rem;
+    width: 20px;
     text-align: center;
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -115,7 +116,7 @@
 .nav-item:hover, .nav-item.active {
     color: var(--primary);
     border-left: 3px solid var(--primary);
-    padding-left: 28px;
+    padding-left: 24px;
 }
 
 .nav-item:hover i {
