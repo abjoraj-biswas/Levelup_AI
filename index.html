@@ -341,6 +341,28 @@
             margin: 0;
         }
 
+        
+        .step-number {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            line-height: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-block;
+            letter-spacing: -0.05em;
+        }
+
+        .journey-step.line-active .step-number {
+            background: var(--hyper-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.5));
+            transform: scale(1.15) translateX(5px);
+        }
+
         /* Journey Timeline */
         .journey-section {
             padding: 120px 20px;
@@ -779,7 +801,7 @@
 
             <div class="journey-step reveal-step">
                 <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">01</h1>
+                    <h1 class="step-number">01</h1>
                     <h3 style="margin:0 0 10px 0; color:var(--text-primary);">Learn & Track</h3>
                     <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Select your desired tech stack
                         and dive into structured curricula while the dashboard maps your progress in real-time.</p>
@@ -790,7 +812,7 @@
 
             <div class="journey-step reveal-step">
                 <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">02</h1>
+                    <h1 class="step-number">02</h1>
                     <h3 style="margin:0 0 10px 0; color:var(--primary);">Practice & Refine</h3>
                     <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Take adaptive assessments. Let
                         the AI coach analyze your weak spots and guide you through highly targeted practice loops.</p>
@@ -801,7 +823,7 @@
 
             <div class="journey-step reveal-step">
                 <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">03</h1>
+                    <h1 class="step-number">03</h1>
                     <h3 style="margin:0 0 10px 0; color:var(--secondary);">Prove & Earn</h3>
                     <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Participate in mock interviews
                         and bug-hunting campaigns to earn verifiable credentials and stand out from the crowd.</p>
@@ -812,7 +834,7 @@
 
             <div class="journey-step reveal-step">
                 <div class="journey-content">
-                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">04</h1>
+                    <h1 class="step-number">04</h1>
                     <h3 style="margin:0 0 10px 0; color:var(--success);">Get Discovered</h3>
                     <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Top tech companies review your
                         verified skill profile and offer direct matches for roles that perfectly fit your proven
