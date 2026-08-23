@@ -3,419 +3,698 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up AI - Learn & Grow</title>
+    <title>Level Up AI - Master Your Future</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Landing Page Specific Styles */
+        /* Modern Minimalistic & Hyperistic Styles */
+        :root {
+            --glass-bg: rgba(10, 11, 26, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-glow: 0 0 20px rgba(0, 240, 255, 0.15);
+            --hyper-gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        body.landing-page {
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(112, 0, 255, 0.04) 0%, transparent 50%);
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
         .landing-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 50px;
-            background: rgba(5, 5, 15, 0.8);
-            backdrop-filter: var(--glass-blur);
+            padding: 15px 40px;
+            background: rgba(5, 5, 15, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 35px;
         }
 
         .nav-links a {
             color: var(--text-secondary);
+            font-size: 0.95rem;
             font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            text-decoration: none;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--text-primary);
         }
 
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--hyper-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Typography Enhancements */
+        h1, h2, h3, .logo {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Hero Section */
         .hero-section {
-            padding: 150px 20px 100px;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .hero-section h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-        }
-
-        .hero-section p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-inline: auto;
-        }
-
-        .hero-buttons {
+            min-height: 100vh;
             display: flex;
-            gap: 20px;
+            flex-direction: column;
             justify-content: center;
-        }
-
-        .hero-visual {
-            margin-top: 60px;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
             position: relative;
+            box-sizing: border-box;
         }
 
-        .hero-visual-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--border-radius-lg);
-            padding: 30px;
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #a0a5cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
             display: flex;
             gap: 20px;
-            box-shadow: var(--shadow-glow);
-            backdrop-filter: var(--glass-blur);
-            transform: perspective(1000px) rotateX(10deg);
-            transition: transform 0.5s ease;
-        }
-        
-        .hero-visual-card:hover {
-            transform: perspective(1000px) rotateX(0deg);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
         }
 
-        .features-section, .how-it-works, .skills-preview {
-            padding: 100px 20px;
+        .btn-glow {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            outline: none;
         }
 
-        .section-header {
-            text-align: center;
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--hyper-gradient);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-glow.primary {
+            background: transparent;
+            border-color: transparent;
+            color: #000;
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-glow.primary::before {
+            opacity: 1;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 240, 255, 0.25);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* 3D Floating Dash Preview */
+        .hero-visual {
+            margin-top: 80px;
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 400px;
+            perspective: 1500px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease 0.6s forwards;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .fc-main {
+            width: 700px;
+            height: 350px;
+            left: 50%;
+            top: 0;
+            margin-left: -350px;
+            transform: rotateX(15deg) rotateY(0deg) translateZ(0);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .fc-small-1 {
+            width: 250px;
+            right: -20px;
+            top: 80px;
+            transform: rotateX(10deg) rotateY(-15deg) translateZ(80px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .fc-small-2 {
+            width: 220px;
+            left: -10px;
+            bottom: 40px;
+            transform: rotateX(20deg) rotateY(15deg) translateZ(100px);
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        /* Bento Box Section */
+        .bento-section {
+            padding: 120px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-tag {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 3rem;
             margin-bottom: 60px;
         }
 
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(280px, auto);
+            gap: 24px;
         }
 
-        .section-header p {
-            color: var(--text-secondary);
-        }
-
-        .feature-card {
-            padding: 30px;
-            text-align: center;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .timeline {
+        .bento-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: flex-start;
+            overflow: hidden;
             position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 50px;
-            right: 50px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--secondary));
-            z-index: 0;
+        .bento-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            background: rgba(20, 22, 40, 0.6);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
-        .step {
-            width: 200px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
+        .bento-card.large {
+            grid-column: span 2;
+        }
+        
+        .bento-card.tall {
+            grid-row: span 2;
         }
 
-        .step-number {
-            width: 80px;
-            height: 80px;
-            background: var(--bg-primary);
-            border: 2px solid var(--primary);
-            border-radius: 50%;
+        .bento-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 30px;
+        }
+
+        .bento-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
             font-family: 'Outfit', sans-serif;
         }
 
-        .skill-card-preview {
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: left;
+        .bento-content p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
 
-        .skill-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        /* Journey Timeline */
+        .journey-section {
+            padding: 120px 20px;
+            background: linear-gradient(180deg, transparent, rgba(5,5,15,0.8));
         }
+
+        .journey-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .journey-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: var(--glass-border);
+            transform: translateX(-50%);
+        }
+
+        .journey-line-fill {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background: var(--hyper-gradient);
+            width: 100%;
+            height: 0%;
+            transition: height 0.5s ease-out;
+        }
+
+        .journey-step {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            position: relative;
+            width: 100%;
+        }
+
+        .journey-step:last-child { margin-bottom: 0; }
         
-        .skill-icon {
-            font-size: 2rem;
-            color: var(--primary);
+        .journey-step:nth-child(even) { flex-direction: row-reverse; }
+
+        .journey-content {
+            width: 42%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 24px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+        }
+
+        .journey-step.visible .journey-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .journey-dot {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 4px solid var(--glass-border);
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            transition: all 0.5s ease;
+        }
+
+        .journey-step.visible .journey-dot {
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Footer */
+        .minimal-footer {
+            padding: 60px 40px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(0); }
+            50% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(-15px); }
+            100% { transform: rotateX(10deg) rotateY(-15deg) translateZ(80px) translateY(0); }
+        }
+
+        /* Reveal utility for intersection observer */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mock UI Elements for Hero */
+        .mock-nav { height: 20px; background: rgba(255,255,255,0.05); border-radius: 10px; width: 30%; margin-bottom: 20px; }
+        .mock-bar { height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 10px; }
+        .mock-bar.w-full { width: 100%; }
+        .mock-bar.w-3-4 { width: 75%; }
+        .mock-bar.w-1-2 { width: 50%; }
+        .mock-accent { background: var(--primary); width: 60%; box-shadow: 0 0 10px rgba(0,240,255,0.4); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero-title { font-size: 3.5rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-card.large, .bento-card.tall { grid-column: span 1; grid-row: span 1; }
+            .hero-visual { display: none; }
+            .journey-line { left: 20px; }
+            .journey-step, .journey-step:nth-child(even) { flex-direction: column; align-items: flex-start; }
+            .journey-content { width: calc(100% - 50px); margin-left: 50px; }
+            .journey-dot { left: 20px; top: 30px; transform: translate(-50%, -50%); }
+            .hidden-mobile { display: none; }
         }
     </style>
 </head>
 <body class="landing-page">
-<script>
-    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-        document.body.classList.add('light-mode');
-    }
-</script>
 
-    <!-- Navbar -->
+    <!-- Navigation -->
     <nav class="landing-nav">
-        <div class="logo">LevelUP<span>.AI</span></div>
+        <div class="logo">LevelUP<span style="color:var(--primary)">.AI</span></div>
         <div class="nav-links hidden-mobile">
-            <a href="#home">Home</a>
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#skills">Skills</a>
+            <a href="#features">Platform</a>
+            <a href="#journey">Journey</a>
             <a href="bughunting.html">Bug Hunting</a>
-            <a href="corporate.html">Corporate Matches</a>
+            <a href="corporate.html">For Enterprise</a>
         </div>
-        <div class="flex gap-2">
-            <button class="btn-secondary" onclick="window.location.href='login.html'">Login</button>
-            <button class="btn-primary" onclick="window.location.href='login.html'">
+        <div style="display:flex; align-items:center; gap: 15px;">
+            <a href="login.html" style="color:var(--text-primary); text-decoration:none; font-weight:500; font-size:0.95rem;">Log in</a>
+            <button class="btn-glow primary" onclick="window.location.href='login.html'">
                 Get Started
-                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="home">
-        <h1 class="text-gradient">LEVEL UP YOUR SKILLS.<br>LEVEL UP YOUR FUTURE.</h1>
-        <p>An intelligent learning platform designed to help you discover skills, build knowledge, track your progress and become career ready.</p>
+    <!-- Hero -->
+    <section class="hero-section">
+        <h1 class="hero-title">Master Your Future<br>With AI-Guided Learning.</h1>
+        <p class="hero-subtitle">LevelUP.AI is the intelligent platform that tracks your skills, targets your weaknesses, and accelerates your career through hyper-personalized coaching and real-world challenges.</p>
         
-        <div class="hero-buttons">
-            <button class="btn-primary" onclick="window.location.href='login.html'">
-                Start Learning
-                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
-            </button>
-            <button class="btn-outline" onclick="window.location.href='skills.html'">
-                Explore Skills
-                <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
-            </button>
+        <div class="hero-cta">
+            <button class="btn-glow primary" onclick="window.location.href='login.html'">Start Learning Now</button>
+            <button class="btn-glow" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Explore Platform</button>
         </div>
 
-        <div class="hero-visual">
-            <div class="hero-visual-card">
-                <div style="flex:1; text-align:left;">
-                    <h3 class="mb-2">Your Dashboard</h3>
-                    <div class="progress-container mb-1"><div class="progress-bar" style="width: 72%;"></div></div>
-                    <p class="text-secondary" style="font-size:0.9rem;">JavaScript Progress: 72%</p>
+        <div class="hero-visual" id="heroVisual">
+            <!-- Main Dashboard Card -->
+            <div class="floating-card fc-main">
+                <div class="mock-nav"></div>
+                <div style="display:flex; gap:16px; height:100%;">
+                    <div style="flex:2; background:rgba(255,255,255,0.02); border-radius:16px; padding:20px;">
+                        <h4 style="margin-bottom:15px; color:var(--text-secondary); margin-top:0;">Learning Velocity</h4>
+                        <div class="mock-bar w-full"></div>
+                        <div class="mock-bar mock-accent" style="height:4px; margin-bottom:30px;"></div>
+                        <div class="mock-bar w-3-4"></div>
+                        <div class="mock-bar w-1-2"></div>
+                    </div>
+                    <div style="flex:1; background:rgba(255,255,255,0.02); border-radius:16px; padding:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                        <i data-lucide="zap" style="color:var(--warning); margin-bottom:10px;"></i>
+                        <h3 style="font-size:2.5rem; margin:0;">14</h3>
+                        <span style="font-size:0.8rem; color:var(--text-secondary)">Day Streak</span>
+                    </div>
                 </div>
-                <div style="width: 150px; background: rgba(0,240,255,0.1); border-radius: 12px; padding: 15px;">
-                    <i class="fa-solid fa-fire" style="color:var(--warning); font-size:1.5rem"></i>
-                    <h4 class="mt-1">14 Days</h4>
-                    <p style="font-size:0.8rem; color:var(--text-secondary)">Learning Streak</p>
+            </div>
+
+            <!-- Floating Assessment Card -->
+            <div class="floating-card fc-small-1">
+                <i data-lucide="brain-circuit" style="color:var(--secondary); margin-bottom:15px;"></i>
+                <h4 style="margin-top:0; margin-bottom:5px;">AI Coach</h4>
+                <p style="font-size:0.75rem; color:var(--text-secondary); margin:0;">Your personalized learning path has been updated.</p>
+            </div>
+
+            <!-- Floating Skill Card -->
+            <div class="floating-card fc-small-2" style="display:flex; align-items:center; gap:15px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(0,240,255,0.1); color:var(--primary); display:flex; justify-content:center; align-items:center;">
+                    <i class="fa-brands fa-js" style="font-size: 1.2rem;"></i>
+                </div>
+                <div>
+                    <h4 style="margin:0; font-size:0.9rem;">JavaScript</h4>
+                    <span style="font-size:0.7rem; color:var(--success)">Advanced Level</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="features-section container" id="features">
-        <div class="section-header">
-            <h2>Why Choose Level Up AI?</h2>
-            <p>A completely new way to approach your career growth.</p>
+    <!-- Bento Features Section -->
+    <section class="bento-section" id="features">
+        <div style="text-align:center;" class="reveal">
+            <span class="section-tag">The Platform</span>
+            <h2 class="section-title">Everything you need to level up.</h2>
         </div>
-        
-        <div class="grid-3">
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-robot feature-icon"></i>
-                <h3>AI-Powered Learning</h3>
-                <p class="text-secondary mt-1">Get personalized learning recommendations tailored to your goals.</p>
-            </div>
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-chart-line feature-icon"></i>
-                <h3>Smart Skill Tracking</h3>
-                <p class="text-secondary mt-1">Track learning progress across multiple skills seamlessly.</p>
-            </div>
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-list-check feature-icon"></i>
-                <h3>Assessments</h3>
-                <p class="text-secondary mt-1">Test your knowledge and instantly identify weak areas.</p>
-            </div>
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-lightbulb feature-icon"></i>
-                <h3>AI Recommendations</h3>
-                <p class="text-secondary mt-1">Know exactly what to learn next based on performance.</p>
-            </div>
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-chart-pie feature-icon"></i>
-                <h3>Progress Analytics</h3>
-                <p class="text-secondary mt-1">Understand your learning velocity and study habits.</p>
-            </div>
-            <div class="glass-card feature-card">
-                <i class="fa-solid fa-briefcase feature-icon"></i>
-                <h3>Career Growth</h3>
-                <p class="text-secondary mt-1">Build skills that directly improve your career readiness.</p>
-            </div>
-        </div>
-    </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works container" id="how-it-works">
-        <div class="section-header">
-            <h2>How It Works</h2>
-        </div>
-        
-        <div class="timeline" style="overflow-x: auto; padding-bottom: 20px;">
-            <div class="step">
-                <div class="step-number">01</div>
-                <h3>Choose Your Skill</h3>
-                <p class="text-secondary mt-1" style="font-size:0.9rem">Explore programming, development, AI, cloud and more.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">02</div>
-                <h3>Learn</h3>
-                <p class="text-secondary mt-1" style="font-size:0.9rem">Follow structured sub-skills and interactive lectures.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">03</div>
-                <h3>Practice</h3>
-                <p class="text-secondary mt-1" style="font-size:0.9rem">Take assessments and identify your weaknesses.</p>
-            </div>
-            <div class="step">
-                <div class="step-number">04</div>
-                <h3>Level Up</h3>
-                <p class="text-secondary mt-1" style="font-size:0.9rem">Follow recommendations and improve continuously.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Preview -->
-    <section class="skills-preview container" id="skills">
-        <div class="section-header">
-            <h2>Popular Skills</h2>
-        </div>
-        
-        <div class="grid-4" id="landingSkillsContainer">
-            <!-- Will be populated by JS or Static -->
-            <div class="glass-card skill-card-preview">
-                <div class="skill-header">
-                    <i class="fa-brands fa-python skill-icon"></i>
-                    <div>
-                        <h3>Python</h3>
-                        <span class="badge primary">Programming</span>
-                    </div>
+        <div class="bento-grid">
+            <!-- Large Card 1 -->
+            <div class="bento-card large reveal">
+                <div class="bento-icon"><i data-lucide="brain"></i></div>
+                <div class="bento-content">
+                    <h3>AI Learning Coach</h3>
+                    <p>Stop guessing what to learn next. Our proprietary AI analyzes your assessment data to pinpoint exactly which topics you need to practice, generating custom learning paths and explanations on the fly.</p>
                 </div>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-secondary" style="font-size:0.8rem">Intermediate</span>
-                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s2'">Explore</button>
+                <!-- Abstract visual -->
+                <div style="position:absolute; right:-50px; bottom:-50px; width:200px; height:200px; background:radial-gradient(circle, rgba(112,0,255,0.2) 0%, transparent 70%); border-radius:50%; z-index:0; pointer-events:none;"></div>
+            </div>
+
+            <!-- Tall Card 2 -->
+            <div class="bento-card tall reveal">
+                <div class="bento-icon" style="color:var(--warning)"><i data-lucide="video"></i></div>
+                <div class="bento-content">
+                    <h3>Interactive Mock Interviews</h3>
+                    <p>Practice makes perfect. Face our AI interviewer in real-time video sessions. It listens to your voice, transcribes your answers, and provides instant feedback on your communication and technical accuracy.</p>
                 </div>
             </div>
 
-            <div class="glass-card skill-card-preview">
-                <div class="skill-header">
-                    <i class="fa-brands fa-js skill-icon"></i>
-                    <div>
-                        <h3>JavaScript</h3>
-                        <span class="badge primary">Frontend</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-secondary" style="font-size:0.8rem">Beginner</span>
-                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s1'">Explore</button>
+            <!-- Normal Card 3 -->
+            <div class="bento-card reveal">
+                <div class="bento-icon" style="color:var(--success)"><i data-lucide="target"></i></div>
+                <div class="bento-content">
+                    <h3>Adaptive Assessments</h3>
+                    <p>Test your limits with dynamically generated challenges that adjust to your skill level in real-time.</p>
                 </div>
             </div>
 
-            <div class="glass-card skill-card-preview">
-                <div class="skill-header">
-                    <i class="fa-brands fa-react skill-icon"></i>
-                    <div>
-                        <h3>React</h3>
-                        <span class="badge primary">Frontend</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-secondary" style="font-size:0.8rem">Intermediate</span>
-                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s4'">Explore</button>
+            <!-- Normal Card 4 -->
+            <div class="bento-card reveal">
+                <div class="bento-icon" style="color:var(--danger)"><i data-lucide="bug"></i></div>
+                <div class="bento-content">
+                    <h3>Bug Hunting</h3>
+                    <p>Prove your mettle. Solve real-world code bugs and earn bounties to showcase your practical expertise.</p>
                 </div>
             </div>
 
-            <div class="glass-card skill-card-preview">
-                <div class="skill-header">
-                    <i class="fa-solid fa-brain skill-icon"></i>
-                    <div>
-                        <h3>AI / ML</h3>
-                        <span class="badge primary">Data Science</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-2">
-                    <span class="text-secondary" style="font-size:0.8rem">Advanced</span>
-                    <button class="btn-outline" style="padding: 5px 15px; font-size:0.8rem" onclick="window.location.href='skill-details.html?id=s6'">Explore</button>
+            <!-- Large Card 5 -->
+            <div class="bento-card large reveal">
+                <div class="bento-icon" style="color:#e0e0e0"><i data-lucide="building-2"></i></div>
+                <div class="bento-content">
+                    <h3>Corporate Matches</h3>
+                    <p>Your skills act as your resume. Top enterprises browse LevelUP.AI to recruit proven talent directly based on their assessment scores, interview performance, and bug-hunting track record.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Career Ecosystem Section -->
-    <section class="container" style="padding: 100px 20px; text-align: center;">
-        <div class="section-header">
-            <h2 class="text-gradient">Learn → Practice → Prove → Get Discovered</h2>
-            <p>Your complete journey from student to hired professional.</p>
+    <!-- Journey Timeline -->
+    <section class="journey-section" id="journey">
+        <div style="text-align:center; margin-bottom:80px;" class="reveal">
+            <span class="section-tag">Your Journey</span>
+            <h2 class="section-title">From Student to Hired Professional</h2>
         </div>
-        
-        <div class="grid-4" style="margin-top: 50px;">
-            <div class="glass-card" style="padding: 30px;">
-                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">01</h1>
-                <h3 class="mb-1 text-primary">Learn</h3>
-                <p class="text-secondary" style="font-size: 0.9rem;">Build technical skills through structured, AI-guided courses.</p>
+
+        <div class="journey-container" id="journeyContainer">
+            <div class="journey-line">
+                <div class="journey-line-fill" id="journeyLineFill"></div>
             </div>
-            
-            <div class="glass-card" style="padding: 30px;">
-                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">02</h1>
-                <h3 class="mb-1 text-primary">Practice</h3>
-                <p class="text-secondary" style="font-size: 0.9rem;">Complete lectures and take intelligent assessments.</p>
+
+            <div class="journey-step reveal-step">
+                <div class="journey-content">
+                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">01</h1>
+                    <h3 style="margin:0 0 10px 0; color:var(--text-primary);">Learn & Track</h3>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Select your desired tech stack and dive into structured curricula while the dashboard maps your progress in real-time.</p>
+                </div>
+                <div class="journey-dot"></div>
+                <div style="width: 42%;"></div> <!-- Spacer -->
             </div>
-            
-            <div class="glass-card" style="padding: 30px;">
-                <h1 style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 10px;">03</h1>
-                <h3 class="mb-1" style="color: #00f0ff">Prove</h3>
-                <p class="text-secondary" style="font-size: 0.9rem;">Earn certificates and real-world bug-hunting experience.</p>
+
+            <div class="journey-step reveal-step">
+                <div class="journey-content">
+                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">02</h1>
+                    <h3 style="margin:0 0 10px 0; color:var(--primary);">Practice & Refine</h3>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Take adaptive assessments. Let the AI coach analyze your weak spots and guide you through highly targeted practice loops.</p>
+                </div>
+                <div class="journey-dot"></div>
+                <div style="width: 42%;"></div> <!-- Spacer -->
             </div>
-            
-            <div class="glass-card" style="padding: 30px; background: rgba(0, 85, 255, 0.1); border-color: rgba(0, 85, 255, 0.3);">
-                <h1 style="font-size: 3rem; color: rgba(0, 85, 255, 0.3); margin-bottom: 10px;">04</h1>
-                <h3 class="mb-1" style="color: #0055ff">Get Discovered</h3>
-                <p class="text-secondary" style="font-size: 0.9rem;">Get matched with top companies and agencies based on verified skills.</p>
+
+            <div class="journey-step reveal-step">
+                <div class="journey-content">
+                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">03</h1>
+                    <h3 style="margin:0 0 10px 0; color:var(--secondary);">Prove & Earn</h3>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Participate in mock interviews and bug-hunting campaigns to earn verifiable credentials and stand out from the crowd.</p>
+                </div>
+                <div class="journey-dot"></div>
+                <div style="width: 42%;"></div> <!-- Spacer -->
+            </div>
+
+            <div class="journey-step reveal-step">
+                <div class="journey-content">
+                    <h1 style="color:var(--glass-border); font-size:3rem; margin:0 0 10px 0; line-height:1;">04</h1>
+                    <h3 style="margin:0 0 10px 0; color:var(--success);">Get Discovered</h3>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">Top tech companies review your verified skill profile and offer direct matches for roles that perfectly fit your proven abilities.</p>
+                </div>
+                <div class="journey-dot"></div>
+                <div style="width: 42%;"></div> <!-- Spacer -->
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer style="text-align:center; padding: 40px; border-top: 1px solid var(--border); margin-top: 50px;">
-        <div class="logo mb-2">LEVEL UP <span>AI</span></div>
-        <p class="text-secondary">© 2024 Level Up AI. Frontend Demo Project.</p>
+    <footer class="minimal-footer">
+        <div class="logo" style="font-size:1.5rem; margin:0;">LevelUP<span style="color:var(--primary)">.AI</span></div>
+        <div style="display:flex; gap:20px;">
+            <a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Privacy</a>
+            <a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Terms</a>
+            <a href="#" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Contact</a>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">© 2024 LevelUP AI. All rights reserved.</p>
     </footer>
 
-    <script src="js/app.js"></script>
-<script src="js/notifications.js"></script>
+    <!-- Scripts for animations -->
+    <script>
+        lucide.createIcons();
+
+        // 3D Hover Effect for Hero
+        const heroVisual = document.getElementById('heroVisual');
+        document.addEventListener('mousemove', (e) => {
+            if(!heroVisual) return;
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            heroVisual.style.transform = `perspective(1500px) rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+
+        // Intersection Observer for scroll animations (Reveal)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if(entry.target.classList.contains('reveal-step')) {
+                        entry.target.classList.add('visible');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, .reveal-step').forEach(el => observer.observe(el));
+
+        // Journey Timeline Fill Animation
+        const journeyContainer = document.getElementById('journeyContainer');
+        const journeyLineFill = document.getElementById('journeyLineFill');
+        
+        window.addEventListener('scroll', () => {
+            if(!journeyContainer || !journeyLineFill) return;
+            
+            const rect = journeyContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate how far we've scrolled into the container
+            if(rect.top < viewportHeight / 2 && rect.bottom > 0) {
+                const totalHeight = rect.height;
+                const scrolled = (viewportHeight / 2) - rect.top;
+                let percentage = (scrolled / totalHeight) * 100;
+                
+                // Clamp between 0 and 100
+                percentage = Math.max(0, Math.min(100, percentage));
+                journeyLineFill.style.height = `${percentage}%`;
+            }
+        });
+    </script>
 </body>
 </html>
-
