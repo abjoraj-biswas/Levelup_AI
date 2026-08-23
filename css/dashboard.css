@@ -1115,10 +1115,10 @@ body.dashboard-initialized #continueLearningList .glass-card {
 /* Hyperistic AI Insight Card Background Animation */
 .ai-insight-card {
     background: rgba(10, 12, 25, 0.3) !important;
-    border: 1px solid rgba(0, 240, 255, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(50px) saturate(200%) !important;
     -webkit-backdrop-filter: blur(50px) saturate(200%) !important;
-    box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.1), 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.05), 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .ai-insight-card::before, .liquid-glass-card::before {
@@ -1142,7 +1142,7 @@ body.dashboard-initialized #continueLearningList .glass-card {
 
 .liquid-glass-card {
     background: rgba(10, 12, 25, 0.3) !important;
-    border: 1px solid rgba(0, 240, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(50px) saturate(150%) !important;
     -webkit-backdrop-filter: blur(50px) saturate(150%) !important;
     position: relative;
