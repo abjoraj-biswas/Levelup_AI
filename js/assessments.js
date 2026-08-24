@@ -415,6 +415,11 @@ function submitAssessment() {
     const newBest = Math.max(currentAssessment.bestScore || 0, score);
     const newStatus = score >= currentAssessment.passScore ? 'Passed' : 'Failed';
     
+    // MUTATE IN MEMORY SO RE-RENDERS WORK
+    currentAssessment.bestScore = newBest;
+    currentAssessment.status = newStatus;
+    currentAssessment.isNew = false;
+    
     if (typeof AppState !== 'undefined') {
         AppState.updateAssessment(currentAssessment.id, {
             bestScore: newBest,
@@ -422,11 +427,17 @@ function submitAssessment() {
             isNew: false
         });
     } else {
-        currentAssessment.bestScore = newBest;
-        currentAssessment.status = newStatus;
-        currentAssessment.isNew = false;
         localStorage.setItem('levelup_assessments', JSON.stringify(allAssessments));
     }
+    
+    // Update local storage explicitly because AppState.updateAssessment doesn't save to the main array if the ID is missing initially.
+    // Wait, since we are managing allAssessments dynamically, we should just overwrite the full array in localStorage to be absolutely safe.
+    localStorage.setItem('levelup_assessments', JSON.stringify(allAssessments));
+
+    // RE-RENDER UI
+    renderSummaryCards();
+    renderHistory();
+    renderAssessmentsList();
     
     // Render Results
     document.getElementById('resultScore').textContent = score;
