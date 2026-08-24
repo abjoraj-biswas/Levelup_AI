@@ -3927,7 +3927,7 @@ const MOCK_DATA = {
         "id": 5,
         "name": "Lumina Design Studio",
         "category": "Design & UX",
-        "type": "Startup",
+        "type": "Agency",
         "logo": "fa-solid fa-pen-nib",
         "roles": [
             "UI/UX Designer",
@@ -4140,33 +4140,23 @@ async function initApp() {
 async function fetchDynamicData() {
     try {
         const supabase = window.db;
-        if(!supabase) throw new Error("Supabase client (window.db) not initialized");
-        const { data: { session } } = await supabase.auth.getSession();
+        if(!supabase) throw new Error("Supabase client not initialized");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         // 1. Fetch Skills 
         const { data: skills, error: skillsErr } = await supabase.from('skills').select('*');
-        if (!skillsErr && skills) {
-            
-            // Fetch roadmap counts for actual lecture counts
-            const { data: roadmaps } = await supabase.from('roadmap_items').select('skill_id');
-            const roadmapCounts = {};
-            if (roadmaps) {
-                roadmaps.forEach(r => {
-                    roadmapCounts[r.skill_id] = (roadmapCounts[r.skill_id] || 0) + 1;
-                });
-            }
-
-            const dynamicSkills = skills.map((s, index) => ({
+        if (!skillsErr && skills && skills.length > 0) {
+            const dynamicSkills = skills.map((s) => ({
                 id: s.id,
-                name: s.title,
+                name: s.name,
                 category: s.category,
                 difficulty: s.difficulty,
-                subSkills: 5, 
-                lectures: roadmapCounts[s.id] || 0,
-                hours: s.duration_hours,
-                progress: 0,
-                icon: s.image_url || "fa-solid fa-code",
-                desc: s.description || ""
+                subSkills: s.subSkills || 5, 
+                lectures: s.lectures || 10,
+                hours: s.hours || 0,
+                progress: s.progress || 0,
+                icon: s.icon || "fa-solid fa-code",
+                desc: s.desc || ""
             }));
             localStorage.setItem('levelup_skills', JSON.stringify(dynamicSkills));
         }
@@ -4175,8 +4165,8 @@ async function fetchDynamicData() {
         const { data: companies, error: compErr } = await supabase.from('companies').select('*');
         if (!compErr && companies && companies.length > 0) {
             const dynamicCompanies = companies.map(c => {
-                let iconClass = c.logo_url || "fa-solid fa-building";
-                if (!c.logo_url) {
+                let iconClass = c.logo || "fa-solid fa-building";
+                if (!c.logo) {
                     const lowerName = (c.name || "").toLowerCase();
                     if (lowerName.includes("microsoft")) iconClass = "fa-brands fa-microsoft";
                     else if (lowerName.includes("google")) iconClass = "fa-brands fa-google";
@@ -4189,58 +4179,48 @@ async function fetchDynamicData() {
                 return {
                     id: c.id,
                     name: c.name,
-                    category: c.industry,
-                    type: "Enterprise",
+                    category: c.category,
+                    type: c.type || "Enterprise",
                     logo: iconClass,
                     description: c.description,
                     culture: c.culture,
-                    benefits: c.benefits,
-                    roles: ["Software Engineer", "Data Scientist", "Cloud Architect", "Frontend Developer", "Product Manager"].sort(() => 0.5 - Math.random()).slice(0, 2),
-                    skills: ["React", "Python", "AWS", "Node.js", "SQL", "Docker", "Machine Learning"].sort(() => 0.5 - Math.random()).slice(0, 3)
+                    benefits: c.benefits || [],
+                    roles: c.roles || ["Software Engineer", "Data Scientist", "Cloud Architect"],
+                    skills: c.skills || ["React", "Python", "AWS", "SQL"]
                 };
             });
             localStorage.setItem('levelup_companies', JSON.stringify(dynamicCompanies));
         }
 
-        // 3. Fetch Bug Bounties
-        const { data: bugs, error: bugsErr } = await supabase.from('bug_bounties').select('*, companies(name)');
+        // 3. Fetch Bug Bounties (mapped to 'projects' in SQL)
+        const { data: bugs, error: bugsErr } = await supabase.from('projects').select('*');
         if (!bugsErr && bugs && bugs.length > 0) {
             const dynamicBugs = bugs.map(b => ({
                 id: b.id,
                 title: b.title,
-                company: b.companies?.name || "Unknown Company",
-                rewardPool: "₹" + b.reward_amount,
-                difficulty: b.severity,
-                category: "Security",
-                timeRemaining: b.status === 'open' ? "Active" : "Closed",
-                bugsFound: 0,
-                status: b.status === 'open' ? 'Active' : 'Completed'
+                company: b.company || "Unknown Company",
+                rewardPool: b.rewardPool || "₹0",
+                difficulty: b.difficulty || "Medium",
+                category: b.category || "Security",
+                timeRemaining: b.timeRemaining || "Active",
+                bugsFound: b.bugsFound || 0,
+                status: b.status || "Active"
             }));
             localStorage.setItem('levelup_bugHunts', JSON.stringify(dynamicBugs));
         }
         
-        // 4. Fetch Auth Profile & Progress
+        // 4. Fetch Auth Profile
         if (session && session.user) {
             const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
             if (profile) {
                 const userState = AppState.getUser() || MOCK_DATA.user;
-                userState.name = profile.full_name || userState.name || 'User';
+                userState.name = profile.name || userState.name || 'User';
+                userState.email = profile.email || userState.email || 'user@example.com';
                 userState.learningHours = profile.learning_hours ?? userState.learningHours ?? 0;
-                userState.streak = profile.current_streak ?? userState.streak ?? 0;
+                userState.streak = profile.streak ?? userState.streak ?? 0;
+                userState.completedSkills = profile.completed_skills ?? userState.completedSkills ?? 0;
+                userState.totalSkillsLearning = profile.total_skills_learning ?? userState.totalSkillsLearning ?? 0;
                 localStorage.setItem('levelup_user', JSON.stringify(userState));
-            }
-            
-            // Apply User Progress to skills
-            const { data: progress } = await supabase.from('user_progress').select('*').eq('user_id', session.user.id);
-            if (progress && progress.length > 0) {
-                const currentSkills = JSON.parse(localStorage.getItem('levelup_skills'));
-                if (currentSkills) {
-                    progress.forEach(p => {
-                        const skill = currentSkills.find(s => s.id === p.skill_id);
-                        if (skill) skill.progress = p.progress_percentage;
-                    });
-                    localStorage.setItem('levelup_skills', JSON.stringify(currentSkills));
-                }
             }
         }
         
@@ -4391,7 +4371,14 @@ const AppState = {
     },
     
     // Corporate Matches
-    getCompanies: () => JSON.parse(localStorage.getItem('levelup_companies')) || MOCK_DATA.companies,
+    getCompanies: () => {
+        const cached = JSON.parse(localStorage.getItem('levelup_companies'));
+        if (cached && cached.length > 0 && cached[0].logo.includes('/')) {
+            localStorage.setItem('levelup_companies', JSON.stringify(MOCK_DATA.companies));
+            return MOCK_DATA.companies;
+        }
+        return cached || MOCK_DATA.companies;
+    },
     getCareerProfile: () => JSON.parse(localStorage.getItem('levelup_career_profile')),
     updateCareerProfile: (data) => {
         const profile = { ...AppState.getCareerProfile(), ...data };

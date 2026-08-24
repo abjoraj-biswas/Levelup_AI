@@ -679,7 +679,9 @@
                     const email = form.querySelector('input[type="text"], input[type="email"]').value;
                     const password = form.querySelector('input[type="password"]').value;
                     
-                    const { data, error } = await Auth.signIn(email, password);
+                    const { data, error } = await window.db.auth.signInWithPassword({
+                        email, password
+                    });
                     if (error) throw error;
                     
                     showToast('Login successful! Redirecting...', 'success');
@@ -687,8 +689,16 @@
                 } else if (type === 'register') {
                     const email = form.querySelector('input[type="email"]').value;
                     const password = form.querySelector('input[type="password"]').value;
+                    const fullName = form.querySelector('input[type="text"]').value;
                     
-                    const { data, error } = await Auth.signUp(email, password);
+                    const { data, error } = await window.db.auth.signUp({
+                        email, password,
+                        options: {
+                            data: {
+                                name: fullName
+                            }
+                        }
+                    });
                     if (error) throw error;
                     
                     showToast('Account created successfully! Redirecting...', 'success');
