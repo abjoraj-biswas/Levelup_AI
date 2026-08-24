@@ -36,85 +36,82 @@
             overflow: hidden;
         }
 
-        /* Abstract CSS Art for the brand side */
-        .auth-brand::before, .auth-brand::after {
-            content: '';
+        /* Advanced Animated Backgrounds */
+        .glow-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(80px);
             opacity: 0.5;
             z-index: 0;
-            animation: pulseGlow 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            animation: floatOrb 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .auth-brand::before {
-            width: 800px;
-            height: 800px;
+        .orb-1 {
+            width: 600px; height: 600px;
             background: rgba(0, 240, 255, 0.15);
-            top: -200px;
-            left: -200px;
+            top: -100px; left: -100px;
+            animation-delay: 0s;
         }
 
-        .auth-brand::after {
-            width: 600px;
-            height: 600px;
+        .orb-2 {
+            width: 500px; height: 500px;
             background: rgba(112, 0, 255, 0.15);
-            bottom: -100px;
-            right: -100px;
+            bottom: -50px; right: -50px;
             animation-delay: -5s;
+            animation-direction: alternate-reverse;
         }
 
-        @keyframes pulseGlow {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
-            50% { opacity: 0.7; }
-            100% { transform: scale(1.2) translate(50px, -50px); opacity: 0.4; }
+        .orb-3 {
+            width: 400px; height: 400px;
+            background: rgba(0, 255, 136, 0.1);
+            top: 40%; left: 30%;
+            animation-delay: -10s;
         }
 
-        .brand-content {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            max-width: 500px;
+        @keyframes floatOrb {
+            0% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 0.4; }
+            33% { transform: scale(1.1) translate(30px, -40px) rotate(45deg); opacity: 0.6; }
+            66% { transform: scale(0.9) translate(-20px, 30px) rotate(90deg); opacity: 0.5; }
+            100% { transform: scale(1.2) translate(40px, 20px) rotate(135deg); opacity: 0.4; }
         }
 
-        .brand-logo {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .animated-grid-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+            animation: gridPan 30s linear infinite;
         }
 
-        .brand-content h2 {
-            opacity: 0;
-            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        @keyframes gridPan {
+            0% { background-position: 0 0; }
+            100% { background-position: 30px 30px; }
         }
 
-        .brand-feature {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            padding: 15px 20px;
-            border-radius: var(--border-radius-md);
-            backdrop-filter: var(--glass-blur);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            text-align: left;
-            transform: translateX(-30px);
-            opacity: 0;
-            animation: slideRightFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+        .glass-morph {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            z-index: 1;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: morphGlass 15s ease-in-out infinite alternate;
         }
 
-        .brand-feature:hover {
-            transform: translateX(5px) !important;
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
+        @keyframes morphGlass {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; transform: translate(-45%, -55%) rotate(45deg) scale(1.05); }
+            100% { border-radius: 50% 50% 60% 40% / 60% 40% 50% 60%; transform: translate(-55%, -45%) rotate(90deg) scale(0.95); }
         }
-
-        .brand-feature:nth-child(3) { animation-delay: 0.3s; }
-        .brand-feature:nth-child(4) { animation-delay: 0.4s; }
-        .brand-feature:nth-child(5) { animation-delay: 0.5s; }
 
         /* Right Side: Form */
         .auth-form-container {
@@ -463,39 +460,16 @@
         
         <!-- Left Branding Area (Hidden on Mobile) -->
         <div class="auth-brand">
+            <!-- Hyperistic Animated Background Elements -->
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+            <div class="glow-orb orb-3"></div>
+            <div class="glass-morph"></div>
+            <div class="animated-grid-overlay"></div>
+
             <div class="brand-content">
-                <div class="logo brand-logo" style="font-weight: 900; letter-spacing: 1px;">LevelUP<span style="color: #00e5ff;">.AI</span></div>
-                <h2 class="mb-4 text-gradient">Your Career, Supercharged.</h2>
-                
-                <div class="brand-feature">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 240, 255, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 1rem;">Personalized AI Coach</h4>
-                        <p class="text-secondary" style="font-size: 0.85rem;">Get tailored learning recommendations.</p>
-                    </div>
-                </div>
-
-                <div class="brand-feature">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(112, 0, 255, 0.1); color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 1rem;">Smart Tracking</h4>
-                        <p class="text-secondary" style="font-size: 0.85rem;">Monitor your progress across all skills.</p>
-                    </div>
-                </div>
-
-                <div class="brand-feature">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 255, 136, 0.1); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 1rem;">Career Ready</h4>
-                        <p class="text-secondary" style="font-size: 0.85rem;">Build a portfolio of verified competencies.</p>
-                    </div>
-                </div>
+                <div class="logo brand-logo" style="font-weight: 900; letter-spacing: 1px; font-size: 4rem;">LevelUP<span style="color: #00e5ff;">.AI</span></div>
+                <h2 class="mb-4 text-gradient" style="font-size: 2.5rem; line-height: 1.2;">Your Career,<br>Supercharged.</h2>
             </div>
         </div>
 
