@@ -4040,7 +4040,7 @@ async function initApp() {
             // Sync with local storage / MOCK_DATA
             // (Skills are now mapped and fetched via fetchDynamicData below)
             if (compRes.data && compRes.data.length > 0) MOCK_DATA.companies = compRes.data;
-            if (projRes.data && projRes.data.length > 0) MOCK_DATA.bugHunts = projRes.data;
+            // Removed bugHunts overwrite from projects table as bug hunts use bug_bounties
             
             if (roadmapRes.data && roadmapRes.data.length > 0) {
                 const cc = {};
@@ -4376,7 +4376,13 @@ const AppState = {
     },
 
     // Bug Hunting
-    getBugHunts: () => JSON.parse(localStorage.getItem('levelup_bugHunts')) || MOCK_DATA.bugHunts,
+    getBugHunts: () => {
+        const cached = JSON.parse(localStorage.getItem('levelup_bugHunts'));
+        if (cached && cached.length > 0 && cached[0].title && cached[0].title !== 'null' && cached[0].title !== 'undefined') {
+            return cached;
+        }
+        return MOCK_DATA.bugHunts;
+    },
     getUserBugs: () => JSON.parse(localStorage.getItem('levelup_user_bugs')),
     addUserBug: (bug) => {
         const bugs = AppState.getUserBugs();
