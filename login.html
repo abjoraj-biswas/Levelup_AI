@@ -685,23 +685,6 @@
                     });
                     if (error) throw error;
                     
-                    if (data?.user) {
-                        const { error: profileError } = await window.db.from('profiles').insert([
-                            {
-                                id: data.user.id,
-                                email: email,
-                                name: fullName,
-                                learning_hours: 0,
-                                streak: 0,
-                                completed_skills: 0,
-                                total_skills_learning: 0
-                            }
-                        ]);
-                        if (profileError) {
-                            console.warn("Profile insertion warning:", profileError.message);
-                        }
-                    }
-                    
                     showToast('Account created successfully! Redirecting...', 'success');
                     setTimeout(() => window.location.href = 'dashboard.html', 1000);
                 }
