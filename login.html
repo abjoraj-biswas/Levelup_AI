@@ -186,6 +186,14 @@
             transform: translateY(10px);
         }
 
+        .auth-card > .stagger-item {
+            animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .form-section .stagger-item {
+            animation: none;
+        }
+
         .form-section.active .stagger-item {
             animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -507,7 +515,7 @@
 
                 <!-- Login Form -->
                 <div id="form-login" class="form-section active">
-                    <div class="stagger-item">
+                    <div class="stagger-item" style="text-align: center;">
                         <h2 class="mb-1">Welcome Back</h2>
                         <p class="text-secondary mb-4" style="font-size: 0.95rem;">Enter your credentials to access your dashboard.</p>
                     </div>
@@ -546,7 +554,7 @@
 
                 <!-- Register Form -->
                 <div id="form-register" class="form-section">
-                    <div class="stagger-item">
+                    <div class="stagger-item" style="text-align: center;">
                         <h2 class="mb-1">Start Your Journey</h2>
                         <p class="text-secondary mb-4" style="font-size: 0.95rem;">Create an account to level up your skills.</p>
                     </div>
