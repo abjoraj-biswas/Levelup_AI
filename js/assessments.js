@@ -27,7 +27,15 @@ async function initAssessments() {
         
         if (data && data.length > 0) {
             const uniqueTopics = [...new Set(data.map(q => q.assessment_name))];
+            const savedAssessments = AppState.getAssessments() || [];
+            
             allAssessments = uniqueTopics.map((topic, i) => {
+                // Check if user already interacted with this topic
+                const existing = savedAssessments.find(a => a.title === topic);
+                if (existing) {
+                    return { ...existing, id: `db_a${i}` }; // ensure ID matches current map
+                }
+                
                 return {
                     id: `db_a${i}`,
                     title: topic,
@@ -42,6 +50,8 @@ async function initAssessments() {
                     isRecommended: Math.random() > 0.6
                 };
             });
+            // Overwrite local storage so submitAssessment can track history by the new DB IDs
+            localStorage.setItem('levelup_assessments', JSON.stringify(allAssessments));
         } else {
             allAssessments = AppState.getAssessments() || [];
         }
