@@ -117,16 +117,16 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 120px 20px 60px;
+            padding: clamp(100px, 12vh, 120px) 20px clamp(40px, 8vh, 80px);
             position: relative;
             box-sizing: border-box;
         }
 
         .hero-title {
-            font-size: 6rem;
+            font-size: clamp(3rem, 6vw, 6rem);
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 24px;
+            margin-bottom: clamp(16px, 3vh, 24px);
             background: linear-gradient(to right, #ffffff, #a0a5cc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -136,10 +136,10 @@
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
             line-height: 1.6;
             color: var(--text-secondary);
-            margin-bottom: 80px;
+            margin-bottom: clamp(40px, 8vh, 80px);
             max-width: 900px;
             opacity: 0;
             animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
@@ -188,7 +188,7 @@
 
         /* 3D Floating Dash Preview */
         .hero-visual {
-            margin-top: 80px;
+            margin-top: clamp(40px, 8vh, 80px);
             position: relative;
             width: 100%;
             max-width: 900px;
@@ -592,10 +592,6 @@
 
         /* Responsive */
         @media (max-width: 900px) {
-            .hero-title {
-                font-size: 3.5rem;
-            }
-
             .bento-grid {
                 grid-template-columns: 1fr;
             }
