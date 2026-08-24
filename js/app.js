@@ -4148,15 +4148,15 @@ async function fetchDynamicData() {
         if (!skillsErr && skills && skills.length > 0) {
             const dynamicSkills = skills.map((s) => ({
                 id: s.id,
-                name: s.name,
-                category: s.category,
-                difficulty: s.difficulty,
-                subSkills: s.subSkills || 5, 
+                name: s.name || s.title || "Unknown Skill",
+                category: s.category || s.industry || "General",
+                difficulty: s.difficulty || "Beginner",
+                subSkills: s.subSkills || s.sub_skills || 5, 
                 lectures: s.lectures || 10,
-                hours: s.hours || 0,
+                hours: s.hours || s.duration_hours || 0,
                 progress: s.progress || 0,
-                icon: s.icon || "fa-solid fa-code",
-                desc: s.desc || ""
+                icon: s.icon || s.image_url || "fa-solid fa-code",
+                desc: s.desc || s.description || ""
             }));
             localStorage.setItem('levelup_skills', JSON.stringify(dynamicSkills));
         }
