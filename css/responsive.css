@@ -1,18 +1,43 @@
 /* Responsive adjustments for Level Up AI */
 
+/* Global Table & Utilities */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius-md);
+    padding-bottom: 10px;
+}
+
+.table-responsive table {
+    min-width: 600px; /* Forces scrolling on small screens */
+}
+
+
+/* Tablet (1024px) */
 @media (max-width: 1024px) {
-    /* Tablet layout adjustments */
     :root {
         --sidebar-width: 240px;
     }
+    
+    h1 { font-size: 2.5rem !important; }
+    h2 { font-size: 2rem !important; }
+    
+    /* Scale grids down slightly */
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }
 
+
+/* Mobile Layout (768px) */
 @media (max-width: 768px) {
-    /* Mobile Layout */
     :root {
         --sidebar-width: 0px;
     }
 
+    /* Core Layout */
     .sidebar {
         transform: translateX(-100%);
         width: 280px;
@@ -27,12 +52,14 @@
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;
+        padding-top: 80px !important; /* Make room for topbar */
     }
 
     .topbar {
         left: 0 !important;
         width: 100% !important;
         padding: 0 15px !important;
+        justify-content: space-between;
     }
 
     .hamburger-btn {
@@ -40,11 +67,36 @@
     }
 
     .search-bar {
-        display: none; /* Hide on small screens, can add an icon toggle later */
+        display: none;
     }
 
+    /* Typography */
+    h1 { font-size: 2rem !important; }
+    h2 { font-size: 1.75rem !important; }
+    h3 { font-size: 1.5rem !important; }
+
+    /* Force Grids & Flex to Stack */
+    .grid-4, .grid-3, .grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    /* Target any hardcoded grid columns */
+    [style*="grid-template-columns: 2fr 1fr"],
+    [style*="grid-template-columns: 3fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"],
+    [style*="grid-column: span 2"] {
+        grid-template-columns: 1fr !important;
+        grid-column: auto !important;
+    }
+
+    .flex-row {
+        flex-direction: column !important;
+    }
+
+    /* Component Overrides */
     .hero-content {
-        padding: 40px 20px;
+        padding: 40px 15px;
         text-align: center;
     }
 
@@ -52,15 +104,11 @@
         justify-content: center;
         flex-direction: column;
         width: 100%;
+        gap: 15px;
     }
 
     .hero-buttons button {
         width: 100%;
-    }
-
-    /* Grid layouts become single column */
-    .grid-4, .grid-3, .grid-2 {
-        grid-template-columns: 1fr !important;
     }
 
     .learning-layout {
@@ -84,12 +132,52 @@
 
     .step-arrow {
         transform: rotate(90deg);
-        margin: 20px 0;
+        margin: 20px auto !important;
+        display: block;
     }
+
+    .notif-dropdown {
+        width: 300px !important;
+        right: -10px !important;
+    }
+    
+    /* Auth & Login Overrides */
+    .auth-layout {
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 100vh;
+    }
+    
+    .auth-left, .auth-right {
+        width: 100% !important;
+        padding: 40px 20px !important;
+    }
+    
+    .auth-left {
+        min-height: 40vh;
+        order: -1;
+    }
+    
+    .login-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 30px 20px !important;
+    }
+
+    .social-buttons {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Spacing tweaks */
+    .p-5 { padding: 1.5rem !important; }
+    .mb-5 { margin-bottom: 2rem !important; }
+    .mt-5 { margin-top: 2rem !important; }
 }
 
+
+/* Small Mobile (480px) */
 @media (max-width: 480px) {
-    h1 { font-size: 2rem !important; }
+    h1 { font-size: 1.75rem !important; }
     h2 { font-size: 1.5rem !important; }
     
     .btn-primary, .btn-secondary, .btn-outline {
@@ -100,5 +188,14 @@
     .modal {
         width: 95%;
         padding: 20px;
+    }
+    
+    .notif-dropdown {
+        width: 280px !important;
+        right: -30px !important;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem !important;
     }
 }
