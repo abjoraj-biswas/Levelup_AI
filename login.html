@@ -113,6 +113,26 @@
             100% { border-radius: 50% 50% 60% 40% / 60% 40% 50% 60%; transform: translate(-55%, -45%) rotate(90deg) scale(0.95); }
         }
 
+        .brand-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 500px;
+            transform: translateZ(10px);
+        }
+
+        .brand-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .brand-content h2 {
+            opacity: 0;
+            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
         /* Right Side: Form */
         .auth-form-container {
             flex: 1;
