@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://jslatnacsucmwhkgqpkr.supabase.co">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Level Up AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            overflow: hidden; /* Prevent scrolling on desktop auth page */
+        }
+        
+        .auth-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Left Side: Branding / Graphic */
+        .auth-brand {
+            flex: 1;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+            border-right: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Abstract CSS Art for the brand side */
+        .auth-brand::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.1) 0%, transparent 60%);
+            top: -200px;
+            left: -200px;
+            animation: floatGlow 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .auth-brand::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 60%);
+            bottom: -100px;
+            right: -100px;
+            animation: floatGlow 15s infinite alternate-reverse cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes floatGlow {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(40px, 40px); }
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .brand-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .brand-content h2 {
+            opacity: 0;
+            animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .brand-feature {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            border-radius: var(--border-radius-md);
+            backdrop-filter: var(--glass-blur);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+            transform: translateX(-30px);
+            opacity: 0;
+            animation: slideRightFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+        }
+
+        .brand-feature:hover {
+            transform: translateX(5px) !important;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-feature:nth-child(3) { animation-delay: 0.3s; }
+        .brand-feature:nth-child(4) { animation-delay: 0.4s; }
+        .brand-feature:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Right Side: Form */
+        .auth-form-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            padding: 40px;
+            position: relative;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            background: transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        /* Custom Tabs with Sliding Indicator */
+        .auth-tabs {
+            position: relative;
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius-pill);
+            padding: 5px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .auth-tab-indicator {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            height: calc(100% - 10px);
+            width: calc(50% - 5px);
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: var(--border-radius-pill);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 0;
+            box-shadow: 0 4px 15px rgba(0, 85, 255, 0.3);
+        }
+
+        .auth-tabs[data-active="register"] .auth-tab-indicator {
+            transform: translateX(100%);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1;
+            transition: color 0.4s ease;
+        }
+
+        .auth-tab.active {
+            color: white;
+        }
+
+        /* Form Staggered Animations */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .form-section.active .stagger-item {
+            animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .form-section.active .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+        .form-section.active .stagger-item:nth-child(2) { animation-delay: 0.15s; }
+        .form-section.active .stagger-item:nth-child(3) { animation-delay: 0.2s; }
+        .form-section.active .stagger-item:nth-child(4) { animation-delay: 0.25s; }
+        .form-section.active .stagger-item:nth-child(5) { animation-delay: 0.3s; }
+        .form-section.active .stagger-item:nth-child(6) { animation-delay: 0.35s; }
+
+        /* Inputs with Icons */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i.icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            background: rgba(0, 240, 255, 0.02);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.05);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .input-wrapper input:focus + i.icon {
+            color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .input-group:focus-within label {
+            color: var(--primary);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        /* Checkbox & Links */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            color: var(--text-primary);
+        }
+
+        .checkbox-container input {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+            transform: translateY(-1px);
+            display: inline-block;
+        }
+
+        /* Custom Button Animation */
+        button[type="submit"] {
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 85, 255, 0.5);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+        .divider:not(:empty)::before { margin-right: 1em; }
+        .divider:not(:empty)::after { margin-left: 1em; }
+
+        /* Social Buttons */
+        .social-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .social-btn {
+            padding: 12px;
+            border-radius: var(--border-radius-md);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+}
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Top Actions Container */
+        .top-actions {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        /* Back Button */
+        .back-btn {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .auth-theme-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-theme-btn:hover {
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Form Visibility Toggle */
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        /* Keyframes */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDownFade {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideRightFade {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .auth-brand { display: none; }
+            body { overflow: auto; }
+            .auth-card { padding-top: 40px; }
+            .top-actions { right: 20px; top: 20px; }
+        }
+    </style>
+</head>
+<body>
+<script>
+    if (localStorage.getItem('levelup_theme') === 'light' || (!localStorage.getItem('levelup_theme') && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.body.classList.add('light-mode');
+    }
+</script>
+
+    <div class="auth-layout">
+        
+        <!-- Left Branding Area (Hidden on Mobile) -->
+        <div class="auth-brand">
+            <div class="brand-content">
+                <div class="logo brand-logo" style="font-weight: 900; letter-spacing: 1px;">LevelUP<span style="color: #00e5ff;">.AI</span></div>
+                <h2 class="mb-4 text-gradient">Your Career, Supercharged.</h2>
+                
+                <div class="brand-feature">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 240, 255, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Personalized AI Coach</h4>
+                        <p class="text-secondary" style="font-size: 0.85rem;">Get tailored learning recommendations.</p>
+                    </div>
+                </div>
+
+                <div class="brand-feature">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(112, 0, 255, 0.1); color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Smart Tracking</h4>
+                        <p class="text-secondary" style="font-size: 0.85rem;">Monitor your progress across all skills.</p>
+                    </div>
+                </div>
+
+                <div class="brand-feature">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 255, 136, 0.1); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Career Ready</h4>
+                        <p class="text-secondary" style="font-size: 0.85rem;">Build a portfolio of verified competencies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Form Area -->
+        <div class="auth-form-container">
+            <div class="top-actions">
+                <button class="theme-toggle-btn auth-theme-btn" title="Toggle Theme"></button>
+                <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+            </div>
+            
+            <div class="auth-card">
+                <div class="auth-tabs" data-active="login" id="authTabsContainer">
+                    <div class="auth-tab-indicator"></div>
+                    <div class="auth-tab active" onclick="switchTab('login')" id="tab-login">Sign In</div>
+                    <div class="auth-tab" onclick="switchTab('register')" id="tab-register">Create Account</div>
+                </div>
+
+                <!-- Login Form -->
+                <div id="form-login" class="form-section active">
+                    <div class="stagger-item">
+                        <h2 class="mb-1">Welcome Back</h2>
+                        <p class="text-secondary mb-4" style="font-size: 0.95rem;">Enter your credentials to access your dashboard.</p>
+                    </div>
+
+                    <form onsubmit="handleAuth(event, 'login')" autocomplete="off">
+                        <div class="input-group stagger-item">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-regular fa-envelope icon"></i>
+                                <input type="email" placeholder="alex@example.com" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="input-group stagger-item">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock icon"></i>
+                                <input type="password" id="loginPass" placeholder="••••••••" required autocomplete="new-password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPass')">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-options stagger-item">
+                            <label class="checkbox-container">
+                                <input type="checkbox" checked>
+                                Remember me
+                            </label>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn-glow primary stagger-item" style="width: 100%; padding: 14px; font-size: 1.05rem;">
+                            Sign In to Account
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div id="form-register" class="form-section">
+                    <div class="stagger-item">
+                        <h2 class="mb-1">Start Your Journey</h2>
+                        <p class="text-secondary mb-4" style="font-size: 0.95rem;">Create an account to level up your skills.</p>
+                    </div>
+
+                    <form onsubmit="handleAuth(event, 'register')" autocomplete="off">
+                        <div class="grid-2 stagger-item" style="gap: 15px; grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+                            <div class="input-group" style="margin-bottom: 15px;">
+                                <label>Full Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-regular fa-id-card icon"></i>
+                                    <input type="text" placeholder="Alex Sharma" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 15px;">
+                                <label>Username</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-at icon"></i>
+                                    <input type="text" placeholder="alex.sharma" required autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group stagger-item" style="margin-bottom: 15px;">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-regular fa-envelope icon"></i>
+                                <input type="email" placeholder="alex@example.com" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="input-group stagger-item" style="margin-bottom: 15px;">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock icon"></i>
+                                <input type="password" id="regPass" placeholder="Create a password" required autocomplete="new-password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('regPass')">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glow primary stagger-item" style="width: 100%; padding: 14px; font-size: 1.05rem; margin-top: 10px;">
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+
+                <div class="divider stagger-item" style="animation-delay: 0.4s;">Or continue with</div>
+
+                <div class="social-buttons stagger-item" style="animation-delay: 0.5s;">
+                    <button class="social-btn" onclick="mockSocialAuth()">
+                        <i class="fa-brands fa-google" style="color: #DB4437;"></i> Google
+                    </button>
+                    <button class="social-btn" onclick="mockSocialAuth()">
+                        <i class="fa-brands fa-github"></i> GitHub
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/mock-data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Update Tab Indicator Position
+            document.getElementById('authTabsContainer').setAttribute('data-active', tab);
+
+            // Update Text Color
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            // Force reflow to re-trigger staggered animations
+            const currentForm = document.querySelector('.form-section.active');
+            if (currentForm) {
+                currentForm.classList.remove('active');
+            }
+            
+            const nextForm = document.getElementById(`form-${tab}`);
+            // Small timeout allows the DOM to hide the old form before showing the new one, resetting animations
+            setTimeout(() => {
+                nextForm.classList.add('active');
+            }, 10);
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            // Add a small rotation animation to the icon
+            icon.style.transform = "translateY(-50%) rotate(180deg)";
+            icon.style.opacity = "0";
+            
+            setTimeout(() => {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+                icon.style.transform = "translateY(-50%) rotate(0deg)";
+                icon.style.opacity = "1";
+            }, 150);
+        }
+
+        async function handleAuth(e, type) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.style.opacity = '0.9';
+            btn.style.transform = 'scale(0.98)';
+            btn.disabled = true;
+            
+            try {
+                if (type === 'login') {
+                    const email = form.querySelector('input[type="text"], input[type="email"]').value;
+                    const password = form.querySelector('input[type="password"]').value;
+                    
+                    const { data, error } = await window.db.auth.signInWithPassword({
+                        email, password
+                    });
+                    if (error) throw error;
+                    
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                } else if (type === 'register') {
+                    const email = form.querySelector('input[type="email"]').value;
+                    const password = form.querySelector('input[type="password"]').value;
+                    const fullName = form.querySelector('input[type="text"]').value;
+                    
+                    const { data, error } = await window.db.auth.signUp({
+                        email, password,
+                        options: {
+                            data: {
+                                name: fullName
+                            }
+                        }
+                    });
+                    if (error) throw error;
+                    
+                    showToast('Account created successfully! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                }
+            } catch (error) {
+                showToast(error.message || 'Authentication failed', 'error');
+                // Reset button state
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.style.transform = 'scale(1)';
+                btn.disabled = false;
+            }
+        }
+        
+
+        // Check for mode=register in URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'register') {
+                switchTab('register');
+            }
+        });
+
+        function mockSocialAuth() {
+            showToast('Social authentication processing...', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+<script src="js/notifications.js"></script>
+</body>
+</html>
+
