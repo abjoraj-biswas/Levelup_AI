@@ -606,6 +606,32 @@
                 display: none;
             }
         }
+        @media (max-width: 768px) {
+            .landing-nav {
+                padding: 15px 20px;
+            }
+            .nav-actions {
+                gap: 10px !important;
+            }
+            .login-btn {
+                display: none !important;
+            }
+            .nav-actions .btn-text {
+                display: none;
+            }
+            .hero-title {
+                font-size: 2.2rem !important;
+                margin-top: 20px;
+            }
+            .hero-cta {
+                flex-direction: column !important;
+                width: 100%;
+                gap: 15px !important;
+            }
+            .hero-cta button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -620,10 +646,10 @@
             <a href="#journey">Journey</a>
             <a href="#ecosystem">Ecosystem</a>
         </div>
-        <div style="flex: 1; display:flex; justify-content: flex-end; align-items:center; gap: 15px;">
-            <a href="login.html" class="btn-glow" style="text-decoration: none;">Log in</a>
+        <div class="nav-actions" style="flex: 1; display:flex; justify-content: flex-end; align-items:center; gap: 15px;">
+            <a href="login.html" class="btn-glow login-btn" style="text-decoration: none;">Log in</a>
             <button class="btn-glow primary" onclick="window.location.href='login.html?mode=register'">
-                Get Started
+                <span class="btn-text">Get Started</span>
                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
             </button>
         </div>
