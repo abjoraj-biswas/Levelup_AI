@@ -13,8 +13,42 @@ document.addEventListener('AppDataLoaded', () => {
     setupFilters();
 });
 
-function initAssessments() {
-    allAssessments = AppState.getAssessments() || [];
+async function initAssessments() {
+    const newGrid = document.getElementById('newAssessmentsGrid');
+    const allGrid = document.getElementById('allAssessmentsGrid');
+    
+    // Show brief loading state
+    if (newGrid) newGrid.innerHTML = '<div class="text-secondary" style="grid-column: 1 / -1; text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading assessments...</div>';
+    if (allGrid) allGrid.innerHTML = '<div class="text-secondary" style="grid-column: 1 / -1; text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading assessments...</div>';
+
+    try {
+        const { data, error } = await window.db.from('assessment_questions').select('assessment_name');
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            const uniqueTopics = [...new Set(data.map(q => q.assessment_name))];
+            allAssessments = uniqueTopics.map((topic, i) => {
+                return {
+                    id: `db_a${i}`,
+                    title: topic,
+                    category: "Technical Assessment",
+                    difficulty: "Mixed",
+                    questions: 10,
+                    duration: 15,
+                    status: "New",
+                    bestScore: null,
+                    passScore: 70,
+                    isNew: true
+                };
+            });
+        } else {
+            allAssessments = AppState.getAssessments() || [];
+        }
+    } catch (err) {
+        console.error("Error fetching assessment topics from Supabase:", err);
+        allAssessments = AppState.getAssessments() || [];
+    }
+
     renderSummaryCards();
     renderAssessmentsList();
     renderHistory();
