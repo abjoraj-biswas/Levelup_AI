@@ -163,22 +163,21 @@ async function startAssessment() {
     showView('assessmentQuizView');
 
     try {
-        let dbDifficultyOptions = [selectedLevel];
-        if (selectedLevel === 'Basic') dbDifficultyOptions.push('Beginner');
-        if (selectedLevel === 'Intermediate') dbDifficultyOptions.push('Intermediate');
-        if (selectedLevel === 'Advance') dbDifficultyOptions.push('High', 'Advanced');
-        
         const { data, error } = await window.db
             .from('assessment_questions')
             .select('*')
             .ilike('assessment_name', currentAssessment.title)
-            .in('difficulty', dbDifficultyOptions)
-            .order('question_number', { ascending: true, nullsFirst: false });
+            .eq('difficulty', selectedLevel);
 
         if (error) throw error;
         
         if (data && data.length > 0) {
-            fetchedQuestions = data.map(row => {
+            // Shuffle the fetched data to get random questions
+            const shuffledData = data.sort(() => 0.5 - Math.random());
+            // Slice out exactly 10 questions
+            const random10 = shuffledData.slice(0, 10);
+
+            fetchedQuestions = random10.map(row => {
                 const options = [row.option_a, row.option_b, row.option_c, row.option_d].filter(Boolean);
                 const ansMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
                 return {
@@ -189,12 +188,12 @@ async function startAssessment() {
             });
         } else {
             if(typeof showToast === 'function') showToast(`No database questions found for "${currentAssessment.title}" at this level. Loading mock questions.`, 'warning');
-            fetchedQuestions = getMockQuestions(currentAssessment.title, selectedLevel) || getMockQuestions(currentAssessment.title, "Basic");
+            fetchedQuestions = getMockQuestions(currentAssessment.title, selectedLevel) || getMockQuestions(currentAssessment.title, "Beginner");
         }
     } catch(err) {
         console.error("Error fetching questions:", err);
         if(typeof showToast === 'function') showToast(`Error connecting to database. Loading mock questions.`, 'danger');
-        fetchedQuestions = getMockQuestions(currentAssessment.title, selectedLevel) || getMockQuestions(currentAssessment.title, "Basic");
+        fetchedQuestions = getMockQuestions(currentAssessment.title, selectedLevel) || getMockQuestions(currentAssessment.title, "Beginner");
     }
 
     userAnswers = {};
@@ -235,7 +234,7 @@ function updateTimer() {
 
 function getMockQuestions(title, level) {
     const topic = title.split(' ')[0] || "Concept";
-    if (level === "Basic") {
+    if (level === "Beginner") {
         return [
             { q: `What is the primary purpose of ${topic}?`, options: ["Data Storage", "Logic Execution", "Styling", "Networking"], ans: 1 },
             { q: `Which of the following is a core feature of ${topic}?`, options: ["Variables", "Hardware", "OS", "Servers"], ans: 0 },
@@ -248,12 +247,12 @@ function getMockQuestions(title, level) {
             { q: `How do you handle asynchronous operations in ${topic}?`, options: ["Callbacks", "Promises", "Async/Await", "All of the above"], ans: 3 },
             { q: `What is the best way to optimize performance in ${topic}?`, options: ["Caching", "Delaying", "Deleting Code", "Ignoring Errors"], ans: 0 },
             { q: `Which design pattern is most common in ${topic}?`, options: ["Singleton", "Observer", "Factory", "MVC"], ans: 3 },
-            { q: `How does memory management work in ${topic}?`, options: ["Garbage Collection", "Manual Allocation", "No Memory", "Infinite Memory"], ans: 0 },
-            { q: `What is the output of a standard ${topic} build process?`, options: ["Executable", "Minified Files", "Source Code", "Errors"], ans: 1 }
+            { q: `How do you manage state in ${topic}?`, options: ["Global Variables", "State Container", "Local Storage", "Cookies"], ans: 1 },
+            { q: `What is the primary security concern in ${topic}?`, options: ["XSS", "CSRF", "SQL Injection", "All of the above"], ans: 3 }
         ];
     } else {
         return [
-            { q: `How would you architect a scalable system using ${topic}?`, options: ["Microservices", "Monolith", "No Architecture", "Spaghetti Code"], ans: 0 },
+            { q: `What is the time complexity of the core algorithm in ${topic}?`, options: ["O(1)", "O(n)", "O(n log n)", "O(n^2)"], ans: 2 },
             { q: `What is the time complexity of the most common sorting algorithm in ${topic}?`, options: ["O(n log n)", "O(n^2)", "O(1)", "O(n)"], ans: 0 },
             { q: `How do you implement thread safety in ${topic}?`, options: ["Locks/Mutexes", "Ignoring it", "Global Variables", "SetTimeout"], ans: 0 },
             { q: `Which of the following is an anti-pattern in ${topic}?`, options: ["God Object", "Dependency Injection", "Unit Testing", "CI/CD"], ans: 0 },
