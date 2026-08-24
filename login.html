@@ -13,14 +13,8 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-
         body {
             overflow: hidden; /* Prevent scrolling on desktop auth page */
-            background: #05050f;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-primary);
         }
         
         .auth-layout {
@@ -31,14 +25,14 @@
         /* Left Side: Branding / Graphic */
         .auth-brand {
             flex: 1;
-            background: #030308;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 40px;
             position: relative;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid var(--border);
             overflow: hidden;
         }
 
@@ -69,7 +63,7 @@
             right: -100px;
             animation-delay: -5s;
         }
-        
+
         @keyframes pulseGlow {
             0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
             50% { opacity: 0.7; }
@@ -97,11 +91,10 @@
 
         .brand-feature {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
             padding: 15px 20px;
             border-radius: var(--border-radius-md);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--glass-blur);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -111,14 +104,12 @@
             opacity: 0;
             animation: slideRightFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
         }
 
         .brand-feature:hover {
             transform: translateX(5px) !important;
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
         }
 
         .brand-feature:nth-child(3) { animation-delay: 0.3s; }
@@ -131,105 +122,43 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #08080f; /* Dark sleek background */
+            background: var(--bg-primary);
             padding: 40px;
             position: relative;
         }
-        
+
         .auth-card {
             width: 100%;
             max-width: 480px;
-            background: transparent; /* Seamless blend */
+            background: transparent;
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-        }
-
-        
-        /* Top Actions (Back button, theme toggle) */
-        .top-actions {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            z-index: 100;
-        }
-
-        .back-btn {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .back-btn:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-5px);
-        }
-
-        .auth-theme-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .auth-theme-btn:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(15deg) scale(1.1);
-        }
-
-        
         }
 
         /* Custom Tabs with Sliding Indicator */
         .auth-tabs {
             position: relative;
             display: flex;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: var(--border-radius-pill);
-            padding: 4px;
+            padding: 5px;
             margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-            opacity: 0;
-            animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+            border: 1px solid var(--border);
+            overflow: hidden;
         }
 
         .auth-tab-indicator {
             position: absolute;
-            top: 4px;
-            left: 4px;
-            height: calc(100% - 8px);
-            width: calc(50% - 4px);
-            background: rgba(255, 255, 255, 0.1);
+            top: 5px;
+            left: 5px;
+            height: calc(100% - 10px);
+            width: calc(50% - 5px);
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
             border-radius: var(--border-radius-pill);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             z-index: 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 85, 255, 0.3);
         }
 
         .auth-tabs[data-active="register"] .auth-tab-indicator {
@@ -238,11 +167,10 @@
 
         .auth-tab {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             color: var(--text-secondary);
             font-weight: 600;
-            font-size: 0.9rem;
             cursor: pointer;
             z-index: 1;
             transition: color 0.4s ease;
@@ -250,25 +178,16 @@
 
         .auth-tab.active {
             color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         /* Form Staggered Animations */
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
         .stagger-item {
             opacity: 0;
-            transform: translateY(15px);
+            transform: translateY(10px);
         }
 
         .form-section.active .stagger-item {
-            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .form-section.active .stagger-item:nth-child(1) { animation-delay: 0.1s; }
@@ -278,11 +197,7 @@
         .form-section.active .stagger-item:nth-child(5) { animation-delay: 0.3s; }
         .form-section.active .stagger-item:nth-child(6) { animation-delay: 0.35s; }
 
-        @keyframes slideUpFade {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Modern Minimalist Inputs */
+        /* Inputs with Icons */
         .input-group {
             position: relative;
             margin-bottom: 25px;
@@ -358,12 +273,13 @@
             color: var(--text-primary);
         }
 
+        /* Checkbox & Links */
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .checkbox-container {
@@ -376,7 +292,7 @@
         }
 
         .checkbox-container:hover {
-            color: white;
+            color: var(--text-primary);
         }
 
         .checkbox-container input {
@@ -387,15 +303,19 @@
         }
 
         .forgot-link {
-            color: var(--text-secondary);
+            color: var(--primary);
             text-decoration: none;
+            font-weight: 500;
             transition: all 0.3s ease;
         }
 
         .forgot-link:hover {
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+            transform: translateY(-1px);
+            display: inline-block;
         }
+
+        /* Form button styling is globally handled by .btn-glow in style.css */
 
         /* Divider */
         .divider {
@@ -404,13 +324,12 @@
             text-align: center;
             margin: 30px 0;
             color: var(--text-muted);
-            font-size: 0.85rem;
-            opacity: 0.7;
+            font-size: 0.9rem;
         }
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border);
         }
         .divider:not(:empty)::before { margin-right: 1em; }
         .divider:not(:empty)::after { margin-left: 1em; }
@@ -448,15 +367,81 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
         }
 
-        @media (max-width: 600px) {
-            .auth-card {
-                margin: 20px;
-                padding: 30px 20px;
-                border-radius: 20px;
-            }
+        /* Top Actions Container */
+        .top-actions {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        /* Back Button */
+        .back-btn {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .auth-theme-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-theme-btn:hover {
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Form Visibility Toggle */
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        /* Keyframes */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDownFade {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideRightFade {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .auth-brand { display: none; }
+            body { overflow: auto; }
+            .auth-card { padding-top: 40px; }
             .top-actions { right: 20px; top: 20px; }
         }
-    
     </style>
 </head>
 <body>
@@ -529,7 +514,6 @@
 
                     <form onsubmit="handleAuth(event, 'login')" autocomplete="off">
                         <div class="input-group stagger-item">
-                            <label>Email Address</label>
                             <div class="input-wrapper">
                                 <i class="fa-regular fa-envelope icon"></i>
                                 <input type="email" placeholder="Email Address" required autocomplete="off">
@@ -537,7 +521,6 @@
                         </div>
 
                         <div class="input-group stagger-item">
-                            <label>Password</label>
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-lock icon"></i>
                                 <input type="password" id="loginPass" placeholder="Password" required autocomplete="new-password">
@@ -556,7 +539,7 @@
                         </div>
 
                         <button type="submit" class="btn-glow primary stagger-item" style="width: 100%; justify-content: center; padding: 14px; font-size: 1.05rem;">
-                            Sign In to Account
+                            Sign In
                         </button>
                     </form>
                 </div>
@@ -569,33 +552,25 @@
                     </div>
 
                     <form onsubmit="handleAuth(event, 'register')" autocomplete="off">
-                        <div class="grid-2 stagger-item" style="gap: 15px; grid-template-columns: 1fr 1fr; margin-bottom: 0;">
-                            <div class="input-group" style="margin-bottom: 15px;">
-                                <label>Full Name</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-regular fa-id-card icon"></i>
-                                    <input type="text" placeholder="Full Name" required autocomplete="off">
-                                </div>
+                        <div class="stagger-item" style="display: flex; gap: 15px; margin-bottom: 25px;">
+                            <div class="input-wrapper" style="flex: 1;">
+                                <i class="fa-regular fa-id-card icon"></i>
+                                <input type="text" placeholder="Full Name" required autocomplete="off">
                             </div>
-                            <div class="input-group" style="margin-bottom: 15px;">
-                                <label>Username</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-at icon"></i>
-                                    <input type="text" placeholder="Username" required autocomplete="off">
-                                </div>
+                            <div class="input-wrapper" style="flex: 1;">
+                                <i class="fa-solid fa-at icon"></i>
+                                <input type="text" placeholder="Username" required autocomplete="off">
                             </div>
                         </div>
 
-                        <div class="input-group stagger-item" style="margin-bottom: 15px;">
-                            <label>Email Address</label>
+                        <div class="input-group stagger-item">
                             <div class="input-wrapper">
                                 <i class="fa-regular fa-envelope icon"></i>
                                 <input type="email" placeholder="Email Address" required autocomplete="off">
                             </div>
                         </div>
 
-                        <div class="input-group stagger-item" style="margin-bottom: 15px;">
-                            <label>Password</label>
+                        <div class="input-group stagger-item">
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-lock icon"></i>
                                 <input type="password" id="regPass" placeholder="Create Password" required autocomplete="new-password">
