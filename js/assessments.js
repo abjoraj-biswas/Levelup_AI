@@ -38,7 +38,8 @@ async function initAssessments() {
                     status: "New",
                     bestScore: null,
                     passScore: 70,
-                    isNew: true
+                    isNew: true,
+                    isRecommended: Math.random() > 0.6
                 };
             });
         } else {
@@ -66,7 +67,9 @@ function renderSummaryCards() {
         avg = Math.round(totalScore / completed.length);
     }
     document.getElementById('sumScore').textContent = avg + '%';
-    document.getElementById('sumRecommended').textContent = 5; // Static for demo
+    
+    const recommendedCount = allAssessments.filter(a => a.isRecommended).length;
+    document.getElementById('sumRecommended').textContent = recommendedCount;
 }
 
 function renderAssessmentsList() {
@@ -92,8 +95,11 @@ function renderAssessmentsList() {
     const renderCard = (a) => `
         <div class="glass-card flex-col" style="padding: 20px; height: 100%;">
             <div class="flex justify-between items-start mb-2">
-                <h3 style="font-size: 1.1rem; line-height: 1.3;">${a.title}</h3>
-                ${a.isNew ? '<span class="badge" style="background: rgba(0, 229, 255, 0.1); color: var(--primary);">NEW</span>' : ''}
+                <h3 style="font-size: 1.1rem; line-height: 1.3; max-width: 70%;">${a.title}</h3>
+                <div class="flex" style="gap: 5px; flex-wrap: wrap; justify-content: flex-end;">
+                    ${a.isRecommended ? '<span class="badge" style="background: rgba(46, 213, 115, 0.1); color: var(--success); font-size: 0.7rem; padding: 3px 8px;">REC</span>' : ''}
+                    ${a.isNew ? '<span class="badge" style="background: rgba(0, 229, 255, 0.1); color: var(--primary); font-size: 0.7rem; padding: 3px 8px;">NEW</span>' : ''}
+                </div>
             </div>
             <p class="text-secondary mb-3 text-sm">${a.category}</p>
             
