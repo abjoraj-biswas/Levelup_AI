@@ -689,6 +689,7 @@ body.light-mode .q-nav-item { background: var(--bg-secondary) !important; color:
 body.light-mode .q-nav-item.current { color: #fff !important; }
 
 /* Dashboard, Profile, and Component Overrides */
+body.light-mode .sidebar { background: var(--bg-card) !important; border-right-color: var(--border) !important; }
 body.light-mode .main-content { background: var(--bg-primary) !important; }
 body.light-mode .topbar { background: var(--bg-secondary) !important; border-bottom-color: var(--border) !important; }
 body.light-mode .stat-icon { border: 1px solid var(--border); }
