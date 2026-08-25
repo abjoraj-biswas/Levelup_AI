@@ -100,15 +100,22 @@
         text-align: center;
     }
 
-    .hero-buttons {
-        justify-content: center;
-        flex-direction: column;
+    .hero-cta {
+        flex-direction: column !important;
         width: 100%;
-        gap: 15px;
+        gap: 15px !important;
     }
 
-    .hero-buttons button {
+    .hero-cta button, .hero-cta a {
         width: 100%;
+    }
+    
+    .landing-nav {
+        padding: 15px !important;
+    }
+    
+    .nav-links {
+        display: none !important;
     }
 
     .learning-layout {
