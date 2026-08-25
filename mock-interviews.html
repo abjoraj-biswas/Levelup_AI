@@ -393,68 +393,17 @@
                 </div>
 
                 <!-- FEEDBACK VIEW -->
-                <div id="miFeedbackView" class="hidden assessment-container">
-                    <h1 class="mb-1 text-center">Interview Completed</h1>
-                    <p class="text-secondary mb-5 text-center">Your performance has been analyzed by the AI.</p>
-                    
-                    <div class="score-circle">
-                        <span id="miScoreText">78</span><span style="font-size: 2rem">%</span>
-                    </div>
-                    <h2 class="text-center mb-5">Overall Score</h2>
-                    
-                    <h3 class="mb-3">Performance Breakdown</h3>
-                    <div class="grid-2 gap-3 mb-5">
-                        <div class="glass-card p-3 flex justify-between items-center">
-                            <span>Technical Knowledge</span><strong class="text-primary" id="miScoreTech">82%</strong>
-                        </div>
-                        <div class="glass-card p-3 flex justify-between items-center">
-                            <span>Communication</span><strong class="text-primary" id="miScoreComm">76%</strong>
-                        </div>
-                        <div class="glass-card p-3 flex justify-between items-center">
-                            <span>Problem Solving</span><strong class="text-primary">74%</strong>
-                        </div>
-                        <div class="glass-card p-3 flex justify-between items-center">
-                            <span>Confidence</span><strong class="text-primary">80%</strong>
-                        </div>
-                        <div class="glass-card p-3 flex justify-between items-center">
-                            <span>Concept Clarity</span><strong class="text-primary">78%</strong>
-                        </div>
-                    </div>
-
-                    <h3 class="mb-3 mt-5">AI Interview Feedback</h3>
-                    <div class="grid-2 gap-4 mb-5">
-                        <div class="glass-card p-4 border-l-4" style="border-left: 4px solid var(--success);">
-                            <h4 class="mb-3 text-success">Strengths</h4>
-                            <ul id="miStrengthsList" class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;">
-                                <li><i class="fa-solid fa-check text-success mr-2"></i> Good understanding of frontend fundamentals</li>
-                                <li><i class="fa-solid fa-check text-success mr-2"></i> Clear explanation of concepts</li>
-                                <li><i class="fa-solid fa-check text-success mr-2"></i> Good problem-solving approach</li>
-                            </ul>
-                        </div>
-                        <div class="glass-card p-4 border-l-4" style="border-left: 4px solid var(--warning);">
-                            <h4 class="mb-3 text-warning">Areas to Improve</h4>
-                            <ul id="miWeaknessesList" class="text-secondary" style="line-height: 1.8; list-style: none; padding: 0;">
-                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Improve explanation structure</li>
-                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Practice JavaScript asynchronous concepts</li>
-                                <li><i class="fa-solid fa-triangle-exclamation text-warning mr-2"></i> Give more specific project examples</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <h1 class="mb-3 text-center mt-5">Recommended Next Steps</h1>
-                    <div class="grid-3 gap-3 mb-5">
-                        <div class="glass-card text-center p-4">
-                            <h4 class="mb-2">Practice JS Async</h4>
-                            <button class="btn-glow primary w-100" onclick="window.location.href='learning.html'">Practice Skill</button>
-                        </div>
-                        <div class="glass-card text-center p-4">
-                            <h4 class="mb-2">Take Frontend Assessment</h4>
-                            <button class="btn-outline w-100" onclick="window.location.href='assessments.html'">Take Assessment</button>
-                        </div>
-                        <div class="glass-card text-center p-4">
-                            <h4 class="mb-2">Retry Mock Interview</h4>
-                            <button class="btn-secondary w-100" onclick="window.location.reload()">Try Again</button>
-                        </div>
+                <div id="miFeedbackView" class="hidden assessment-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh;">
+                    <div class="glass-card" style="padding: 50px; text-align: center; max-width: 600px; width: 100%;">
+                        <i class="fa-solid fa-envelope-circle-check text-primary" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                        <h1 class="mb-3">Thank You!</h1>
+                        <p class="text-secondary mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                            Your mock interview has been successfully completed. Our AI is currently analyzing your performance, speech patterns, and technical accuracy.
+                        </p>
+                        <p class="text-primary mb-5" style="font-size: 1.1rem; font-weight: 500;">
+                            Your detailed results and feedback report will be sent to your email shortly.
+                        </p>
+                        <button class="btn-glow primary" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
                     </div>
                 </div>
 
