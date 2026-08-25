@@ -677,8 +677,8 @@ body.light-mode .video-placeholder { background: var(--bg-secondary) !important;
 body.light-mode .play-btn { background: var(--bg-primary) !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
 body.light-mode .tab:hover { background: var(--bg-primary) !important; color: var(--primary) !important; }
 body.light-mode .lecture-list-item:hover { background: var(--bg-primary) !important; }
-body.light-mode .lecture-list-item.locked { color: var(--text-muted) !important; }
-body.light-mode .lecture-list-item.locked .locked-icon { color: var(--text-muted) !important; }
+body.light-mode .lecture-list-item.locked { color: var(--text-secondary) !important; }
+body.light-mode .lecture-list-item.locked .locked-icon { color: var(--text-secondary) !important; }
 
 body.light-mode .option-btn { background: var(--bg-secondary) !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
 body.light-mode .option-btn:hover { background: var(--bg-primary) !important; }
