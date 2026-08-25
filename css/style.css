@@ -974,20 +974,20 @@ input:checked + .slider:before {
         }
 
         body.light-mode .btn-glow.primary {
-            background: var(--primary);
-            color: white;
-            border: 1px solid rgba(0, 85, 255, 0.8);
+            background: var(--primary) !important;
+            color: white !important;
+            border: 1px solid rgba(0, 85, 255, 0.8) !important;
             box-shadow: 
                 inset 0 1px 2px rgba(255, 255, 255, 0.4),
-                0 4px 15px rgba(0, 85, 255, 0.3);
+                0 4px 15px rgba(0, 85, 255, 0.3) !important;
         }
 
         body.light-mode .btn-glow.primary:hover {
-            background: #0044cc; /* darker primary */
-            border-color: #003399;
+            background: #0044cc !important;
+            border-color: #003399 !important;
             box-shadow: 
                 inset 0 1px 2px rgba(255, 255, 255, 0.5),
-                0 6px 20px rgba(0, 85, 255, 0.4);
+                0 6px 20px rgba(0, 85, 255, 0.4) !important;
         }
 /* AI Chat Window */
 .chat-window {
