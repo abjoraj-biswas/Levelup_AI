@@ -4,17 +4,17 @@
     font-family: 'Outfit', sans-serif;
     letter-spacing: -0.5px;
     font-weight: 700;
-    color: #f8fafc;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 .content-area h3 {
     font-family: 'Outfit', sans-serif;
     letter-spacing: -0.2px;
     font-weight: 600;
-    color: #f1f5f9;
+    color: var(--text-primary);
 }
 .content-area p {
-    color: #94a3b8;
+    color: var(--text-secondary);
     font-weight: 400;
     line-height: 1.6;
 }
@@ -57,7 +57,7 @@
     font-weight: 800;
     letter-spacing: 1px;
     text-decoration: none;
-    color: #ffffff;
+    color: var(--text-primary);
     display: inline-flex;
     align-items: center;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -76,7 +76,7 @@
 
 .logo:hover span {
     text-shadow: 0 0 20px var(--primary);
-    color: #fff;
+    color: var(--text-primary);
 }
 
 @keyframes logoGlowPulse {
@@ -358,7 +358,7 @@
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     letter-spacing: -1px;
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 .stat-info p {
