@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,38 +102,6 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ── AI Coach Floating Button ── */
-        .ai-coach-fab {
-            position: fixed;
-            bottom: 28px; right: 28px;
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; color: #000;
-            box-shadow: 0 4px 24px rgba(0,240,255,0.35);
-            z-index: 900;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .ai-coach-fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 32px rgba(0,240,255,0.5);
-        }
-        .ai-coach-fab .fab-tooltip {
-            position: absolute;
-            right: 72px; top: 50%;
-            transform: translateY(-50%);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.82rem; font-weight: 500;
-            white-space: nowrap;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-        .ai-coach-fab:hover .fab-tooltip { opacity: 1; }
 
         /* ── Chat Drawer ── */
         .drawer-overlay {
@@ -447,12 +415,7 @@
     </div>
 </div>
 
-<!-- AI Coach FAB (Mobile / extra shortcut) -->
-<button class="ai-coach-fab" onclick="toggleAICoachDrawer()" aria-label="Open AI Coach">
-    <i class="fa-solid fa-robot"></i>
-    <span class="fab-tooltip">Ask AI Coach</span>
-</button>
-
+<!-- AI Coach FAB (Mobile / extra shortcut) Removed as it duplicates the global AI Chat Button -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/mock-data.js"></script>
