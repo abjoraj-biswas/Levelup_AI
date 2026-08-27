@@ -430,6 +430,10 @@ select.form-control option {
     z-index: 100;
     transition: var(--transition-normal);
     animation: float 3s ease-in-out infinite;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 .ai-chat-btn:hover {
