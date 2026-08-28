@@ -358,7 +358,7 @@
                     <button class="rec-refresh-btn" style="background: rgba(112,0,255,0.1); border-color: rgba(112,0,255,0.3); color: var(--secondary);"
                             onmouseenter="this.style.background='var(--secondary)'; this.style.color='#fff';"
                             onmouseleave="this.style.background='rgba(112,0,255,0.1)'; this.style.color='var(--secondary)';"
-                            onclick="toggleAICoachDrawer()">
+                            onclick="toggleChat()">
                         <i class="fa-solid fa-robot"></i>
                         Open Chat
                     </button>
@@ -374,46 +374,6 @@
     </main>
 </div>
 
-<!-- Drawer Overlay -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeAICoachDrawer()"></div>
-
-<!-- AI Coach Chat Drawer -->
-<div class="ai-coach-drawer" id="aiCoachDrawer" role="dialog" aria-label="AI Learning Coach Chat">
-    <div class="drawer-header">
-        <div class="drawer-avatar">
-            <i class="fa-solid fa-robot"></i>
-        </div>
-        <div>
-            <strong style="display:block; font-size: 1rem;">AI Learning Coach</strong>
-            <span class="rec-status-badge" style="margin: 0; font-size: 0.72rem; padding: 2px 10px;">
-                <span class="rec-status-dot"></span> Online
-            </span>
-        </div>
-        <button class="drawer-close" onclick="closeAICoachDrawer()" aria-label="Close chat">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
-
-    <div class="drawer-messages" id="drawerMessages"></div>
-
-    <div class="quick-prompts" id="drawerQuickPrompts" style="border-top: 1px solid var(--border); padding-top: 12px;">
-        <button class="quick-prompt" onclick="quickAsk('Explain this concept simply')">✨ Simplify</button>
-        <button class="quick-prompt" onclick="quickAsk('Give me a practice problem')">🧠 Practice</button>
-        <button class="quick-prompt" onclick="quickAsk('What should I study next?')">🗺️ Next Steps</button>
-    </div>
-
-    <div class="drawer-input-area">
-        <textarea id="drawerInput"
-            placeholder="Ask anything about your weak topics..."
-            rows="1"
-            onkeydown="handleDrawerKey(event)"
-            oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">
-        </textarea>
-        <button class="drawer-send-btn" onclick="sendDrawerMessage()" aria-label="Send message">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
-    </div>
-</div>
 
 <!-- AI Coach FAB (Mobile / extra shortcut) Removed as it duplicates the global AI Chat Button -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -438,9 +398,9 @@
 
     // Quick-ask helper from hero section
     function openChatWithPrompt(text) {
-        toggleAICoachDrawer();
+        toggleChat();
         setTimeout(() => {
-            const input = document.getElementById("drawerInput");
+            const input = document.getElementById("chatInputText");
             if (input) {
                 input.value = text;
                 input.dispatchEvent(new Event("input"));
