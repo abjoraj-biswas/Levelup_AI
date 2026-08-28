@@ -108,7 +108,8 @@ app.post('/api/chat', async (req, res) => {
 Student context:
 - Weak areas: ${(userContext?.weakTopics || []).join(", ") || "general programming"}
 - Recent assessments: ${(userContext?.recentAssessments || []).map(a => a.title + (a.bestScore !== null ? " (" + a.bestScore + "%)" : " (not taken)")).join(", ")}
-Rules: Keep replies to 2-4 sentences. Be practical and specific. Use emojis sparingly.`;
+Rules: Keep replies to 2-4 sentences. Be practical and specific. Use emojis sparingly.
+CRITICAL RULE: You are strictly a CODING and PROGRAMMING assistant. You MUST ONLY answer questions related to coding, software engineering, computer science, and technical topics. If a user asks about anything else, you MUST firmly refuse and remind them you only help with coding.`;
 
     const messages = [
         { role: "system", content: systemPrompt },

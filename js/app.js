@@ -517,28 +517,69 @@ window.toggleChat = function() {
     }
 }
 
-window.sendChatMessage = function() {
+window.sendChatMessage = async function() {
     const input = document.getElementById('chatInputText');
     const text = input.value.trim();
     if(text) {
-        const messages = document.getElementById('chatMessages');
-        // Add User Message
-        messages.innerHTML += `<div class="message user">${text}</div>`;
-        input.value = '';
-        messages.scrollTop = messages.scrollHeight;
+        const messagesContainer = document.getElementById('chatMessages');
         
-        // Simulate typing delay
-        setTimeout(() => {
-            const aiResponses = [
-                "Sure! Let's break it down step by step.",
-                "That's a great question. You can find more about this in the JavaScript course.",
-                "I recommend practicing Data Structures next.",
-                "Keep going, you're making great progress!"
-            ];
-            const response = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-            messages.innerHTML += `<div class="message ai">${response}</div>`;
-            messages.scrollTop = messages.scrollHeight;
-        }, 1000);
+        // Build history from DOM before adding new message
+        const history = [];
+        const messageEls = messagesContainer.querySelectorAll('.message');
+        messageEls.forEach(el => {
+            if (el.classList.contains('ai') && !el.classList.contains('loading')) {
+                history.push({ role: 'ai', text: el.textContent });
+            } else if (el.classList.contains('user')) {
+                history.push({ role: 'user', text: el.textContent });
+            }
+        });
+
+        // Add User Message
+        messagesContainer.innerHTML += `<div class="message user">${text}</div>`;
+        input.value = '';
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Add Loading Indicator
+        const loadingId = 'loading-' + Date.now();
+        messagesContainer.innerHTML += `<div class="message ai loading" id="${loadingId}">AI is thinking...</div>`;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        try {
+            const response = await fetch('http://localhost:3000/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    history: history,
+                    userMessage: text,
+                    userContext: {} // generic context for global chat
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('API error');
+            }
+
+            const data = await response.json();
+            
+            // Replace loading message with actual response
+            const loadingEl = document.getElementById(loadingId);
+            if (loadingEl) {
+                loadingEl.outerHTML = `<div class="message ai">${data.reply}</div>`;
+            } else {
+                messagesContainer.innerHTML += `<div class="message ai">${data.reply}</div>`;
+            }
+        } catch (error) {
+            console.error(error);
+            const loadingEl = document.getElementById(loadingId);
+            const errorMsg = `<div class="message ai" style="color: #ff4444;">Sorry, I encountered an error. Is the backend server running?</div>`;
+            if (loadingEl) {
+                loadingEl.outerHTML = errorMsg;
+            } else {
+                messagesContainer.innerHTML += errorMsg;
+            }
+        }
+        
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 }
 
